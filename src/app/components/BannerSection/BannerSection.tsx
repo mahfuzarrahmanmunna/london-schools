@@ -226,7 +226,7 @@ export default function BannerSection() {
           style={{ opacity: 0 }}
         >
           <img
-            src="https://picsum.photos/seed/lshs-banner-professional/1200/1000.jpg"
+            src="/hero/port.avif"
             alt="Professional at London School of Higher Studies"
             className="h-full w-full object-cover object-center"
           />
