@@ -4,6 +4,160 @@ import { ApprenticeshipLevel } from "../types/apprenticeship";
 
 export const apprenticeshipLevels: ApprenticeshipLevel[] = [
   {
+    level: 2,
+    title: "Level 2 Apprenticeship",
+    subtitle: "Supply Chain & Procurement Support",
+    href: "/apprenticeships/level-2",
+    color: "#16A34A",
+    colorLight: "#F0FDF4",
+    colorDark: "#15803D",
+    image: "/courses/chain.jpg",
+    badge: "Introductory",
+    badgeColor: "bg-green-100 text-green-700",
+    description:
+      "The Level 2 Supply Chain & Procurement Support apprenticeship is the ideal entry point for anyone looking to start a career in procurement and supply chain. You'll learn the basics of ordering, stock control, and supplier communication while working and earning.",
+    overview:
+      "This apprenticeship is designed for individuals with little or no prior experience in procurement or supply chain operations. It provides a practical introduction to the fundamentals of sourcing, receiving goods, managing paperwork, and supporting a procurement team. The programme typically takes 12–15 months to complete and is perfect for school leavers, career changers, or those currently in administrative roles who want to move into supply chain functions. You'll gain a recognised qualification equivalent to five GCSEs at grades 9–4, giving you a strong platform to progress to Level 3 and beyond.",
+    passRate: "96%",
+    duration: "12–15 months",
+    price: "Funded",
+    priceNote:
+      "Fully funded for all eligible employers — no co-investment required for apprentices aged 16–18",
+    entryRequirements: [
+      "No prior qualifications or experience required",
+      "Must be employed in a relevant support or administrative role",
+      "Minimum age of 16",
+      "No minimum GCSE requirements — functional skills support available",
+      "Right to work in the UK",
+    ],
+    modules: [
+      {
+        title: "Introduction to Procurement and Supply",
+        description:
+          "Understand what procurement and supply means, the role it plays in different types of organisations, and the basic terminology used in the profession.",
+        hours: "25",
+        units: 2,
+      },
+      {
+        title: "Receiving and Checking Goods",
+        description:
+          "Learn how to receive deliveries, check goods against orders, identify discrepancies, and follow correct procedures for returns and discrepancies.",
+        hours: "25",
+        units: 2,
+      },
+      {
+        title: "Order Processing and Administration",
+        description:
+          "Gain practical skills in raising purchase orders, maintaining records, filing documentation, and using basic procurement software.",
+        hours: "30",
+        units: 3,
+      },
+      {
+        title: "Stock Control Basics",
+        description:
+          "Understand basic stock recording methods, how to perform stock counts, and the importance of accurate inventory data.",
+        hours: "20",
+        units: 2,
+      },
+      {
+        title: "Communication and Teamwork",
+        description:
+          "Develop the communication skills needed to work effectively with colleagues, suppliers, and other departments in a professional environment.",
+        hours: "15",
+        units: 2,
+      },
+      {
+        title: "Health, Safety and Sustainability",
+        description:
+          "Learn about health and safety requirements in a supply chain environment and the basic principles of sustainable working practices.",
+        hours: "15",
+        units: 2,
+      },
+    ],
+    stats: [
+      { label: "Pass Rate", value: "96%", icon: "pass-rate" },
+      { label: "Duration", value: "12–15 mo", icon: "duration" },
+      { label: "Modules", value: "6", icon: "modules" },
+      { label: "Learning Hours", value: "130+", icon: "learners" },
+    ],
+    studyModes: [
+      {
+        mode: "Online",
+        description:
+          "Access all learning materials, quizzes, and tutor support through our beginner-friendly digital platform. No prior technical skills needed.",
+        icon: "Monitor",
+      },
+      {
+        mode: "Remote",
+        description:
+          "Live virtual sessions with your tutor and cohort. Small group sizes ensure personalised attention and plenty of opportunity to ask questions.",
+        icon: "Video",
+      },
+      {
+        mode: "On-site",
+        description:
+          "Face-to-face training sessions at your employer's premises or our London training centre, with hands-on activities and direct tutor support.",
+        icon: "Building2",
+      },
+    ],
+    careerOutcomes: [
+      {
+        title: "Procurement Administrator",
+        salaryRange: "£16,000–£20,000",
+        description:
+          "Handle purchase order processing, maintain supplier records, and support the procurement team with day-to-day administrative tasks.",
+      },
+      {
+        title: "Stores Assistant",
+        salaryRange: "£16,500–£21,000",
+        description:
+          "Manage goods in/out, perform stock checks, and ensure the storeroom is organised and compliant with health and safety standards.",
+      },
+      {
+        title: "Supply Chain Administrator",
+        salaryRange: "£17,000–£22,000",
+        description:
+          "Support supply chain operations by coordinating deliveries, updating tracking systems, and liaising with suppliers and internal teams.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is Level 2 right for me if I have some office experience?",
+        answer:
+          "Yes. Even if you've worked in an office environment, if you're new to procurement and supply chain specifically, Level 2 gives you the foundational knowledge and a recognised qualification to formalise your experience and open doors to procurement-specific roles.",
+      },
+      {
+        question: "What if I don't have GCSEs in English and Maths?",
+        answer:
+          "That's not a barrier. If you don't have GCSEs at grade 4/C or above in English and Maths, you'll complete functional skills qualifications as part of your apprenticeship at no extra cost.",
+      },
+      {
+        question: "How is Level 2 different from Level 3?",
+        answer:
+          "Level 2 focuses on basic support tasks — receiving goods, processing orders, and general administration. Level 3 goes deeper into sourcing, supplier evaluation, and procurement operations. Think of Level 2 as learning the 'what' and Level 3 as understanding the 'why'.",
+      },
+      {
+        question: "Can I progress straight to Level 3 after this?",
+        answer:
+          "Absolutely. Most Level 2 apprentices progress directly to Level 3. Your tutor will help you assess your readiness and plan your progression route.",
+      },
+    ],
+    progression: {
+      previous: null,
+      next: {
+        label: "Level 3 — Procurement & Supply Assistant",
+        href: "/apprenticeships/level-3",
+      },
+    },
+    featured: false,
+    funding:
+      "Fully funded for apprentices aged 16–18 regardless of employer size. For apprentices aged 19+, non-levy employers contribute a maximum of £150 (5% co-investment). Levy-paying employers use their Apprenticeship Levy funds. This is one of the most cost-effective ways to bring new talent into your supply chain team.",
+    assessment:
+      "Assessment is through a portfolio of work-based evidence collected during your apprenticeship, including screenshots, witness testimonies, and reflective accounts. You'll also complete a short professional discussion with an independent assessor to confirm your competence.",
+    employerInfo:
+      "Level 2 apprentices are ideal for organisations wanting to build a pipeline of procurement talent from the ground up. They can handle essential administrative tasks quickly, freeing up experienced staff for more strategic work. Many employers use Level 2 as a cost-effective way to recruit and develop school leavers into long-term procurement professionals.",
+  },
+  {
     level: 3,
     title: "Level 3 Apprenticeship",
     subtitle: "Procurement & Supply Assistant",
@@ -11,7 +165,7 @@ export const apprenticeshipLevels: ApprenticeshipLevel[] = [
     color: "#E8850C",
     colorLight: "#FFF7ED",
     colorDark: "#C2660A",
-    image: "/apprenticeships/level3.webp",
+    image: "/courses/procurement1.jfif",
     badge: "Foundation",
     badgeColor: "bg-orange-100 text-orange-700",
     description:
@@ -143,7 +297,10 @@ export const apprenticeshipLevels: ApprenticeshipLevel[] = [
       },
     ],
     progression: {
-      previous: null,
+      previous: {
+        label: "Level 2 — Supply Chain & Procurement Support",
+        href: "/apprenticeships/level-2",
+      },
       next: {
         label: "Level 4 — Procurement & Supply Officer",
         href: "/apprenticeships/level-4",
@@ -165,7 +322,7 @@ export const apprenticeshipLevels: ApprenticeshipLevel[] = [
     color: "#0891B2",
     colorLight: "#ECFEFF",
     colorDark: "#0E7490",
-    image: "/apprenticeships/level4.webp",
+    image: "/courses/procurement.jfif",
     badge: "Professional",
     badgeColor: "bg-cyan-100 text-cyan-700",
     description:
@@ -302,8 +459,8 @@ export const apprenticeshipLevels: ApprenticeshipLevel[] = [
         href: "/apprenticeships/level-3",
       },
       next: {
-        label: "Level 6 — Senior Procurement Professional",
-        href: "/apprenticeships/level-6",
+        label: "Level 5 — Procurement & Supply Manager",
+        href: "/apprenticeships/level-5",
       },
     },
     featured: true,
@@ -315,6 +472,163 @@ export const apprenticeshipLevels: ApprenticeshipLevel[] = [
       "Level 4 apprentices bring immediate value to procurement teams — they can manage sourcing events independently, draft commercial contracts, and contribute to category planning. This apprenticeship is ideal for upskilling existing staff to officer level.",
   },
   {
+    level: 5,
+    title: "Level 5 Apprenticeship",
+    subtitle: "Procurement & Supply Manager",
+    href: "/apprenticeships/level-5",
+    color: "#2563EB",
+    colorLight: "#EFF6FF",
+    colorDark: "#1D4ED8",
+    image: "/courses/manager.jfif",
+    badge: "Managerial",
+    badgeColor: "bg-blue-100 text-blue-700",
+    description:
+      "The Level 5 Procurement & Supply Manager apprenticeship bridges the gap between operational procurement and strategic leadership. You'll develop expertise in category management, supply chain risk, and organisational influence while working towards your CIPS Advanced Diploma.",
+    overview:
+      "This apprenticeship is for experienced procurement professionals ready to step into management. It covers the CIPS Level 5 Advanced Diploma in Procurement and Supply, equipping you with the skills to manage categories, lead teams, and drive procurement performance across complex supply chains. The programme typically takes 18–24 months and is the critical stepping stone between officer-level practice and the senior strategic role at Level 6. You'll learn to think like a procurement leader while continuing to apply your learning directly in the workplace.",
+    passRate: "85%",
+    duration: "18–24 months",
+    price: "Funded",
+    priceNote:
+      "Funded via Apprenticeship Levy. Non-levy employers contribute 5% (£750 max) for learners aged 19+",
+    entryRequirements: [
+      "Level 4 Diploma in Procurement and Supply (or equivalent qualification)",
+      "Currently employed in a procurement role with management or category responsibility",
+      "GCSEs at grade 4/C or above in English and Maths (or equivalent)",
+      "Minimum of 3 years of procurement experience",
+      "Right to work in the UK",
+    ],
+    modules: [
+      {
+        title: "Management in Procurement and Supply",
+        description:
+          "Develop leadership and management skills specific to procurement, including team performance, change management, and continuous improvement methodologies.",
+        hours: "45",
+        units: 4,
+      },
+      {
+        title: "Managing Risks in Supply Chains",
+        description:
+          "Identify, analyse, and mitigate supply chain risks including geopolitical disruption, supplier failure, cyber threats, and regulatory compliance.",
+        hours: "45",
+        units: 4,
+      },
+      {
+        title: "Category Management",
+        description:
+          "Design and implement category strategies that deliver value, using spend analysis, market intelligence, and stakeholder alignment to optimise procurement outcomes.",
+        hours: "50",
+        units: 5,
+      },
+      {
+        title: "Sustainability and Ethical Procurement",
+        description:
+          "Embed sustainability, social value, and ethical standards into procurement strategy and supplier management, meeting ESG requirements and organisational objectives.",
+        hours: "35",
+        units: 3,
+      },
+      {
+        title: "Commercial Management and Contract Law",
+        description:
+          "Apply advanced commercial understanding to contract management, dispute resolution, and performance management in complex procurement environments.",
+        hours: "40",
+        units: 4,
+      },
+      {
+        title: "Driving Procurement Performance",
+        description:
+          "Use data, KPIs, and benchmarking to measure and improve procurement performance, build business cases, and demonstrate value to senior stakeholders.",
+        hours: "40",
+        units: 4,
+      },
+    ],
+    stats: [
+      { label: "Pass Rate", value: "85%", icon: "pass-rate" },
+      { label: "Duration", value: "18–24 mo", icon: "duration" },
+      { label: "Modules", value: "6", icon: "modules" },
+      { label: "Learning Hours", value: "255+", icon: "learners" },
+    ],
+    studyModes: [
+      {
+        mode: "Online",
+        description:
+          "Advanced digital learning platform with in-depth case studies, analytical tools, and dedicated tutor mentoring. Designed for busy professionals who need flexibility without compromising depth.",
+        icon: "Monitor",
+      },
+      {
+        mode: "Remote",
+        description:
+          "Live virtual masterclasses with your cohort of experienced practitioners. Focus on strategic discussion, problem-solving, and peer learning with professionals from diverse sectors.",
+        icon: "Video",
+      },
+      {
+        mode: "On-site",
+        description:
+          "Intensive in-person workshops at our London centre combining expert-led sessions, group exercises, and networking with fellow procurement managers.",
+        icon: "Building2",
+      },
+    ],
+    careerOutcomes: [
+      {
+        title: "Procurement Manager",
+        salaryRange: "£38,000–£52,000",
+        description:
+          "Lead a procurement team or category, manage supplier relationships at a strategic level, and deliver measurable savings and value improvements.",
+      },
+      {
+        title: "Category Manager",
+        salaryRange: "£40,000–£55,000",
+        description:
+          "Own end-to-end category strategies for significant spend areas, conduct market analysis, and lead cross-functional sourcing initiatives.",
+      },
+      {
+        title: "Supply Chain Manager",
+        salaryRange: "£42,000–£58,000",
+        description:
+          "Oversee supply chain operations, manage risk and resilience, and coordinate with procurement, logistics, and operations teams.",
+      },
+    ],
+    faqs: [
+      {
+        question: "How is Level 5 different from Level 4?",
+        answer:
+          "Level 4 focuses on being a competent procurement practitioner — managing processes, negotiating deals, and understanding contracts. Level 5 shifts to management: leading teams, designing category strategies, managing supply chain risk, and influencing organisational decisions. You're no longer just doing procurement — you're managing how procurement is done.",
+      },
+      {
+        question: "Do I need to manage a team to do this apprenticeship?",
+        answer:
+          "Not necessarily. While some learners do have direct reports, the 'management' element can also relate to managing categories, projects, or stakeholder relationships. Your employer needs to confirm that your role has sufficient scope for Level 5 responsibilities.",
+      },
+      {
+        question: "What qualification will I achieve?",
+        answer:
+          "You'll achieve the CIPS Level 5 Advanced Diploma in Procurement and Supply, which is a globally recognised qualification and a key milestone on the path to full MCIPS status.",
+      },
+      {
+        question: "Can I progress to Level 6 straight after this?",
+        answer:
+          "Yes. Most Level 5 apprentices progress to Level 6, though there is typically a gap of 6–12 months to consolidate your learning and gain additional experience before starting the senior strategic programme. Your tutor will advise on the best timing.",
+      },
+    ],
+    progression: {
+      previous: {
+        label: "Level 4 — Procurement & Supply Officer",
+        href: "/apprenticeships/level-4",
+      },
+      next: {
+        label: "Level 6 — Senior Procurement Professional",
+        href: "/apprenticeships/level-6",
+      },
+    },
+    featured: false,
+    funding:
+      "Funded through the Apprenticeship Levy for levy-paying employers. Non-levy employers contribute a maximum of £750 (5% co-investment) for apprentices aged 19+. This represents outstanding value for achieving a CIPS Advanced Diploma — which would typically cost several thousand pounds if self-funded.",
+    assessment:
+      "The EPA consists of a 4,500-word management project report addressing a significant procurement or supply chain challenge in your organisation, followed by a 75-minute professional discussion with an independent assessor. You must also pass all on-programme CIPS Level 5 assessments to reach EPA gateway. The standard demands evidence of managerial thinking, not just operational competence.",
+    employerInfo:
+      "Level 5 apprentices are transformational for mid-sized procurement teams. They bring category management rigour, risk management capability, and the leadership skills to mentor junior staff and influence senior stakeholders. This apprenticeship is the single most impactful step for developing a future Head of Procurement from within your organisation.",
+  },
+  {
     level: 6,
     title: "Level 6 Apprenticeship",
     subtitle: "Senior Procurement & Supply Professional",
@@ -322,7 +636,7 @@ export const apprenticeshipLevels: ApprenticeshipLevel[] = [
     color: "#7C3AED",
     colorLight: "#F5F3FF",
     colorDark: "#6D28D9",
-    image: "/apprenticeships/level6.webp",
+    image: "/courses/senior.jpg",
     badge: "Strategic",
     badgeColor: "bg-violet-100 text-violet-700",
     description:
@@ -449,8 +763,8 @@ export const apprenticeshipLevels: ApprenticeshipLevel[] = [
     ],
     progression: {
       previous: {
-        label: "Level 4 — Procurement & Supply Officer",
-        href: "/apprenticeships/level-4",
+        label: "Level 5 — Procurement & Supply Manager",
+        href: "/apprenticeships/level-5",
       },
       next: null,
     },

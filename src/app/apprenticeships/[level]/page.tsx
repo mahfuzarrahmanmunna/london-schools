@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useParams } from "next/navigation";
@@ -49,6 +49,13 @@ const C = {
   goldDark: "#B08A30",
 };
 
+// ─── Helper: Refresh ScrollTrigger safely ─────────
+function refreshScrollTrigger() {
+  requestAnimationFrame(() => {
+    ScrollTrigger.refresh();
+  });
+}
+
 // ─── Accordion Item ──────────────────────────────
 function AccordionItem({
   title,
@@ -67,58 +74,89 @@ function AccordionItem({
 }) {
   const contentRef = useRef<HTMLDivElement>(null);
   const itemRef = useRef<HTMLDivElement>(null);
+  const isFirstRender = useRef(true);
 
+  // Handle accordion animation with proper ScrollTrigger refresh
   useEffect(() => {
-    if (contentRef.current) {
-      if (isOpen) {
-        gsap.set(contentRef.current, {
-          height: "auto",
+    if (!contentRef.current) return;
+
+    // Skip animation on first render if already open (default state)
+    if (isFirstRender.current && isOpen) {
+      gsap.set(contentRef.current, {
+        height: "auto",
+        opacity: 1,
+        display: "block",
+      });
+      isFirstRender.current = false;
+      return;
+    }
+
+    isFirstRender.current = false;
+
+    if (isOpen) {
+      gsap.set(contentRef.current, { display: "block" });
+      const fullHeight = contentRef.current.scrollHeight;
+
+      gsap.fromTo(
+        contentRef.current,
+        { height: 0, opacity: 0 },
+        {
+          height: fullHeight,
           opacity: 1,
-          display: "block",
-        });
-        const h = contentRef.current.scrollHeight;
-        gsap.fromTo(
-          contentRef.current,
-          { height: 0, opacity: 0 },
-          {
-            height: h,
-            opacity: 1,
-            duration: 0.4,
-            ease: "power2.out",
-            onComplete: () => gsap.set(contentRef.current, { height: "auto" }),
+          duration: 0.4,
+          ease: "power2.out",
+          onComplete: () => {
+            if (contentRef.current) {
+              gsap.set(contentRef.current, { height: "auto" });
+              // Refresh ScrollTrigger AFTER height is set to auto
+              refreshScrollTrigger();
+            }
           },
-        );
-      } else {
-        gsap.to(contentRef.current, {
-          height: 0,
-          opacity: 0,
-          duration: 0.3,
-          ease: "power2.inOut",
-          onComplete: () => gsap.set(contentRef.current, { display: "none" }),
-        });
-      }
+        },
+      );
+    } else {
+      gsap.to(contentRef.current, {
+        height: 0,
+        opacity: 0,
+        duration: 0.3,
+        ease: "power2.inOut",
+        onComplete: () => {
+          if (contentRef.current) {
+            gsap.set(contentRef.current, { display: "none" });
+            // Refresh ScrollTrigger AFTER content is hidden
+            refreshScrollTrigger();
+          }
+        },
+      });
     }
   }, [isOpen]);
 
+  // Entrance animation - only once
   useEffect(() => {
     if (!itemRef.current) return;
-    gsap.fromTo(
-      itemRef.current,
-      { y: 20, opacity: 0 },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.5,
-        delay: index * 0.07,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: itemRef.current,
-          start: "top 92%",
-          toggleActions: "play none none none",
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        itemRef.current,
+        { y: 20, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.5,
+          delay: index * 0.07,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: itemRef.current,
+            start: "top 92%",
+            toggleActions: "play none none none",
+            once: true, // Only animate once
+          },
         },
-      },
-    );
-  }, []);
+      );
+    });
+
+    return () => ctx.revert();
+  }, [index]);
 
   return (
     <div
@@ -129,6 +167,7 @@ function AccordionItem({
       <button
         onClick={onToggle}
         className="flex w-full items-center justify-between px-5 py-4 text-left hover:bg-[#E8EDF3]/40 transition-colors duration-200"
+        type="button"
       >
         <div className="flex items-center gap-3">
           <div
@@ -175,121 +214,176 @@ export default function ApprenticeshipDetailPage() {
     new Set(["covered"]),
   );
   const [showTop, setShowTop] = useState(false);
+  const scrollTriggerRef = useRef<gsap.core.Tween[]>([]);
 
-  useEffect(() => {
-    if (!course) return;
-    const ctx = gsap.context(() => {
-      if (headerRef.current) {
-        const els = headerRef.current.querySelectorAll(".h-anim");
-        gsap.fromTo(
-          els,
-          { y: 18, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.55,
-            stagger: 0.06,
-            ease: "power2.out",
-          },
-        );
-      }
-
-      if (imageRef.current) {
-        gsap.fromTo(
-          imageRef.current,
-          { y: 30, opacity: 0, scale: 0.97 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.7,
-            ease: "power2.out",
-            scrollTrigger: { trigger: imageRef.current, start: "top 88%" },
-          },
-        );
-      }
-
-      if (overviewRef.current) {
-        gsap.fromTo(
-          overviewRef.current.querySelectorAll(".ov-anim"),
-          { y: 15, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.5,
-            stagger: 0.08,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: overviewRef.current,
-              start: "top 85%",
-            },
-          },
-        );
-      }
-
-      if (downloadRef.current) {
-        gsap.fromTo(
-          downloadRef.current,
-          { y: 15, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.5,
-            ease: "power2.out",
-            scrollTrigger: { trigger: downloadRef.current, start: "top 90%" },
-          },
-        );
-      }
-
-      if (studyRef.current) {
-        gsap.fromTo(
-          studyRef.current.querySelectorAll(".study-card"),
-          { y: 20, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.5,
-            stagger: 0.1,
-            ease: "power2.out",
-            scrollTrigger: { trigger: studyRef.current, start: "top 85%" },
-          },
-        );
-      }
-
-      if (levelsRef.current) {
-        gsap.fromTo(
-          levelsRef.current.querySelectorAll(".lvl-card"),
-          { y: 15, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.4,
-            stagger: 0.07,
-            ease: "power2.out",
-            scrollTrigger: { trigger: levelsRef.current, start: "top 88%" },
-          },
-        );
-      }
-
-      ScrollTrigger.create({
-        trigger: pageRef.current,
-        start: "top -400",
-        onEnter: () => setShowTop(true),
-        onLeaveBack: () => setShowTop(false),
-      });
-    }, pageRef);
-
-    return () => ctx.revert();
-  }, [course]);
-
-  function toggleSection(key: string) {
+  // Toggle section with ScrollTrigger refresh
+  const toggleSection = useCallback((key: string) => {
     setOpenSections((prev) => {
       const next = new Set(prev);
       if (next.has(key)) next.delete(key);
       else next.add(key);
       return next;
     });
-  }
+  }, []);
+
+  // Main animations
+  useEffect(() => {
+    if (!course) return;
+
+    // Small delay to ensure DOM is fully rendered
+    const timer = setTimeout(() => {
+      const ctx = gsap.context(() => {
+        // Header animations
+        if (headerRef.current) {
+          const els = headerRef.current.querySelectorAll(".h-anim");
+          gsap.to(els, {
+            y: 0,
+            opacity: 1,
+            duration: 0.55,
+            stagger: 0.06,
+            ease: "power2.out",
+          });
+        }
+
+        // Image animation
+        if (imageRef.current) {
+          const tween = gsap.to(imageRef.current, {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.7,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: imageRef.current,
+              start: "top 88%",
+              once: true,
+            },
+          });
+          scrollTriggerRef.current.push(tween);
+        }
+
+        // Overview animations
+        if (overviewRef.current) {
+          const tween = gsap.to(
+            overviewRef.current.querySelectorAll(".ov-anim"),
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.5,
+              stagger: 0.08,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: overviewRef.current,
+                start: "top 85%",
+                once: true,
+              },
+            },
+          );
+          scrollTriggerRef.current.push(tween);
+        }
+
+        // Download section animation
+        if (downloadRef.current) {
+          const tween = gsap.to(downloadRef.current, {
+            y: 0,
+            opacity: 1,
+            duration: 0.5,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: downloadRef.current,
+              start: "top 90%",
+              once: true,
+            },
+          });
+          scrollTriggerRef.current.push(tween);
+        }
+
+        // Study cards animation
+        if (studyRef.current) {
+          const tween = gsap.to(
+            studyRef.current.querySelectorAll(".study-card"),
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.5,
+              stagger: 0.1,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: studyRef.current,
+                start: "top 85%",
+                once: true,
+              },
+            },
+          );
+          scrollTriggerRef.current.push(tween);
+        }
+
+        // Level cards animation
+        if (levelsRef.current) {
+          const tween = gsap.to(
+            levelsRef.current.querySelectorAll(".lvl-card"),
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.4,
+              stagger: 0.07,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: levelsRef.current,
+                start: "top 88%",
+                once: true,
+              },
+            },
+          );
+          scrollTriggerRef.current.push(tween);
+        }
+
+        // Scroll to top button visibility
+        ScrollTrigger.create({
+          trigger: pageRef.current,
+          start: "top -400",
+          onEnter: () => setShowTop(true),
+          onLeaveBack: () => setShowTop(false),
+        });
+
+        // Initial refresh after all animations are set up
+        refreshScrollTrigger();
+      }, pageRef);
+
+      return () => ctx.revert();
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      scrollTriggerRef.current = [];
+    };
+  }, [course]);
+
+  // Additional refresh when images load (they affect layout height)
+  useEffect(() => {
+    const handleImageLoad = () => {
+      refreshScrollTrigger();
+    };
+
+    window.addEventListener("load", handleImageLoad);
+
+    // Also refresh on resize
+    let resizeTimer: NodeJS.Timeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        refreshScrollTrigger();
+      }, 250);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("load", handleImageLoad);
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(resizeTimer);
+    };
+  }, []);
 
   if (!course) {
     return (
@@ -407,17 +501,19 @@ export default function ApprenticeshipDetailPage() {
                   className="object-cover"
                   priority
                   sizes="(max-width: 1024px) 100vw, 50vw"
+                  onLoad={() => refreshScrollTrigger()}
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = "none";
+                    refreshScrollTrigger();
                   }}
                 />
                 <div
-                  className="absolute inset-0 flex items-center justify-center"
+                  className="absolute inset-0 flex items-center justify-center pointer-events-none"
                   style={{
                     background: `linear-gradient(135deg, ${C.cips}30, ${C.cips}10)`,
                   }}
                 >
-                  <span className="text-[100px] font-black text-white/20">
+                  <span className="text-[100px] font-black text-white/20 select-none">
                     L{course.level}
                   </span>
                 </div>
@@ -529,6 +625,7 @@ export default function ApprenticeshipDetailPage() {
           <button
             className="inline-flex items-center gap-2 rounded-lg px-6 py-3 text-[13px] font-semibold text-white transition-all duration-200 hover:opacity-90 flex-shrink-0"
             style={{ backgroundColor: C.cips }}
+            type="button"
           >
             <Download className="h-4 w-4" />
             Download Guide
@@ -734,6 +831,7 @@ export default function ApprenticeshipDetailPage() {
               <div
                 key={mode.mode}
                 className="study-card rounded-xl border border-slate-200 bg-white p-5 hover:shadow-md hover:border-slate-300 transition-all duration-300"
+                style={{ opacity: 0 }}
               >
                 <div
                   className="flex h-10 w-10 items-center justify-center rounded-lg mb-4"
@@ -834,6 +932,7 @@ export default function ApprenticeshipDetailPage() {
         }`}
         style={{ backgroundColor: C.navyDark }}
         aria-label="Scroll to top"
+        type="button"
       >
         <ArrowUp className="h-4 w-4" />
       </button>

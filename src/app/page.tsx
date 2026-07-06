@@ -1,6 +1,7 @@
 import ApprenticeshipsBanner from "./components/ApprenticeshipsBanner/ApprenticeshipsBanner";
 import BannerSection from "./components/BannerSection/BannerSection";
 import CipsCoursesBanner from "./components/BannerSection/CipsCoursesBanner";
+import GlobalPresence from "./components/GlobalPresence/GlobalPresence";
 
 export default function Home() {
   return (
@@ -8,6 +9,7 @@ export default function Home() {
       <BannerSection />
       <CipsCoursesBanner />
       <ApprenticeshipsBanner/>
+      <GlobalPresence />
     </main>
   );
 }
