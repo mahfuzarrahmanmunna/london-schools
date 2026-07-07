@@ -226,7 +226,7 @@ export default function BannerSection() {
           style={{ opacity: 0 }}
         >
           <img
-            src="/hero/port.avif"
+            src="/hero/logistic.avif"
             alt="Professional at London School of Higher Studies"
             className="h-full w-full object-cover object-center"
           />

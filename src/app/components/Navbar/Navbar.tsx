@@ -28,10 +28,17 @@ const badgeStyles: Record<string, string> = {
 };
 
 // ─── SubMenu Item Component ─────────────────────────
-function SubMenuItemRow({ item }: { item: SubMenuItem }) {
+function SubMenuItemRow({
+  item,
+  onClose,
+}: {
+  item: SubMenuItem;
+  onClose: () => void;
+}) {
   return (
     <Link
       href={item.href}
+      onClick={onClose}
       className="mega-item group flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors duration-200 hover:bg-slate-50"
     >
       <ChevronRight className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-slate-300 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-cips" />
@@ -109,7 +116,7 @@ export default function Navbar() {
     });
   }
 
-  // ─── Force Close (escape / click outside) ────────
+  // ─── Force Close (escape / click outside / link click) ────────
   function forceCloseMenu() {
     if (closeTimeout.current) clearTimeout(closeTimeout.current);
     if (menuTl.current) menuTl.current.kill();
@@ -432,16 +439,21 @@ export default function Navbar() {
                     </h3>
                     <div className="space-y-0.5">
                       {col.items.map((subItem, subIdx) => (
-                        <SubMenuItemRow key={subIdx} item={subItem} />
+                        <SubMenuItemRow
+                          key={subIdx}
+                          item={subItem}
+                          onClose={forceCloseMenu}
+                        />
                       ))}
                     </div>
                   </div>
                 ))}
 
-                {activeMenuItem?.featured && (
+                {/* {activeMenuItem?.featured && (
                   <div className="mega-featured">
                     <Link
                       href={activeMenuItem.featured.href}
+                      onClick={forceCloseMenu}
                       className="group block overflow-hidden rounded-xl border border-slate-100 bg-gradient-to-br from-slate-50 to-white shadow-sm hover:shadow-md transition-shadow duration-300"
                     >
                       <div className="relative h-36 overflow-hidden">
@@ -466,7 +478,7 @@ export default function Navbar() {
                       </div>
                     </Link>
                   </div>
-                )}
+                )} */}
               </div>
 
               <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between">
@@ -474,6 +486,7 @@ export default function Navbar() {
                   Can&apos;t find what you&apos;re looking for?{" "}
                   <Link
                     href="/contact"
+                    onClick={forceCloseMenu}
                     className="font-medium text-cips hover:underline"
                   >
                     Contact our team
@@ -481,6 +494,7 @@ export default function Navbar() {
                 </p>
                 <Link
                   href={activeMenuItem?.href || "#"}
+                  onClick={forceCloseMenu}
                   className="inline-flex items-center gap-1.5 text-xs font-semibold text-navy hover:text-cips transition-colors duration-200"
                 >
                   View all {activeMenuItem?.label?.toLowerCase()}

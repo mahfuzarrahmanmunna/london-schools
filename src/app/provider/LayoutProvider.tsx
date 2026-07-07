@@ -4,6 +4,7 @@
 
 import Footer from "../components/Footer/Footer";
 import LenisProvider from "../components/LenisProvider/LenisProvider";
+// import Navbar from "../components/Navbar/Navbar";
 import Navbar from "../components/Navbar/Navbar";
 
 
