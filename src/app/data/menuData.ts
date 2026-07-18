@@ -79,111 +79,111 @@ export const menuData: MenuItem[] = [
       ctaText: "Explore Level 4",
     },
   },
-  {
-    label: "Qualifications",
-    href: "/qualifications",
-    columns: [
-      {
-        title: "CIPS Qualifications",
-        items: [
-          {
-            label: "Level 2 Certificate",
-            href: "/qualifications/level-2",
-            description: "Introductory supply chain principles for beginners.",
-          },
-          {
-            label: "Level 3 Certificate",
-            href: "/qualifications/level-3",
-            description:
-              "Foundation procurement knowledge. No experience needed.",
-            badge: "Popular",
-          },
-          {
-            label: "Level 4 Diploma",
-            href: "/qualifications/level-4",
-            description: "Professional procurement practice and contracting.",
-            badge: "Trending",
-          },
-          {
-            label: "Level 5 Advanced Diploma",
-            href: "/qualifications/level-5",
-            description: "Category management and procurement leadership.",
-            badge: "MCIPS Path",
-          },
-          {
-            label: "Level 6 Professional Diploma",
-            href: "/qualifications/level-6",
-            description: "Strategic procurement. Pathway to full MCIPS.",
-            badge: "Gold Standard",
-          },
-        ],
-      },
-      {
-        title: "How It Works",
-        items: [
-          {
-            label: "Apprenticeship vs Self-Funded",
-            href: "/qualifications/apprenticeship-vs-self-funded",
-            description:
-              "Understand the key differences and which route suits you best.",
-          },
-          {
-            label: "Study Modes Explained",
-            href: "/qualifications/study-modes",
-            description:
-              "Online, remote, and on-site learning options compared.",
-          },
-          {
-            label: "Progression Routes",
-            href: "/qualifications/progression",
-            description:
-              "Map your journey from Level 2 through to MCIPS and beyond.",
-          },
-          {
-            label: "Recognition & Equivalency",
-            href: "/qualifications/equivalency",
-            description:
-              "How CIPS qualifications compare to GCSEs, A-Levels, and degrees.",
-          },
-        ],
-      },
-      {
-        title: "Support",
-        items: [
-          {
-            label: "Entry Requirements",
-            href: "/qualifications/entry-requirements",
-            description: "Check your eligibility for each qualification level.",
-          },
-          {
-            label: "Fees & Payment Options",
-            href: "/qualifications/fees",
-            description: "Transparent pricing with flexible payment plans.",
-          },
-          {
-            label: "Exemptions & Credits",
-            href: "/qualifications/exemptions",
-            description:
-              "Skip modules if you have prior qualifications or experience.",
-          },
-          {
-            label: "Free Assessment",
-            href: "/qualifications/assessment",
-            description: "Get a personalised recommendation on where to start.",
-            badge: "Free",
-          },
-        ],
-      },
-    ],
-    featured: {
-      title: "Free Qualification Assessment",
-      description:
-        "Not sure which level is right for you? Complete our 5-minute assessment and get a personalised recommendation from a CIPS tutor.",
-      image: "/courses/procurement1.jfif",
-      href: "/qualifications/assessment",
-      ctaText: "Start Free Assessment",
-    },
-  },
+  // {
+  //   label: "Qualifications",
+  //   href: "/qualifications",
+  //   columns: [
+  //     {
+  //       title: "CIPS Qualifications",
+  //       items: [
+  //         {
+  //           label: "Level 2 Certificate",
+  //           href: "/qualifications/level-2",
+  //           description: "Introductory supply chain principles for beginners.",
+  //         },
+  //         {
+  //           label: "Level 3 Certificate",
+  //           href: "/qualifications/level-3",
+  //           description:
+  //             "Foundation procurement knowledge. No experience needed.",
+  //           badge: "Popular",
+  //         },
+  //         {
+  //           label: "Level 4 Diploma",
+  //           href: "/qualifications/level-4",
+  //           description: "Professional procurement practice and contracting.",
+  //           badge: "Trending",
+  //         },
+  //         {
+  //           label: "Level 5 Advanced Diploma",
+  //           href: "/qualifications/level-5",
+  //           description: "Category management and procurement leadership.",
+  //           badge: "MCIPS Path",
+  //         },
+  //         {
+  //           label: "Level 6 Professional Diploma",
+  //           href: "/qualifications/level-6",
+  //           description: "Strategic procurement. Pathway to full MCIPS.",
+  //           badge: "Gold Standard",
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       title: "How It Works",
+  //       items: [
+  //         {
+  //           label: "Apprenticeship vs Self-Funded",
+  //           href: "/qualifications/apprenticeship-vs-self-funded",
+  //           description:
+  //             "Understand the key differences and which route suits you best.",
+  //         },
+  //         {
+  //           label: "Study Modes Explained",
+  //           href: "/qualifications/study-modes",
+  //           description:
+  //             "Online, remote, and on-site learning options compared.",
+  //         },
+  //         {
+  //           label: "Progression Routes",
+  //           href: "/qualifications/progression",
+  //           description:
+  //             "Map your journey from Level 2 through to MCIPS and beyond.",
+  //         },
+  //         {
+  //           label: "Recognition & Equivalency",
+  //           href: "/qualifications/equivalency",
+  //           description:
+  //             "How CIPS qualifications compare to GCSEs, A-Levels, and degrees.",
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       title: "Support",
+  //       items: [
+  //         {
+  //           label: "Entry Requirements",
+  //           href: "/qualifications/entry-requirements",
+  //           description: "Check your eligibility for each qualification level.",
+  //         },
+  //         {
+  //           label: "Fees & Payment Options",
+  //           href: "/qualifications/fees",
+  //           description: "Transparent pricing with flexible payment plans.",
+  //         },
+  //         {
+  //           label: "Exemptions & Credits",
+  //           href: "/qualifications/exemptions",
+  //           description:
+  //             "Skip modules if you have prior qualifications or experience.",
+  //         },
+  //         {
+  //           label: "Free Assessment",
+  //           href: "/qualifications/assessment",
+  //           description: "Get a personalised recommendation on where to start.",
+  //           badge: "Free",
+  //         },
+  //       ],
+  //     },
+  //   ],
+  //   featured: {
+  //     title: "Free Qualification Assessment",
+  //     description:
+  //       "Not sure which level is right for you? Complete our 5-minute assessment and get a personalised recommendation from a CIPS tutor.",
+  //     image: "/courses/procurement1.jfif",
+  //     href: "/qualifications/assessment",
+  //     ctaText: "Start Free Assessment",
+  //   },
+  // },
   {
     label: "Training",
     href: "/training",

@@ -17,8 +17,8 @@ import { menuData } from "@/app/data/menuData";
 
 // ─── Badge Color Map ─────────────────────────────────
 const badgeStyles: Record<string, string> = {
-  Popular: "bg-teal-100 text-teal-700",
-  "MCIPS Path": "bg-amber-100 text-amber-700",
+  Popular: "bg-cips/10 text-cips",
+  "MCIPS Path": "bg-gold/15 text-gold-dark",
   "Gold Standard": "bg-yellow-100 text-yellow-800",
   New: "bg-emerald-100 text-emerald-700",
   Trending: "bg-violet-100 text-violet-700",
@@ -27,7 +27,7 @@ const badgeStyles: Record<string, string> = {
   Hiring: "bg-green-100 text-green-700",
 };
 
-// ─── SubMenu Item Component ─────────────────────────
+// ─── SubMenu Item Row ───────────────────────────────
 function SubMenuItemRow({
   item,
   onClose,
@@ -39,17 +39,19 @@ function SubMenuItemRow({
     <Link
       href={item.href}
       onClick={onClose}
-      className="mega-item group flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors duration-200 hover:bg-slate-50"
+      className="mega-item group flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors duration-200 hover:bg-navy-50"
     >
       <ChevronRight className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-slate-300 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-cips" />
       <div className="min-w-0">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-slate-700 transition-colors duration-200 group-hover:text-navy">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-[13px] font-medium text-slate-700 transition-colors duration-200 group-hover:text-navy">
             {item.label}
           </span>
           {item.badge && (
             <span
-              className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold leading-none ${badgeStyles[item.badge] || "bg-slate-100 text-slate-600"}`}
+              className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold leading-none ${
+                badgeStyles[item.badge] || "bg-slate-100 text-slate-600"
+              }`}
             >
               {item.badge}
             </span>
@@ -65,7 +67,7 @@ function SubMenuItemRow({
   );
 }
 
-// ─── Main Navbar Component ──────────────────────────
+// ─── Main Navbar ────────────────────────────────────
 export default function Navbar() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -81,16 +83,24 @@ export default function Navbar() {
   const menuTl = useRef<gsap.core.Timeline | null>(null);
   const closeTimeout = useRef<NodeJS.Timeout | null>(null);
   const searchContentRef = useRef<HTMLDivElement>(null);
-  const mobilePanelRef = useRef<HTMLDivElement>(null);
 
   // ─── Scroll Detection ────────────────────────────
+  // KEY CHANGE: threshold is now window.innerHeight instead of 10
+  // This keeps the navbar fully transparent over the entire BannerSection (h-screen)
+  // and only switches to white after scrolling past it.
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 10);
+    const handleScroll = () => {
+      // Subtract a small buffer (80px) so the transition starts slightly before
+      // the banner fully leaves the viewport for a smoother feel
+      setIsScrolled(window.scrollY > window.innerHeight - 80);
+    };
     window.addEventListener("scroll", handleScroll, { passive: true });
+    // Run once on mount in case the page is already scrolled (e.g. browser back)
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // ─── Move Nav Indicator ──────────────────────────
+  // ─── Move Sliding Indicator ──────────────────────
   function moveIndicator(label: string | null) {
     if (!navIndicatorRef.current) return;
     if (!label) {
@@ -116,7 +126,7 @@ export default function Navbar() {
     });
   }
 
-  // ─── Force Close (escape / click outside / link click) ────────
+  // ─── Force Close ─────────────────────────────────
   function forceCloseMenu() {
     if (closeTimeout.current) clearTimeout(closeTimeout.current);
     if (menuTl.current) menuTl.current.kill();
@@ -124,7 +134,7 @@ export default function Navbar() {
     moveIndicator(null);
   }
 
-  // ─── Close on Escape ─────────────────────────────
+  // ─── Escape Key ──────────────────────────────────
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -137,12 +147,11 @@ export default function Navbar() {
     return () => window.removeEventListener("keydown", handleKey);
   }, [isSearchOpen, isMobileOpen, activeMenu]);
 
-  // ─── Click Outside → Close Mega Menu ─────────────
+  // ─── Click Outside ───────────────────────────────
   useEffect(() => {
     const handleMouseDown = (e: MouseEvent) => {
       if (!activeMenu || !navRef.current) return;
-      const target = e.target as Node;
-      if (!navRef.current.contains(target)) {
+      if (!navRef.current.contains(e.target as Node)) {
         forceCloseMenu();
       }
     };
@@ -150,19 +159,16 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleMouseDown);
   }, [activeMenu]);
 
-  // ─── Lock Body Scroll ────────────────────────────
+  // ─── Body Scroll Lock ────────────────────────────
   useEffect(() => {
-    if (isMobileOpen || isSearchOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow =
+      isMobileOpen || isSearchOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
   }, [isMobileOpen, isSearchOpen]);
 
-  // ─── Close mobile accordion when mobile menu closes
+  // ─── Reset mobile accordion on close ────────────
   useEffect(() => {
     if (!isMobileOpen) setMobileAccordion(null);
   }, [isMobileOpen]);
@@ -195,7 +201,7 @@ export default function Navbar() {
         menuPanelRef.current,
         { y: -12, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.4 },
-        0,
+        0
       );
 
       const topLine = menuPanelRef.current.querySelector(".mega-top-line");
@@ -204,7 +210,7 @@ export default function Navbar() {
           topLine,
           { scaleX: 0 },
           { scaleX: 1, duration: 0.5, ease: "power2.out" },
-          0.05,
+          0.05
         );
       }
 
@@ -214,7 +220,7 @@ export default function Navbar() {
           cols,
           { y: 20, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.35, stagger: 0.07 },
-          0.1,
+          0.1
         );
       }
 
@@ -230,7 +236,7 @@ export default function Navbar() {
             stagger: 0.02,
             ease: "power2.out",
           },
-          0.15,
+          0.15
         );
       }
 
@@ -246,7 +252,7 @@ export default function Navbar() {
             duration: 0.45,
             ease: "back.out(1.4)",
           },
-          0.2,
+          0.2
         );
       }
     });
@@ -265,33 +271,29 @@ export default function Navbar() {
       });
       menuTl.current = tl;
 
-      if (overlayRef.current) {
-        tl.to(overlayRef.current, { opacity: 0 }, 0);
-      }
-      if (menuPanelRef.current) {
+      if (overlayRef.current) tl.to(overlayRef.current, { opacity: 0 }, 0);
+      if (menuPanelRef.current)
         tl.to(menuPanelRef.current, { y: -8, opacity: 0 }, 0);
-      }
 
       moveIndicator(null);
     }, 120);
   }
 
-  // ─── Search Toggle ───────────────────────────────
+  // ─── Search Animation ────────────────────────────
   useEffect(() => {
     if (isSearchOpen && searchContentRef.current) {
       gsap.fromTo(
         searchContentRef.current,
         { y: -10, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" },
+        { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }
       );
       setTimeout(() => {
-        const input = searchContentRef.current?.querySelector("input");
-        input?.focus();
+        searchContentRef.current?.querySelector("input")?.focus();
       }, 100);
     }
   }, [isSearchOpen]);
 
-  // ─── Get Active Menu Data ────────────────────────
+  // ─── Derived State ───────────────────────────────
   const activeMenuItem = menuData.find((m) => m.label === activeMenu);
   const hasFeatured = !!activeMenuItem?.featured;
   const colCount = activeMenuItem?.columns?.length || 0;
@@ -301,7 +303,7 @@ export default function Navbar() {
       {/* ═══ MEGA MENU OVERLAY ═══ */}
       <div
         ref={overlayRef}
-        className={`fixed inset-0 z-40 bg-black/20 backdrop-blur-[1px] cursor-pointer transition-opacity ${
+        className={`fixed inset-0 z-40 bg-navy-dark/15 backdrop-blur-[1px] cursor-pointer ${
           activeMenu ? "pointer-events-auto" : "pointer-events-none"
         }`}
         style={{ opacity: 0, display: activeMenu ? "block" : "none" }}
@@ -311,22 +313,30 @@ export default function Navbar() {
       {/* ═══ NAVBAR ═══ */}
       <nav
         ref={navRef}
-        className={`fixed top-0 left-0 right-0 z-50 bg-white transition-shadow duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           isScrolled
-            ? "shadow-md shadow-slate-200/60"
-            : "border-b border-slate-100"
+            ? "bg-white/[0.97] backdrop-blur-2xl shadow-md shadow-navy/5 border-b border-navy-50"
+            : "bg-transparent"
         }`}
       >
         <div className="mx-auto max-w-7xl px-6">
-          <div className="flex h-[72px] items-center justify-between">
+          <div className="flex min-h-[140px] items-center justify-between">
             {/* ── Logo ── */}
-            <Link href="/" className="relative z-50 flex items-center gap-3">
-              <div className="relative h-12 w-36 flex-shrink-0">
+            <Link
+              href="/"
+              className="relative z-50 flex items-center gap-4 group"
+            >
+              <div
+                className={`relative h-16 w-40 flex-shrink-0 rounded-lg transition-all duration-500 ${
+                  isScrolled ? "" : "p-2 "
+                }`}
+              >
                 <Image
                   src="/logo/logo.webp"
-                  alt="logo"
+                  alt="London School of Higher Studies"
                   fill
                   className="object-contain"
+                  priority
                 />
               </div>
             </Link>
@@ -339,11 +349,15 @@ export default function Navbar() {
                   ref={(el) => {
                     if (el) navItemRefs.current.set(item.label, el);
                   }}
-                  onMouseEnter={() => openMenu(item.label)}
-                  className={`relative flex items-center gap-1 px-3.5 py-2 text-[13.5px] font-medium transition-colors duration-150 rounded-md ${
+                  onMouseEnter={() => {
+                    if (item.columns) openMenu(item.label);
+                  }}
+                  className={`relative flex items-center gap-1 px-4 py-2.5 text-[13.5px] font-medium transition-all duration-300 rounded-md ${
                     activeMenu === item.label
                       ? "text-cips"
-                      : "text-slate-600 hover:text-navy hover:bg-slate-50"
+                      : isScrolled
+                      ? "text-slate-600 hover:text-navy hover:bg-navy-50/50"
+                      : "text-white/85 hover:text-white hover:bg-white/10"
                   }`}
                 >
                   {item.label}
@@ -360,16 +374,22 @@ export default function Navbar() {
               {/* Sliding Indicator */}
               <div
                 ref={navIndicatorRef}
-                className="absolute bottom-0 h-0.5 rounded-full bg-cips origin-left"
+                className={`absolute bottom-0 h-[2px] rounded-full origin-left transition-colors duration-500 ${
+                  isScrolled ? "bg-cips" : "bg-white"
+                }`}
                 style={{ transform: "scaleX(0)" }}
               />
             </div>
 
             {/* ── Right Actions ── */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               <button
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
-                className="relative z-50 flex h-9 w-9 items-center justify-center rounded-md text-slate-400 hover:text-navy hover:bg-slate-50 transition-colors duration-150"
+                className={`relative z-50 flex h-10 w-10 items-center justify-center rounded-lg transition-all duration-300 ${
+                  isScrolled
+                    ? "text-slate-400 hover:text-navy hover:bg-navy-50/50"
+                    : "text-white/70 hover:text-white hover:bg-white/10"
+                }`}
                 aria-label="Search"
               >
                 <Search className="h-[17px] w-[17px]" />
@@ -377,21 +397,34 @@ export default function Navbar() {
 
               <Link
                 href="/login"
-                className="hidden md:inline-flex relative z-50 items-center px-3.5 py-2 text-[13.5px] font-medium text-slate-500 hover:text-navy hover:bg-slate-50 rounded-md transition-colors duration-150"
+                className={`hidden md:inline-flex relative z-50 items-center px-4 py-2.5 text-[13.5px] font-medium rounded-lg transition-all duration-300 ${
+                  isScrolled
+                    ? "text-slate-500 hover:text-navy hover:bg-navy-50/50"
+                    : "text-white/80 hover:text-white hover:bg-white/10"
+                }`}
               >
                 Login
               </Link>
 
               <Link
                 href="/join"
-                className="hidden sm:inline-flex relative z-50 items-center gap-2 bg-navy text-white text-[13px] font-semibold px-5 py-2.5 rounded-md hover:bg-navy-dark transition-colors duration-150"
+                className={`hidden sm:inline-flex relative z-50 items-center gap-2 text-[13px] font-semibold px-6 py-2.5 rounded-lg transition-all duration-300 ${
+                  isScrolled
+                    ? "bg-cips text-white hover:bg-cips-dark hover:shadow-md hover:shadow-cips/15"
+                    : "bg-white/15 backdrop-blur-sm text-white border border-white/20 hover:bg-white/25 hover:border-white/30"
+                }`}
               >
-                Join Now
+                Enroll Now
+                <ArrowRight className="h-3.5 w-3.5" />
               </Link>
 
               <button
                 onClick={() => setIsMobileOpen(!isMobileOpen)}
-                className="relative z-50 flex lg:hidden h-9 w-9 items-center justify-center rounded-md text-slate-500 hover:text-navy hover:bg-slate-50 transition-colors duration-150"
+                className={`relative z-50 flex lg:hidden h-10 w-10 items-center justify-center rounded-lg transition-all duration-300 ${
+                  isScrolled
+                    ? "text-slate-500 hover:text-navy hover:bg-navy-50/50"
+                    : "text-white/80 hover:text-white hover:bg-white/10"
+                }`}
                 aria-label="Toggle menu"
               >
                 {isMobileOpen ? (
@@ -419,22 +452,24 @@ export default function Navbar() {
           onMouseLeave={closeMenu}
           style={{ display: activeMenu ? "block" : "none" }}
         >
-          <div className="mega-top-line h-[2px] w-full bg-gradient-to-r from-cips via-teal-400 to-cips origin-left" />
+          {/* Animated top accent line */}
+          <div className="mega-top-line h-[2px] w-full bg-gradient-to-r from-transparent via-cips to-transparent origin-left" />
 
-          <div className="bg-white border-b border-slate-100 shadow-xl shadow-slate-200/40">
+          <div className="bg-white border-b border-navy-50 shadow-xl shadow-navy/5">
             <div className="mx-auto max-w-7xl px-6 py-8">
               <div
-                className={`grid gap-8 ${
+                className={`grid gap-10 ${
                   hasFeatured
-                    ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                    ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
                     : colCount <= 2
-                      ? "grid-cols-1 md:grid-cols-2"
-                      : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                    ? "grid-cols-1 md:grid-cols-2"
+                    : "grid-cols-1 md:grid-cols-3"
                 }`}
               >
+                {/* Columns */}
                 {activeMenuItem?.columns?.map((col, colIdx) => (
                   <div key={colIdx} className="mega-col">
-                    <h3 className="text-xs font-bold tracking-widest uppercase text-cips mb-3">
+                    <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase text-cips mb-3.5 pb-2 border-b border-navy-50">
                       {col.title}
                     </h3>
                     <div className="space-y-0.5">
@@ -449,26 +484,42 @@ export default function Navbar() {
                   </div>
                 ))}
 
-                {/* {activeMenuItem?.featured && (
+                {/* Featured Card */}
+                {activeMenuItem?.featured && (
                   <div className="mega-featured">
                     <Link
                       href={activeMenuItem.featured.href}
                       onClick={forceCloseMenu}
-                      className="group block overflow-hidden rounded-xl border border-slate-100 bg-gradient-to-br from-slate-50 to-white shadow-sm hover:shadow-md transition-shadow duration-300"
+                      className="group block overflow-hidden rounded-xl border border-navy-50 bg-gradient-to-br from-navy-50/50 to-white shadow-sm hover:shadow-lg hover:shadow-navy/5 transition-all duration-300"
                     >
-                      <div className="relative h-36 overflow-hidden">
+                      <div className="relative h-40 overflow-hidden">
                         <img
                           src={activeMenuItem.featured.image}
                           alt={activeMenuItem.featured.title}
                           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-transparent to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/70 via-navy-dark/20 to-transparent" />
+                        {/* Floating badge */}
+                        <div className="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-white/90 backdrop-blur-sm px-3 py-1 shadow-sm">
+                          <svg
+                            width="12"
+                            height="12"
+                            viewBox="0 0 24 24"
+                            fill="var(--color-gold)"
+                            stroke="none"
+                          >
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                          </svg>
+                          <span className="text-[9px] font-bold text-navy-dark tracking-wider uppercase">
+                            Featured
+                          </span>
+                        </div>
                       </div>
                       <div className="p-5">
-                        <h4 className="text-sm font-semibold text-navy mb-1.5 group-hover:text-cips transition-colors duration-200">
+                        <h4 className="text-[14px] font-semibold text-navy mb-1.5 group-hover:text-cips transition-colors duration-200">
                           {activeMenuItem.featured.title}
                         </h4>
-                        <p className="text-xs text-slate-400 leading-relaxed mb-3">
+                        <p className="text-xs text-slate-400 leading-relaxed mb-4">
                           {activeMenuItem.featured.description}
                         </p>
                         <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-cips group-hover:gap-2.5 transition-all duration-300">
@@ -478,10 +529,11 @@ export default function Navbar() {
                       </div>
                     </Link>
                   </div>
-                )} */}
+                )}
               </div>
 
-              <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between">
+              {/* Footer bar */}
+              <div className="mt-7 pt-5 border-t border-navy-50 flex items-center justify-between">
                 <p className="text-xs text-slate-400">
                   Can&apos;t find what you&apos;re looking for?{" "}
                   <Link
@@ -509,7 +561,7 @@ export default function Navbar() {
       {/* ═══ SEARCH OVERLAY ═══ */}
       {isSearchOpen && (
         <div
-          className="fixed inset-0 z-[60] bg-white/98 backdrop-blur-xl flex items-start justify-center pt-32"
+          className="fixed inset-0 z-[60] bg-white/[0.98] backdrop-blur-xl flex items-start justify-center pt-32"
           onClick={() => setIsSearchOpen(false)}
         >
           <button
@@ -518,6 +570,7 @@ export default function Navbar() {
           >
             <X className="h-6 w-6" />
           </button>
+
           <div
             ref={searchContentRef}
             className="w-full max-w-2xl px-6"
@@ -528,32 +581,79 @@ export default function Navbar() {
               <input
                 type="text"
                 placeholder="Search qualifications, resources, events..."
-                className="w-full bg-transparent border-b-2 border-slate-200 focus:border-cips text-navy text-2xl md:text-3xl font-light pl-10 pb-4 pr-4 outline-none placeholder:text-slate-300 transition-colors duration-300"
+                className="w-full bg-transparent border-b-2 border-navy-50 focus:border-cips text-navy text-2xl md:text-3xl font-light pl-10 pb-4 pr-4 outline-none placeholder:text-slate-300 transition-colors duration-300"
               />
             </div>
-            <div className="mt-8 flex flex-wrap gap-2">
+
+            <div className="mt-8">
+              <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-slate-400 mb-3">
+                Popular Searches
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  "MCIPS",
+                  "Level 4 Diploma",
+                  "Sustainable Procurement",
+                  "CIPS Membership",
+                  "Online Learning",
+                  "Exam Preparation",
+                ].map((tag) => (
+                  <button
+                    key={tag}
+                    className="rounded-full border border-navy-50 px-4 py-1.5 text-xs font-medium text-slate-500 hover:text-navy hover:border-cips hover:bg-cips/5 transition-all duration-200"
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Quick links */}
+            <div className="mt-10 grid grid-cols-2 gap-3">
               {[
-                "MCIPS",
-                "Level 4 Diploma",
-                "Sustainable Procurement",
-                "Membership",
-                "Training Courses",
-              ].map((tag) => (
-                <button
-                  key={tag}
-                  className="rounded-full border border-slate-200 px-4 py-1.5 text-xs font-medium text-slate-500 hover:text-navy hover:border-cips hover:bg-cips/5 transition-all duration-200"
+                {
+                  label: "All Courses",
+                  href: "/courses",
+                  desc: "Browse CIPS Levels 2–6",
+                },
+                {
+                  label: "How to Enrol",
+                  href: "/how-to-enrol",
+                  desc: "Step-by-step guide",
+                },
+                {
+                  label: "Fee Structure",
+                  href: "/fees",
+                  desc: "Pricing & instalments",
+                },
+                {
+                  label: "Student Support",
+                  href: "/support",
+                  desc: "Help & resources",
+                },
+              ].map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setIsSearchOpen(false)}
+                  className="group rounded-lg border border-navy-50 p-4 hover:border-cips/20 hover:bg-cips/[0.02] transition-all duration-200"
                 >
-                  {tag}
-                </button>
+                  <p className="text-[13px] font-semibold text-navy group-hover:text-cips transition-colors">
+                    {link.label}
+                  </p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    {link.desc}
+                  </p>
+                </Link>
               ))}
             </div>
           </div>
         </div>
       )}
 
-      {/* ═══ MOBILE OVERLAY ═══ */}
+      {/* ═══ MOBILE BACKDROP ═══ */}
       <div
-        className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden transition-all duration-500 ${
+        className={`fixed inset-0 z-40 bg-navy-dark/40 backdrop-blur-sm lg:hidden transition-all duration-500 ${
           isMobileOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
@@ -562,55 +662,68 @@ export default function Navbar() {
         aria-hidden="true"
       />
 
-      {/* ═══ MOBILE DRAWER PANEL ═══ */}
+      {/* ═══ MOBILE DRAWER ═══ */}
       <div
-        ref={mobilePanelRef}
-        className={`fixed inset-y-0 right-0 z-[41] w-[85%] max-w-sm bg-white shadow-2xl shadow-slate-300/30 lg:hidden transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        className={`fixed inset-y-0 right-0 z-[41] w-[85%] max-w-sm bg-white shadow-2xl shadow-navy/10 lg:hidden transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           isMobileOpen ? "translate-x-0" : "translate-x-full"
         }`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between h-[72px] px-6 border-b border-slate-100">
-          <span className="text-sm font-semibold text-navy">Menu</span>
+        {/* Drawer Header */}
+        <div className="flex items-center justify-between h-[72px] px-6 border-b border-navy-50">
+          <div className="flex items-center gap-3">
+            <div className="relative h-9 w-28 flex-shrink-0">
+              <Image
+                src="/logo/logo.webp"
+                alt="LSHS"
+                fill
+                className="object-contain"
+              />
+            </div>
+          </div>
           <button
             onClick={() => setIsMobileOpen(false)}
-            className="flex h-9 w-9 items-center justify-center rounded-md text-slate-400 hover:text-navy hover:bg-slate-50 transition-colors"
+            className="flex h-9 w-9 items-center justify-center rounded-md text-slate-400 hover:text-navy hover:bg-navy-50 transition-colors"
             aria-label="Close menu"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
+        {/* Drawer Body */}
         <div className="h-[calc(100vh-72px)] overflow-y-auto px-6 pb-8">
-          <div className="space-y-1 pt-2">
+          <div className="space-y-0.5 pt-3">
             {menuData.map((item) => (
-              <div key={item.label}>
+              <div key={item.label} className="border-b border-navy-50/60">
                 <button
                   onClick={() =>
                     setMobileAccordion(
-                      mobileAccordion === item.label ? null : item.label,
+                      mobileAccordion === item.label ? null : item.label
                     )
                   }
                   className="flex w-full items-center justify-between py-3.5 text-[15px] font-medium text-navy"
                 >
                   {item.label}
-                  <ChevronDown
-                    className={`h-4 w-4 text-slate-400 transition-transform duration-300 ${
-                      mobileAccordion === item.label ? "rotate-180" : ""
-                    }`}
-                  />
+                  {item.columns && (
+                    <ChevronDown
+                      className={`h-4 w-4 text-slate-400 transition-transform duration-300 ${
+                        mobileAccordion === item.label ? "rotate-180" : ""
+                      }`}
+                    />
+                  )}
                 </button>
 
+                {/* Accordion content */}
                 <div
-                  className="overflow-hidden transition-all duration-400"
+                  className="overflow-hidden transition-all duration-[400ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
                   style={{
                     maxHeight: mobileAccordion === item.label ? "600px" : "0px",
                     opacity: mobileAccordion === item.label ? 1 : 0,
                   }}
                 >
                   {item.columns?.map((col, colIdx) => (
-                    <div key={colIdx} className="mb-4 pl-3">
-                      <p className="text-[10px] font-bold tracking-widest uppercase text-cips mb-2">
+                    <div key={colIdx} className="mb-4 pl-2">
+                      <p className="text-[10px] font-bold tracking-[0.18em] uppercase text-cips mb-2.5">
                         {col.title}
                       </p>
                       <div className="space-y-0.5">
@@ -619,13 +732,16 @@ export default function Navbar() {
                             key={subIdx}
                             href={subItem.href}
                             onClick={() => setIsMobileOpen(false)}
-                            className="flex items-center gap-2 py-2 text-sm text-slate-500 hover:text-navy transition-colors"
+                            className="flex items-center gap-2.5 py-2.5 text-[13px] text-slate-500 hover:text-navy transition-colors rounded-md hover:bg-navy-50/30 px-2"
                           >
-                            <span className="h-1 w-1 rounded-full bg-slate-300 flex-shrink-0" />
+                            <ChevronRight className="h-3 w-3 flex-shrink-0 text-slate-300" />
                             <span className="min-w-0">{subItem.label}</span>
                             {subItem.badge && (
                               <span
-                                className={`rounded-full px-2 py-0.5 text-[9px] font-semibold leading-none flex-shrink-0 ${badgeStyles[subItem.badge] || "bg-slate-100 text-slate-500"}`}
+                                className={`ml-auto rounded-full px-2 py-0.5 text-[9px] font-semibold leading-none flex-shrink-0 ${
+                                  badgeStyles[subItem.badge] ||
+                                  "bg-slate-100 text-slate-500"
+                                }`}
                               >
                                 {subItem.badge}
                               </span>
@@ -636,24 +752,32 @@ export default function Navbar() {
                     </div>
                   ))}
 
+                  {/* Mobile featured card */}
                   {item.featured && (
                     <Link
                       href={item.featured.href}
                       onClick={() => setIsMobileOpen(false)}
-                      className="ml-3 flex items-center gap-3 rounded-lg bg-slate-50 p-3 mb-3 border border-slate-100"
+                      className="ml-2 flex items-center gap-3.5 rounded-xl bg-navy-50/50 p-3.5 mb-3 border border-navy-50 group"
                     >
-                      <img
-                        src={item.featured.image}
-                        alt=""
-                        className="h-14 w-14 rounded-lg object-cover flex-shrink-0"
-                      />
+                      <div className="relative h-16 w-16 rounded-lg overflow-hidden flex-shrink-0">
+                        <img
+                          src={item.featured.image}
+                          alt=""
+                          className="h-full w-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/30 to-transparent" />
+                      </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-navy">
+                        <p className="text-[13px] font-semibold text-navy group-hover:text-cips transition-colors">
                           {item.featured.title}
                         </p>
-                        <p className="text-xs text-slate-400 mt-0.5 line-clamp-1">
+                        <p className="text-[11px] text-slate-400 mt-0.5 line-clamp-1">
                           {item.featured.description}
                         </p>
+                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-cips mt-1">
+                          {item.featured.ctaText || "Learn More"}
+                          <ArrowRight className="h-2.5 w-2.5" />
+                        </span>
                       </div>
                     </Link>
                   )}
@@ -662,21 +786,64 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="mt-8 space-y-3 border-t border-slate-100 pt-6">
+          {/* Drawer footer actions */}
+          <div className="mt-6 space-y-2.5 border-t border-navy-50 pt-6">
             <Link
               href="/login"
               onClick={() => setIsMobileOpen(false)}
-              className="block w-full text-center py-3 text-sm font-medium text-slate-600 rounded-md border border-slate-200 hover:bg-slate-50 transition-colors"
+              className="flex items-center justify-center gap-2 w-full py-3 text-[13px] font-medium text-slate-600 rounded-lg border border-navy-50 hover:bg-navy-50/50 transition-colors"
             >
               Login
             </Link>
             <Link
               href="/join"
               onClick={() => setIsMobileOpen(false)}
-              className="block w-full text-center py-3 text-sm font-semibold text-white bg-navy rounded-md hover:bg-navy-dark transition-colors"
+              className="flex items-center justify-center gap-2 w-full py-3 text-[13px] font-semibold text-white bg-cips rounded-lg hover:bg-cips-dark transition-colors hover:shadow-md hover:shadow-cips/15"
             >
-              Join Now
+              Enroll Now
+              <ArrowRight className="h-3.5 w-3.5" />
             </Link>
+          </div>
+
+          {/* Contact info */}
+          <div className="mt-6 pt-5 border-t border-navy-50 space-y-2.5">
+            <a
+              href="mailto:info@lshs.ac.uk"
+              className="flex items-center gap-2.5 text-[11px] text-slate-400 hover:text-cips transition-colors"
+            >
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+              </svg>
+              info@lshs.ac.uk
+            </a>
+            <a
+              href="tel:+442012345678"
+              className="flex items-center gap-2.5 text-[11px] text-slate-400 hover:text-cips transition-colors"
+            >
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+              +44 20 1234 5678
+            </a>
           </div>
         </div>
       </div>
