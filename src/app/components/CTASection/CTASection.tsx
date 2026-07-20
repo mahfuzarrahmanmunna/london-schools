@@ -1,158 +1,118 @@
-'use client'
+'use client';
 
-import { useEffect, useRef } from 'react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useEffect, useRef } from 'react';
+import Link from 'next/link';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ArrowRight, Award, ShieldCheck } from 'lucide-react';
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger);
 
-export default function CTASection() {
-  const sectionRef = useRef<HTMLElement>(null)
+export default function CallToActionSection() {
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from('.cta-content', {
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: 'top 75%',
+          start: 'top 85%',
+          toggleActions: 'play none none none',
         },
-        y: 50,
-        opacity: 0,
-        duration: 0.9,
-        ease: 'power3.out',
-      })
-    }, sectionRef)
+        defaults: { ease: 'power3.out' },
+      });
 
-    return () => ctx.revert()
-  }, [])
+      tl.from('.cta-eyebrow', { y: 15, opacity: 0, duration: 0.5 }, 0);
+      tl.from('.cta-accent-line', { scaleX: 0, duration: 0.8, ease: 'power2.inOut' }, 0.2);
+      tl.from('.cta-heading', { y: 30, opacity: 0, duration: 0.8 }, 0.3);
+      tl.from('.cta-body', { y: 20, opacity: 0, duration: 0.6 }, 0.5);
+      tl.from('.cta-buttons', { y: 15, opacity: 0, duration: 0.5 }, 0.65);
+      tl.from('.cta-footer', { y: 10, opacity: 0, duration: 0.4 }, 0.8);
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section
-      id="contact"
       ref={sectionRef}
-      className="relative py-24 md:py-32 bg-[#0a1628] overflow-hidden"
+      className="relative py-24 lg:py-32 overflow-hidden bg-[#070d19]"
     >
-      {/* Decorative blurs */}
-      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[500px] h-[500px] bg-[#1e40af]/10 rounded-full blur-[120px]" />
-      <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-[400px] h-[400px] bg-[#2563eb]/8 rounded-full blur-[100px]" />
+      {/* ── Background Elements ── */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628] via-[#0c1e35] to-[#070d19]" />
+      <div
+        className="absolute inset-0 opacity-[0.02]"
+        style={{
+          backgroundImage:
+            'radial-gradient(circle, white 0.6px, transparent 0.6px)',
+          backgroundSize: '32px 32px',
+        }}
+      />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-[#0c79bf]/[0.06] blur-[150px]" />
+      <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] rounded-full bg-[#f4d210]/[0.03] blur-[120px]" />
+      
+      {/* Top Edge Line */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-px bg-gradient-to-r from-transparent via-white/[0.1] to-transparent" />
 
-      <div className="relative max-w-[800px] mx-auto px-5 lg:px-8 text-center">
-        <div className="cta-content">
-          <span className="inline-block text-[#60a5fa] text-[10px] font-bold tracking-[0.25em] uppercase mb-5">
-            Start Today
+      <div className="relative z-10 max-w-2xl mx-auto px-6 text-center">
+        {/* Eyebrow */}
+        <div className="cta-eyebrow inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-white/[0.08] bg-white/[0.03] mb-9">
+          <Award className="w-3.5 h-3.5 text-[#f4d210]" strokeWidth={1.5} />
+          <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/50">
+            Globally Recognised
           </span>
-          <h2
-            className="text-white text-3xl md:text-4xl lg:text-5xl font-normal tracking-[-0.02em] leading-tight mb-5"
-            style={{ fontFamily: 'var(--font-playfair)' }}
+        </div>
+
+        {/* Accent Line */}
+        <div className="cta-accent-line w-12 h-[2px] bg-gradient-to-r from-transparent via-[#f4d210]/80 to-transparent mx-auto mb-9 origin-center" />
+
+        {/* Heading */}
+        <h2 className="cta-heading text-3xl lg:text-[44px] xl:text-[48px] font-bold text-white tracking-[-0.025em] leading-[1.1] mb-6">
+          Ready to Start Your{' '}
+          <span className="text-[#f4d210]">MCIPS</span>{' '}
+          Journey?
+        </h2>
+
+        {/* Body */}
+        <p className="cta-body text-[15px] text-white/40 leading-[1.8] mb-10 max-w-lg mx-auto font-light">
+          Join thousands of professionals who have advanced their procurement 
+          careers through LSHS. Enrol today and take the first step towards 
+          Chartered Status.
+        </p>
+
+        {/* Buttons */}
+        <div className="cta-buttons flex flex-col sm:flex-row items-center justify-center gap-3">
+          <Link
+            href="/join"
+            className="group inline-flex items-center gap-2.5 text-[13px] font-semibold tracking-wide px-9 py-4 rounded-xl bg-[#f4d210] text-slate-900 hover:bg-[#f4d210]/90 hover:shadow-xl hover:shadow-[#f4d210]/20 hover:-translate-y-px transition-all duration-300 active:scale-[0.98]"
           >
-            Begin Your CIPS Journey
-          </h2>
-          <p className="text-slate-400 text-base md:text-lg leading-relaxed mb-10 max-w-lg mx-auto">
-            Enrol today and take the first step towards a globally recognised
-            procurement qualification. Our team is ready to guide you.
-          </p>
+            Enrol Now
+            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+          </Link>
+          <Link
+            href="/support"
+            className="inline-flex items-center gap-2 text-[13px] font-medium text-white/50 hover:text-white/90 transition-all duration-300 px-7 py-4 rounded-xl border border-white/[0.1] hover:border-white/[0.2] hover:bg-white/[0.04]"
+          >
+            Speak to an Advisor
+          </Link>
+        </div>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-            <a
-              href="#"
-              className="inline-flex items-center gap-2.5 bg-[#1e40af] hover:bg-[#1e3a8a] text-white text-xs font-bold tracking-[0.12em] uppercase px-8 py-4 rounded-md transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/25 hover:-translate-y-0.5"
-            >
-              Enrol Now
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
-            </a>
-            <a
-              href="#"
-              className="inline-flex items-center gap-2.5 border border-white/15 hover:border-white/30 text-white text-xs font-bold tracking-[0.12em] uppercase px-8 py-4 rounded-md transition-all duration-300 hover:bg-white/5"
-            >
-              Download Brochure
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-            </a>
-          </div>
-
-          {/* Contact Info */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 text-slate-400">
-            <a
-              href="mailto:info@lshs.ac.uk"
-              className="flex items-center gap-2 hover:text-white transition-colors text-sm"
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="2" y="4" width="20" height="16" rx="2" />
-                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-              </svg>
-              info@lshs.ac.uk
-            </a>
-            <a
-              href="tel:+442012345678"
-              className="flex items-center gap-2 hover:text-white transition-colors text-sm"
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-              </svg>
-              +44 20 1234 5678
-            </a>
-            <span className="flex items-center gap-2 text-sm">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-              London, United Kingdom
-            </span>
-          </div>
+        {/* Footer Trust Signals */}
+        <div className="cta-footer mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+          {[
+            { icon: ShieldCheck, text: 'No Hidden Fees' },
+            { icon: ShieldCheck, text: 'Flexible Payments' },
+            { icon: ShieldCheck, text: 'Expert Tutor Support' },
+          ].map((item) => (
+            <div key={item.text} className="flex items-center gap-2">
+              <item.icon className="w-3.5 h-3.5 text-white/15" strokeWidth={1.5} />
+              <span className="text-[11px] text-white/20 font-medium tracking-wide">
+                {item.text}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
     </section>
-  )
+  );
 }

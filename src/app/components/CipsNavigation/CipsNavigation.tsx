@@ -68,10 +68,8 @@ export default function CipsNavigation() {
       smoothWheel: true,
     });
 
-    // Sync Lenis with GSAP ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update);
 
-    // Use GSAP ticker for the animation frame loop
     const raf = (time: number) => {
       lenis.raf(time * 1000);
     };
@@ -142,36 +140,21 @@ export default function CipsNavigation() {
 
   return (
     <section ref={sectionRef} className="w-full bg-white">
-      {/* ── Section Header ── */}
-      <div
-        ref={headerRef}
-        className="mx-auto max-w-[1120px] px-7 md:px-9 pt-20 pb-10"
-      >
-        <p className="section-eyebrow text-[11px] tracking-[0.3em] font-medium text-navy/30 uppercase text-center">
-          Navigate Your Path
-        </p>
-        <div className="flex justify-center mt-6">
-          <div
-            ref={lineRef}
-            className="w-12 h-px bg-gradient-to-r from-transparent via-[#9B1B30] to-transparent origin-center"
-          />
-        </div>
-      </div>
 
       {/* ── 8-Cell Grid ── */}
       <div
         ref={gridRef}
-        className="mx-auto max-w-[1120px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+        className="mx-auto max-w-290 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
       >
         {courses.map((course, index) => (
           <Link
             key={index}
             href={course.href}
-            className={`nav-cell group relative flex items-start justify-between border-b border-r border-navy/[0.06] px-7 md:px-9 py-7 md:py-8 transition-all duration-500 hover:bg-[#9B1B30]/[0.03] ${
+            className={`nav-cell group relative flex items-start justify-between border-b border-r border-slate-100 px-7 md:px-9 py-7 md:py-8 transition-all duration-500 hover:bg-slate-50 ${
               (index + 1) % 4 === 0 ? 'lg:border-r-0' : ''
             } ${index >= 4 ? 'border-b-0' : ''} ${
               course.accent
-                ? 'bg-gradient-to-br from-gold/[0.02] to-transparent'
+                ? 'bg-gradient-to-br from-amber-50/50 to-transparent'
                 : ''
             }`}
           >
@@ -179,13 +162,13 @@ export default function CipsNavigation() {
               <h3
                 className={`text-[13.5px] font-medium tracking-[-0.01em] leading-snug transition-colors duration-500 ${
                   course.accent
-                    ? 'text-gold-dark/80 group-hover:text-gold-dark'
-                    : 'text-navy/70 group-hover:text-[#9B1B30]'
+                    ? 'text-amber-700/80 group-hover:text-amber-700'
+                    : 'text-slate-700 group-hover:text-[#9B1B30]'
                 }`}
               >
                 {course.title}
               </h3>
-              <p className="mt-1.5 text-[11px] font-light tracking-wide text-navy/25 leading-relaxed transition-colors duration-500 group-hover:text-navy/35">
+              <p className="mt-1.5 text-[11px] font-light tracking-wide text-slate-300 leading-relaxed transition-colors duration-500 group-hover:text-slate-400">
                 {course.subtitle}
               </p>
             </div>
@@ -193,8 +176,8 @@ export default function CipsNavigation() {
             <ChevronRight
               className={`w-3.5 h-3.5 flex-shrink-0 mt-1 transition-all duration-500 ${
                 course.accent
-                  ? 'text-gold/20 group-hover:text-gold group-hover:translate-x-0.5'
-                  : 'text-navy/[0.12] group-hover:text-[#9B1B30] group-hover:translate-x-0.5'
+                  ? 'text-amber-200 group-hover:text-amber-500 group-hover:translate-x-0.5'
+                  : 'text-slate-200 group-hover:text-[#9B1B30] group-hover:translate-x-0.5'
               }`}
               strokeWidth={1.5}
             />
@@ -202,7 +185,7 @@ export default function CipsNavigation() {
             {/* Left accent */}
             <div
               className={`absolute left-0 top-0 bottom-0 w-[2px] scale-y-0 origin-center transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-y-100 ${
-                course.accent ? 'bg-gold' : 'bg-[#9B1B30]'
+                course.accent ? 'bg-amber-500' : 'bg-[#9B1B30]'
               }`}
             />
           </Link>
@@ -212,31 +195,31 @@ export default function CipsNavigation() {
       {/* ── Bottom Banner ── */}
       <div
         ref={bannerRef}
-        className="mx-auto max-w-[1120px] border-b border-navy/[0.06]"
+        className="mx-auto max-w-[1120px] border-b border-slate-100"
       >
         <Link
           href="/why-cips"
-          className="group relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-8 px-7 md:px-9 py-7 md:py-8 transition-all duration-500 hover:bg-[#9B1B30]/[0.02]"
+          className="group relative flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-8 px-7 md:px-9 py-7 md:py-8 transition-all duration-500 hover:bg-slate-50"
         >
           <div className="banner-content">
             <h3
-              className="text-[17px] font-light text-navy/70 tracking-[-0.025em] group-hover:text-[#9B1B30] transition-colors duration-500"
+              className="text-[17px] font-light text-slate-700 tracking-[-0.025em] group-hover:text-[#9B1B30] transition-colors duration-500"
               style={{ fontFamily: 'var(--font-playfair)' }}
             >
               Why CIPS at London School of Higher Studies
             </h3>
-            <p className="mt-2 text-[12px] font-light tracking-wide text-navy/25 leading-relaxed transition-colors duration-500 group-hover:text-navy/35">
+            <p className="mt-2 text-[12px] font-light tracking-wide text-slate-300 leading-relaxed transition-colors duration-500 group-hover:text-slate-400">
               The global standard for procurement excellence, recognised in 150+
               countries
             </p>
           </div>
 
           <div className="banner-content flex items-center gap-2.5 flex-shrink-0">
-            <span className="text-[10px] font-medium tracking-[0.15em] uppercase text-navy/25 group-hover:text-[#9B1B30] transition-colors duration-500">
+            <span className="text-[10px] font-medium tracking-[0.15em] uppercase text-slate-400 group-hover:text-[#9B1B30] transition-colors duration-500">
               Learn More
             </span>
             <ChevronRight
-              className="w-3.5 h-3.5 text-navy/[0.12] group-hover:text-[#9B1B30] group-hover:translate-x-0.5 transition-all duration-500"
+              className="w-3.5 h-3.5 text-slate-200 group-hover:text-[#9B1B30] group-hover:translate-x-0.5 transition-all duration-500"
               strokeWidth={1.5}
             />
           </div>
