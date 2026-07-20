@@ -144,7 +144,7 @@ export default function CipsNavigation() {
       {/* ── 8-Cell Grid ── */}
       <div
         ref={gridRef}
-        className="mx-auto max-w-290 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+        className="mx-auto max-w-290 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4"
       >
         {courses.map((course, index) => (
           <Link
