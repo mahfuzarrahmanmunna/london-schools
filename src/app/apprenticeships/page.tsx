@@ -208,7 +208,7 @@ function StickyLevelCard({
                 <div className="flex items-center gap-2.5">
                   <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
                   <span className="text-[12px] text-slate-500">
-                    {app.price} — No Cost to Learner
+                    {app.price} No Cost to Learner
                   </span>
                 </div>
               </div>
@@ -365,7 +365,7 @@ function PageContent() {
               CIPS Apprenticeships
             </h1>
             <p className="hero-fade text-[17px] md:text-[19px] font-medium text-cips mb-6">
-              Level 2 — Level 6
+              Level 2 Level 6
             </p>
             <p className="hero-fade text-[16px] md:text-[17px] text-slate-500 leading-relaxed max-w-xl mb-9">
               Fully funded procurement qualifications for working professionals.
@@ -555,13 +555,13 @@ function PageContent() {
       <section className="py-16 md:py-24 section-reveal">
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-14 lg:gap-20">
-            {/* Why — 3 cols */}
+            {/* Why 3 cols */}
             <div className="lg:col-span-3">
               <h2 className="text-2xl md:text-[28px] font-bold text-navy mb-2">
                 Why an Apprenticeship?
               </h2>
               <p className="text-[13.5px] text-slate-400 mb-10 max-w-md">
-                The smartest route to a CIPS qualification — no student debt,
+                The smartest route to a CIPS qualification no student debt,
                 real experience, and a salary from day one.
               </p>
 
@@ -600,7 +600,7 @@ function PageContent() {
               </div>
             </div>
 
-            {/* Funding — 2 cols */}
+            {/* Funding 2 cols */}
             <div className="lg:col-span-2">
               <div className="lg:sticky lg:top-28">
                 <span className="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-[0.1em] uppercase text-emerald-600 mb-5 block">
@@ -612,7 +612,7 @@ function PageContent() {
                   {[
                     {
                       title: "Levy-Paying Employers",
-                      desc: "Organisations with a payroll over £3m use Levy funds directly — no cost to the apprentice.",
+                      desc: "Organisations with a payroll over £3m use Levy funds directly no cost to the apprentice.",
                     },
                     {
                       title: "Non-Levy Employers",
@@ -768,7 +768,7 @@ function PageContent() {
                   },
                   {
                     q: "What if I don't have GCSEs in English and Maths?",
-                    a: "For Level 2, this isn't a barrier — you'll complete functional skills qualifications as part of your apprenticeship at no extra cost. For Level 3+, GCSEs at grade 4/C are typically required.",
+                    a: "For Level 2, this isn't a barrier you'll complete functional skills qualifications as part of your apprenticeship at no extra cost. For Level 3+, GCSEs at grade 4/C are typically required.",
                   },
                   {
                     q: "Can I start at Level 4 without completing Level 3?",
@@ -776,7 +776,7 @@ function PageContent() {
                   },
                   {
                     q: "Does Level 6 lead to MCIPS?",
-                    a: "Yes. Completing Level 6, combined with the required professional experience, enables you to apply for full MCIPS membership — the gold standard in procurement.",
+                    a: "Yes. Completing Level 6, combined with the required professional experience, enables you to apply for full MCIPS membership the gold standard in procurement.",
                   },
                   {
                     q: "Is there a minimum wage for apprentices?",

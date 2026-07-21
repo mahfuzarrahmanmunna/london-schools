@@ -376,10 +376,10 @@ export default function StudentReviews({
       {/* Stats */}
       <ReviewStats />
 
-      {/* Row 1 — scrolls left */}
+      {/* Row 1 scrolls left */}
       <MarqueeRow reviews={row1} reverse={false} />
 
-      {/* Row 2 — scrolls right */}
+      {/* Row 2 scrolls right */}
       <div className="mt-4">
         <MarqueeRow reviews={row2} reverse={true} />
       </div>

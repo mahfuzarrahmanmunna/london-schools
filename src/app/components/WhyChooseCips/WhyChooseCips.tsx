@@ -25,7 +25,7 @@ const benefits = [
     icon: Award,
     num: '03',
     title: 'Chartered Status',
-    desc: 'The exclusive route to achieving MCIPS chartered status — marking you as a master of the procurement profession.',
+    desc: 'The exclusive route to achieving MCIPS chartered status marking you as a master of the procurement profession.',
   },
   {
     icon: Shield,
@@ -206,7 +206,7 @@ export default function WhyChooseCips() {
       <div className="grid grid-cols-1 lg:grid-cols-12">
 
         {/* ══════════════════════════════════════════════
-             LEFT — Sticky heading (5 cols)
+             LEFT Sticky heading (5 cols)
         ══════════════════════════════════════════════ */}
         <div className="lg:col-span-5 sticky top-0 h-screen flex items-center">
           {/* Grid texture */}
@@ -245,7 +245,7 @@ export default function WhyChooseCips() {
             {/* Description */}
             <p className="why-desc mt-7 text-[13.5px] font-light leading-[1.9] tracking-wide text-white/20 max-w-[340px]">
               The Chartered Institute of Procurement &amp; Supply isn&apos;t
-              just a certificate — it&apos;s a benchmark of professional
+              just a certificate it&apos;s a benchmark of professional
               integrity trusted by the world&apos;s leading organisations.
             </p>
 
@@ -293,7 +293,7 @@ export default function WhyChooseCips() {
         </div>
 
         {/* ══════════════════════════════════════════════
-             RIGHT — Stacking sticky cards (7 cols)
+             RIGHT Stacking sticky cards (7 cols)
         ══════════════════════════════════════════════ */}
         <div ref={cardsRef} className="lg:col-span-7 relative">
           {/* Vertical divider */}

@@ -83,9 +83,9 @@ const teamExtended = [
 ];
 
 const credentials = [
-  "FHEA — Advance HE, UK",
-  "MBA — University of East London",
-  "Teaching Fellow — Arden University",
+  "FHEA Advance HE, UK",
+  "MBA University of East London",
+  "Teaching Fellow Arden University",
   "CMI Professional Membership",
   "OTHM Honorary Membership",
 ];
@@ -118,7 +118,7 @@ const values = [
   {
     icon: Heart,
     title: "Inclusivity",
-    desc: "Education accessible to all — fostering a diverse learning community regardless of background, location, or circumstance.",
+    desc: "Education accessible to all fostering a diverse learning community regardless of background, location, or circumstance.",
   },
 ];
 
@@ -221,7 +221,7 @@ export default function AboutPage() {
         );
       }
 
-      // Team rows — stagger from sides
+      // Team rows stagger from sides
       [teamRow1Ref, teamRow2Ref, teamRow3Ref].forEach((ref, rowIdx) => {
         if (!ref.current) return;
         const fromX = rowIdx % 2 === 0 ? -25 : 25;
@@ -296,7 +296,7 @@ export default function AboutPage() {
   return (
     <main ref={pageRef} className="bg-white">
       {/* ═══ BREADCRUMB ═══ */}
-      <div className="border-b border-slate-100 bg-[#E8EDF3]/30">
+      {/* <div className="border-b border-slate-100 bg-[#E8EDF3]/30">
         <div className="mx-auto max-w-6xl px-6 py-3">
           <nav className="flex items-center gap-1.5 text-[12px] text-slate-400">
             <Link href="/" className="hover:text-[#002E4D] transition-colors">
@@ -307,7 +307,7 @@ export default function AboutPage() {
           </nav>
         </div>
       </div>
-
+ */}
       {/* ═══ HERO ═══ */}
       <section
         ref={heroRef}
@@ -360,7 +360,7 @@ export default function AboutPage() {
             style={{ opacity: 0 }}
           >
             A UK-based CIPS Study Center, Exam Centre & Distance Learning
-            Partner — offering world-class qualifications with expert, flexible
+            Partner offering world-class qualifications with expert, flexible
             learning that fits your life.
           </p>
 
@@ -507,7 +507,7 @@ export default function AboutPage() {
                 He is the Owner of Sampan Agro & Golf Resort and Express Highway
                 Inn, and the Acting Director & President of Express Highway Club
                 & Lounge. He serves as Managing Director of SAMPAN Highway Inn —
-                serving over 5,000 guests daily — and Managing Director of the
+                serving over 5,000 guests daily and Managing Director of the
                 London School of Higher Studies, a prestigious CIPS-UK-approved
                 study, exam, and distance-learning center.
               </p>
@@ -520,7 +520,7 @@ export default function AboutPage() {
                 BADIA & Shooters Club Ltd, Vice President of Bangladesh LPG
                 Association, and Co-owner of Barisal Bulls (BPL). Honored as the
                 highest tax & VAT payer in Dhaka Zone-03, he is widely respected
-                for his philanthropy — supporting mosque development, flood
+                for his philanthropy supporting mosque development, flood
                 relief, and organic agro-food initiatives.
               </p>
             </div>
@@ -530,11 +530,11 @@ export default function AboutPage() {
               style={{ opacity: 0 }}
             >
               {[
-                "SAMPAN Group — MD & CEO",
-                "Bangladesh PABX Assoc. — SVP",
-                "Bangladesh LPG Assoc. — VP",
-                "Barisal Bulls (BPL) — Co-owner",
-                "Highest Tax Payer — Dhaka Zone-03",
+                "SAMPAN Group MD & CEO",
+                "Bangladesh PABX Assoc. SVP",
+                "Bangladesh LPG Assoc. VP",
+                "Barisal Bulls (BPL) Co-owner",
+                "Highest Tax Payer Dhaka Zone-03",
               ].map((role) => (
                 <span
                   key={role}
@@ -569,7 +569,7 @@ export default function AboutPage() {
                     &ldquo;The village will become the city.&rdquo;
                   </p>
                   <p className="text-[12px] text-white/30 font-medium">
-                    — Md. Emamul Hasan, Managing Director & CEO
+                    Md. Emamul Hasan, Managing Director & CEO
                   </p>
                 </div>
               </div>
@@ -730,7 +730,7 @@ export default function AboutPage() {
           </p>
         </div>
 
-        {/* Row 1 — 4 featured */}
+        {/* Row 1 4 featured */}
         <div
           ref={teamRow1Ref}
           className="grid grid-cols-2 sm:grid-cols-4 gap-10 sm:gap-8 mb-10 sm:mb-12"
@@ -770,7 +770,7 @@ export default function AboutPage() {
           ))}
         </div>
 
-        {/* Row 2 — 4 featured */}
+        {/* Row 2 4 featured */}
         <div
           ref={teamRow2Ref}
           className="grid grid-cols-2 sm:grid-cols-4 gap-10 sm:gap-8 mb-14 sm:mb-16"
@@ -802,7 +802,7 @@ export default function AboutPage() {
           ))}
         </div>
 
-        {/* Row 3 — extended team, smaller */}
+        {/* Row 3 extended team, smaller */}
         <div ref={teamRow3Ref} className="pt-12 border-t border-slate-100">
           <p
             className="tm text-[11px] font-bold uppercase tracking-[0.2em] text-slate-300 text-center mb-8"

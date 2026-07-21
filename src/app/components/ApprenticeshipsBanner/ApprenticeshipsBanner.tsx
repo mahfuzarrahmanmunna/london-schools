@@ -99,7 +99,7 @@ export default function ApprenticeshipsBanner() {
             style={{ opacity: 0 }}
           >
             Government-funded CIPS apprenticeships that combine real-world work
-            experience with professional qualifications — from Level 3 to senior
+            experience with professional qualifications from Level 3 to senior
             strategic roles.
           </p>
         </div>

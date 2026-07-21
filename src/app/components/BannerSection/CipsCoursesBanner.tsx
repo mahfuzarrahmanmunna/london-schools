@@ -218,7 +218,7 @@ export default function BannerSection() {
         </div>
       </div>
 
-      {/* ═══ RIGHT PANEL — Image ═══ */}
+      {/* ═══ RIGHT PANEL Image ═══ */}
       <div className="hidden lg:block absolute top-0 right-0 bottom-0 w-[50%] xl:w-[55%]">
         <div
           ref={rightRef}
@@ -241,7 +241,7 @@ export default function BannerSection() {
           {/* Subtle bottom gradient */}
           <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
 
-          {/* Floating stat card — bottom right */}
+          {/* Floating stat card bottom right */}
           <div className="absolute bottom-8 right-8 xl:bottom-12 xl:right-12 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl shadow-black/10 border border-white/50 p-5 max-w-[220px]">
             <div className="flex items-center gap-3 mb-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">

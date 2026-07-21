@@ -127,7 +127,7 @@ export default function RootLayout({
         {/* Preload sharing image for faster OG rendering */}
         <link rel="preload" href="/logo/logo.webp" as="image" type="image/png" />
 
-        {/* Structured Data — Educational Organization */}
+        {/* Structured Data Educational Organization */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

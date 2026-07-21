@@ -54,7 +54,7 @@ const spotlightItems = [
     label: "Qualifications",
     title: "Level 6 Professional Diploma",
     description:
-      "The pinnacle of CIPS qualifications — strategic leadership for senior procurement professionals. Your path to MCIPS.",
+      "The pinnacle of CIPS qualifications strategic leadership for senior procurement professionals. Your path to MCIPS.",
     image: "https://picsum.photos/seed/cips-spotlight-lvl6/600/400.jpg",
     href: "/qualifications/level-6",
     cta: "Explore Level 6",
@@ -289,7 +289,7 @@ export default function HeroSection1() {
   return (
     <>
       {/* ═══════════════════════════════════════════════
-          SECTION 1 — FULL-BLEED HERO (McMaster pattern)
+          SECTION 1 FULL-BLEED HERO (McMaster pattern)
           ═══════════════════════════════════════════════ */}
       <section
         ref={heroRef}
@@ -302,13 +302,13 @@ export default function HeroSection1() {
             alt=""
             className="w-full h-full object-cover"
           />
-          {/* Multi-layer gradient — McMaster style */}
+          {/* Multi-layer gradient McMaster style */}
           <div className="absolute inset-0 bg-gradient-to-r from-navy/90 via-navy/60 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-transparent to-navy/30" />
           <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-navy to-transparent" />
         </div>
 
-        {/* Hero Content — left-aligned, bottom-heavy */}
+        {/* Hero Content left-aligned, bottom-heavy */}
         <div className="relative z-10 mx-auto max-w-7xl px-6 w-full pb-24 lg:pb-32 pt-40">
           <div ref={heroContentRef} className="max-w-2xl">
             {/* Overline */}
@@ -363,7 +363,7 @@ export default function HeroSection1() {
           </div>
         </div>
 
-        {/* Scroll Indicator — bottom center */}
+        {/* Scroll Indicator bottom center */}
         <div
           ref={scrollRef}
           className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10"
@@ -382,7 +382,7 @@ export default function HeroSection1() {
       </section>
 
       {/* ═══════════════════════════════════════════════
-          SECTION 2 — FEATURED STORIES (McMaster grid)
+          SECTION 2 FEATURED STORIES (McMaster grid)
           ═══════════════════════════════════════════════ */}
       <section ref={storiesRef} className="py-24 lg:py-32 bg-white">
         <div className="mx-auto max-w-7xl px-6">
@@ -405,7 +405,7 @@ export default function HeroSection1() {
             </Link>
           </div>
 
-          {/* Stories Grid — McMaster style: 1 large + 2 small */}
+          {/* Stories Grid McMaster style: 1 large + 2 small */}
           <div className="grid lg:grid-cols-2 gap-6">
             {/* Large Feature */}
             <Link
@@ -481,7 +481,7 @@ export default function HeroSection1() {
       </section>
 
       {/* ═══════════════════════════════════════════════
-          SECTION 3 — STATS BAND (McMaster thin bar)
+          SECTION 3 STATS BAND (McMaster thin bar)
           ═══════════════════════════════════════════════ */}
       <section
         ref={statsRef}
@@ -519,7 +519,7 @@ export default function HeroSection1() {
       </section>
 
       {/* ═══════════════════════════════════════════════
-          SECTION 4 — SPOTLIGHT (McMaster 2-col feature)
+          SECTION 4 SPOTLIGHT (McMaster 2-col feature)
           ═══════════════════════════════════════════════ */}
       <section ref={spotlightRef} className="py-24 lg:py-32 bg-slate-50">
         <div className="mx-auto max-w-7xl px-6">
@@ -579,12 +579,12 @@ export default function HeroSection1() {
       </section>
 
       {/* ═══════════════════════════════════════════════
-          SECTION 5 — EVENTS (McConnell list style)
+          SECTION 5 EVENTS (McConnell list style)
           ═══════════════════════════════════════════════ */}
       <section ref={eventsRef} className="py-24 lg:py-32 bg-white">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid lg:grid-cols-5 gap-12 lg:gap-16">
-            {/* Left — Header */}
+            {/* Left Header */}
             <div className="lg:col-span-2">
               <span className="text-xs font-bold tracking-[0.2em] uppercase text-cips mb-2 block">
                 Events
@@ -605,7 +605,7 @@ export default function HeroSection1() {
               </Link>
             </div>
 
-            {/* Right — Event List */}
+            {/* Right Event List */}
             <div className="lg:col-span-3">
               <div className="divide-y divide-slate-100">
                 {events.map((event) => (

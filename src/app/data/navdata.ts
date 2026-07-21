@@ -11,7 +11,7 @@ export const navData: MenuItem[] = [
         title: "Programmes",
         items: [
           {
-            label: "Level 2 — Supply Chain Support",
+            label: "Level 2 Supply Chain Support",
             href: "/apprenticeships/level-2",
             description:
               "Entry-level for those new to procurement and supply chain operations.",
@@ -19,7 +19,7 @@ export const navData: MenuItem[] = [
             accent: "#16A34A",
           },
           {
-            label: "Level 3 — Procurement Assistant",
+            label: "Level 3 Procurement Assistant",
             href: "/apprenticeships/level-3",
             description:
               "CIPS Certificate in Procurement & Supply Operations.",
@@ -27,7 +27,7 @@ export const navData: MenuItem[] = [
             accent: "#E8850C",
           },
           {
-            label: "Level 4 — Procurement Officer",
+            label: "Level 4 Procurement Officer",
             href: "/apprenticeships/level-4",
             description:
               "CIPS Diploma in Procurement & Supply. Most enrolled standard.",
@@ -35,7 +35,7 @@ export const navData: MenuItem[] = [
             accent: "#0891B2",
           },
           {
-            label: "Level 5 — Procurement Manager",
+            label: "Level 5 Procurement Manager",
             href: "/apprenticeships/level-5",
             description:
               "CIPS Advanced Diploma. Category management and leadership.",
@@ -43,7 +43,7 @@ export const navData: MenuItem[] = [
             accent: "#2563EB",
           },
           {
-            label: "Level 6 — Senior Professional",
+            label: "Level 6 Senior Professional",
             href: "/apprenticeships/level-6",
             description:
               "Achieve full MCIPS status. The gold standard for leaders.",
@@ -56,7 +56,7 @@ export const navData: MenuItem[] = [
     featured: {
       title: "Level 4 Procurement & Supply Officer",
       description:
-        "Our most popular apprenticeship — fully funded, CIPS-accredited, and designed for working professionals. 89% pass rate.",
+        "Our most popular apprenticeship fully funded, CIPS-accredited, and designed for working professionals. 89% pass rate.",
       image: "/courses/procurement.jfif",
       href: "/apprenticeships/level-4",
       ctaText: "Explore Level 4",

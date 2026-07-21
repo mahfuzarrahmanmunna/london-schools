@@ -205,12 +205,12 @@ export default function GlobalPresence() {
 
           {/* Top / Bottom subtle borders */}
           <div className="relative before:absolute before:top-0 before:left-0 before:right-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-gradient-to-r after:from-transparent after:via-white/10 after:to-transparent py-6 sm:py-8">
-            {/* Row 1 — Left to Right */}
+            {/* Row 1 Left to Right */}
             <div className="overflow-hidden mb-6 sm:mb-8">
               <ScrollTrack reverse={false} />
             </div>
 
-            {/* Row 2 — Right to Left (reversed for visual interest) */}
+            {/* Row 2 Right to Left (reversed for visual interest) */}
             <div className="overflow-hidden">
               <ScrollTrack reverse={true} />
             </div>
