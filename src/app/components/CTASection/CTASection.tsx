@@ -1,116 +1,306 @@
-'use client';
+"use client";
 
-import { useEffect, useRef } from 'react';
-import Link from 'next/link';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowRight, Award, ShieldCheck } from 'lucide-react';
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  ShieldCheck,
+  CreditCard,
+  Award,
+  GraduationCap,
+  ArrowRight,
+  CheckCircle2,
+  Loader2,
+  AlertCircle,
+} from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function CallToActionSection() {
+const trustPoints = [
+  {
+    icon: CreditCard,
+    title: "Transparent Fees, No Hidden Costs",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Flexible Payment Plans Available",
+  },
+  {
+    icon: Award,
+    title: "CIPS Approved Study Centre",
+  },
+  {
+    icon: GraduationCap,
+    title: "Experienced, CIPS-Qualified Tutors",
+  },
+];
+
+export default function ContactSection() {
   const sectionRef = useRef<HTMLElement>(null);
+
+  // Form State Management
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-        },
-        defaults: { ease: 'power3.out' },
-      });
+      const mm = gsap.matchMedia();
 
-      tl.from('.cta-eyebrow', { y: 15, opacity: 0, duration: 0.5 }, 0);
-      tl.from('.cta-accent-line', { scaleX: 0, duration: 0.8, ease: 'power2.inOut' }, 0.2);
-      tl.from('.cta-heading', { y: 30, opacity: 0, duration: 0.8 }, 0.3);
-      tl.from('.cta-body', { y: 20, opacity: 0, duration: 0.6 }, 0.5);
-      tl.from('.cta-buttons', { y: 15, opacity: 0, duration: 0.5 }, 0.65);
-      tl.from('.cta-footer', { y: 10, opacity: 0, duration: 0.4 }, 0.8);
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const items = gsap.utils.toArray<HTMLElement>(".reveal-item");
+        items.forEach((item) => {
+          gsap.fromTo(
+            item,
+            { opacity: 0, y: 30 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: item,
+                start: "top 90%",
+                once: true,
+              },
+            },
+          );
+        });
+      });
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/enquiry", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          source: "CTA Section",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.message || "Unable to send your enquiry right now.",
+        );
+      }
+
+      setFormData({ name: "", email: "", phone: "" });
+      setIsSubmitted(true);
+
+      setTimeout(() => setIsSubmitted(false), 5000);
+    } catch (err: any) {
+      setError(
+        err.message ||
+          "Unable to send your enquiry right now. Please try again.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section
+      id="contact"
       ref={sectionRef}
-      className="relative py-24 lg:py-32 overflow-hidden bg-[#070d19]"
+      className="relative w-full bg-[#001B30] border-t border-white/5 overflow-hidden"
     >
-      {/* ── Background Elements ── */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628] via-[#0c1e35] to-[#070d19]" />
-      <div
-        className="absolute inset-0 opacity-[0.02]"
-        style={{
-          backgroundImage:
-            'radial-gradient(circle, white 0.6px, transparent 0.6px)',
-          backgroundSize: '32px 32px',
-        }}
-      />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-[#0c79bf]/[0.06] blur-[150px]" />
-      <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] rounded-full bg-[#f4d210]/[0.03] blur-[120px]" />
-      
-      {/* Top Edge Line */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-px bg-gradient-to-r from-transparent via-white/[0.1] to-transparent" />
+      {/* Subtle Grid Texture */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-size-[72px_72px] pointer-events-none z-0" />
 
-      <div className="relative z-10 max-w-2xl mx-auto px-6 text-center">
-        {/* Eyebrow */}
-        <div className="cta-eyebrow inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-white/[0.08] bg-white/[0.03] mb-9">
-          <Award className="w-3.5 h-3.5 text-[#f4d210]" strokeWidth={1.5} />
-          <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/50">
-            Globally Recognised
-          </span>
-        </div>
+      {/* Left Blue Glow */}
+      <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-[#0B73B9]/10 to-transparent pointer-events-none z-0" />
 
-        {/* Accent Line */}
-        <div className="cta-accent-line w-12 h-[2px] bg-gradient-to-r from-transparent via-[#f4d210]/80 to-transparent mx-auto mb-9 origin-center" />
+      {/* Right Gold Glow */}
+      <div className="absolute bottom-0 right-0 w-1/3 h-1/2 bg-gradient-to-tl from-[#f4d210]/5 to-transparent pointer-events-none z-0" />
 
-        {/* Heading */}
-        <h2 className="cta-heading text-3xl lg:text-[44px] xl:text-[48px] font-bold text-white tracking-[-0.025em] leading-[1.1] mb-6">
-          Ready to Start Your{' '}
-          <span className="text-[#f4d210]">MCIPS</span>{' '}
-          Journey?
-        </h2>
-
-        {/* Body */}
-        <p className="cta-body text-[15px] text-white/40 leading-[1.8] mb-10 max-w-lg mx-auto font-light">
-          Join thousands of professionals who have advanced their procurement 
-          careers through LSHS. Enrol today and take the first step towards 
-          Chartered Status.
-        </p>
-
-        {/* Buttons */}
-        <div className="cta-buttons flex flex-col sm:flex-row items-center justify-center gap-3">
-          <Link
-            href="/join"
-            className="group inline-flex items-center gap-2.5 text-[13px] font-semibold tracking-wide px-9 py-4 rounded-xl bg-[#f4d210] text-slate-900 hover:bg-[#f4d210]/90 hover:shadow-xl hover:shadow-[#f4d210]/20 hover:-translate-y-px transition-all duration-300 active:scale-[0.98]"
-          >
-            Enrol Now
-            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-          </Link>
-          <Link
-            href="/support"
-            className="inline-flex items-center gap-2 text-[13px] font-medium text-white/50 hover:text-white/90 transition-all duration-300 px-7 py-4 rounded-xl border border-white/[0.1] hover:border-white/[0.2] hover:bg-white/[0.04]"
-          >
-            Speak to an Advisor
-          </Link>
-        </div>
-
-        {/* Footer Trust Signals */}
-        <div className="cta-footer mt-12 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-          {[
-            { icon: ShieldCheck, text: 'No Hidden Fees' },
-            { icon: ShieldCheck, text: 'Flexible Payments' },
-            { icon: ShieldCheck, text: 'Expert Tutor Support' },
-          ].map((item) => (
-            <div key={item.text} className="flex items-center gap-2">
-              <item.icon className="w-3.5 h-3.5 text-white/15" strokeWidth={1.5} />
-              <span className="text-[11px] text-white/20 font-medium tracking-wide">
-                {item.text}
+      {/* REDUCED: py-20 md:py-32 -> py-14 md:py-20 */}
+      <div className="relative z-10 mx-auto max-w-7xl px-6 md:px-12 py-14 md:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-20 items-start">
+          {/* Left Column: Text & Trust Signals */}
+          <div className="lg:col-span-5 lg:sticky lg:top-28 self-start">
+            {/* REDUCED: mb-8 -> mb-5 */}
+            <div className="reveal-item mb-5">
+              <span className="inline-block text-xs tracking-[0.2em] font-semibold text-white/80 uppercase bg-white/10 backdrop-blur-md border border-white/20 shadow-sm px-4 py-2 rounded-full">
+                Get In Touch
               </span>
             </div>
-          ))}
+
+            <h2
+              className="reveal-item text-3xl md:text-4xl lg:text-[2.75rem] font-medium text-white tracking-tight leading-[1.2] mb-4"
+              style={{ fontFamily: "var(--font-playfair)" }}
+            >
+              Ready to Take Your Seat at the Executive Table?
+            </h2>
+
+            {/* REDUCED: mb-12 -> mb-8, text sizing slightly tighter */}
+            <p className="reveal-item text-[15px] md:text-base font-normal leading-relaxed tracking-normal text-white/60 mb-8 max-w-md">
+              Have a question about which CIPS level is right for you, or how
+              distance learning works? Our team is here to help.
+            </p>
+
+            {/* REDUCED: pt-8 -> pt-6, gaps reduced */}
+            <div className="reveal-item grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6 border-t border-white/10 pt-6">
+              {trustPoints.map((point, i) => {
+                const Icon = point.icon;
+                return (
+                  <div key={i} className="flex items-start gap-3 group">
+                    {/* REDUCED: w-10 h-10 -> w-9 h-9 */}
+                    <div className="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300 bg-white/5 border border-white/10 group-hover:border-[#f4d210]/50 group-hover:bg-[#f4d210]/10">
+                      <Icon
+                        className="w-4 h-4 text-[#f4d210] transition-transform duration-300 group-hover:scale-110"
+                        strokeWidth={1.5}
+                      />
+                    </div>
+                    {/* REDUCED: pt-2.5 -> pt-1.5, text sizing */}
+                    <p className="text-[13px] font-medium leading-snug tracking-normal text-white/80 pt-1.5">
+                      {point.title}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Right Column: Enquiry Form */}
+          <div className="lg:col-span-7">
+            {/* REDUCED: p-8 md:p-10 -> p-6 md:p-8 */}
+            <div className="reveal-item relative bg-white/[0.03] border border-white/10 rounded-2xl p-6 md:p-8 backdrop-blur-md shadow-2xl overflow-hidden group">
+              {/* Decorative corners */}
+              <div className="absolute top-4 left-4 w-10 h-10 border-t-2 border-l-2 border-[#f4d210]/40 rounded-tl-xl pointer-events-none transition-all duration-500 group-hover:border-[#f4d210]/80"></div>
+              <div className="absolute bottom-4 right-4 w-10 h-10 border-b-2 border-r-2 border-[#f4d210]/40 rounded-br-xl pointer-events-none transition-all duration-500 group-hover:border-[#f4d210]/80"></div>
+
+              {/* REDUCED: space-y-6 -> space-y-4 */}
+              <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
+                {/* Name Field */}
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-semibold text-white/80 mb-1.5 tracking-wide"
+                  >
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    required
+                    disabled={isSubmitting || isSubmitted}
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-base text-white placeholder-white/30 focus:outline-none focus:border-[#0B73B9] focus:bg-white/10 focus:ring-2 focus:ring-[#0B73B9]/20 transition-all duration-300 disabled:opacity-50"
+                    placeholder="e.g. John Doe"
+                    value={formData.name}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                {/* Email Field */}
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-semibold text-white/80 mb-1.5 tracking-wide"
+                  >
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    required
+                    disabled={isSubmitting || isSubmitted}
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-base text-white placeholder-white/30 focus:outline-none focus:border-[#0B73B9] focus:bg-white/10 focus:ring-2 focus:ring-[#0B73B9]/20 transition-all duration-300 disabled:opacity-50"
+                    placeholder="e.g. john@example.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                {/* Phone Field */}
+                <div>
+                  <label
+                    htmlFor="phone"
+                    className="block text-sm font-semibold text-white/80 mb-1.5 tracking-wide"
+                  >
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    required
+                    disabled={isSubmitting || isSubmitted}
+                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-base text-white placeholder-white/30 focus:outline-none focus:border-[#0B73B9] focus:bg-white/10 focus:ring-2 focus:ring-[#0B73B9]/20 transition-all duration-300 disabled:opacity-50"
+                    placeholder="+44 20 1234 5678"
+                    value={formData.phone}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                {/* Error Message Display */}
+                {error && (
+                  <div className="flex items-center gap-2 text-red-300 bg-red-500/10 border border-red-500/20 px-4 py-3 rounded-lg text-xs font-medium">
+                    <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                    <span>{error}</span>
+                  </div>
+                )}
+
+                {/* Submit Button */}
+                {/* REDUCED: pt-4 -> pt-2 */}
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting || isSubmitted}
+                    className={`group w-full flex items-center justify-center gap-3 px-8 py-3.5 text-sm font-bold tracking-wider uppercase rounded-xl transition-all duration-500 overflow-hidden min-h-[48px] ${
+                      isSubmitted
+                        ? "bg-emerald-500 text-white cursor-not-allowed"
+                        : isSubmitting
+                          ? "bg-[#085C92] text-white cursor-wait"
+                          : "bg-[#0B73B9] text-white hover:bg-[#085C92] hover:shadow-lg hover:shadow-[#0B73B9]/30"
+                    }`}
+                  >
+                    {isSubmitted ? (
+                      <>
+                        <CheckCircle2 className="w-5 h-5" />
+                        Enquiry Sent Successfully
+                      </>
+                    ) : isSubmitting ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        Send Enquiry
+                        <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </section>

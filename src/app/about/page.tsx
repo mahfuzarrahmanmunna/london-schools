@@ -1,293 +1,200 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
-  ChevronRight,
-  Globe,
-  Award,
-  Users,
   BookOpen,
   Target,
+  Globe,
+  Award,
   Heart,
   Lightbulb,
   Shield,
   ArrowRight,
-  GraduationCap,
-  CheckCircle2,
-  Quote,
+  Users,
   Sparkles,
-  CircleDot,
+  CheckCircle2,
+  Briefcase,
+  GraduationCap,
+  MapPin,
+  Building2,
+  UserCheck,
 } from "lucide-react";
-import CipsCoursesBanner from "@/app/components/ApprenticeshipsBanner/ApprenticeshipsBanner";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ─── Color Tokens ────────────────────────────────
-const C = {
-  navy: "#002E4D",
-  navyLight: "#0A4D73",
-  navyDark: "#001B30",
-  navy50: "#E8EDF3",
-  cips: "#0975b7",
-  cipsLight: "#00BCD4",
-  cipsDark: "#007887",
-  gold: "#D4A843",
-  goldLight: "#E8C468",
-  goldDark: "#B08A30",
-};
+/* ─── Sub-Components ─────────────────────────────────────── */
 
-// ─── Data ────────────────────────────────────────
-const teamFeatured = [
-  {
-    name: "Akash Ghosh",
-    role: "Director Digital Marketing & IT",
-    initials: "AG",
-  },
-  { name: "MD. Omar Khayum", role: "AGM Sales", initials: "OK" },
-  { name: "Mehedi Hasan Rony", role: "Senior Visualizer", initials: "MR" },
-  {
-    name: "Md Merazul Islam",
-    role: "International Sales Executive",
-    initials: "MI",
-  },
-  {
-    name: "Sayma Haque",
-    role: "International Sales Executive",
-    initials: "SH",
-  },
-  {
-    name: "Raysha Siddika",
-    role: "International Sales Executive",
-    initials: "RS",
-  },
-  {
-    name: "Samia Haque",
-    role: "International Sales Executive",
-    initials: "SaH",
-  },
-  { name: "Arin Kazi", role: "International Sales Executive", initials: "AK" },
-];
+function SplitText({ text, className }: { text: string; className?: string }) {
+  return (
+    <span className={className} aria-label={text}>
+      {text.split(" ").map((word, i) => (
+        <span key={i} className="split-word inline-block overflow-hidden pb-2">
+          <span
+            className="inline-block"
+            style={{ willChange: "transform, opacity" }}
+          >
+            {word}&nbsp;
+          </span>
+        </span>
+      ))}
+    </span>
+  );
+}
 
-const teamExtended = [
-  {
-    name: "Tazrian Ariya",
-    role: "International Sales Executive",
-    initials: "TA",
-  },
-  { name: "Atiqur Rahman", role: "Assistant Manager Sales", initials: "AR" },
-  { name: "Bakhtiyar Sakil", role: "Junior Executive", initials: "BS" },
-  { name: "Joy Iqbal", role: "Junior Executive Sales", initials: "JI" },
-];
+/* ─── Data ──────────────────────────────────────────────── */
 
 const credentials = [
-  "FHEA Advance HE, UK",
-  "MBA University of East London",
-  "Teaching Fellow Arden University",
-  "CMI Professional Membership",
-  "OTHM Honorary Membership",
+  "UK-Based",
+  "CIPS Approved Centre",
+  "Expert Faculty",
+  "Flexible Learning",
 ];
 
-const highlights = [
-  "CIPS-UK Approved Study Centre",
-  "CIPS-UK Approved Exam Centre",
-  "CIPS-UK Distance Learning Partner",
-  "Hospitality & Tourism Programs",
-  "Soft-Skill Development Courses",
-  "Expert UK-Based Tutors",
+const badges = [
+  "CIPS Approved Study Centre",
+  "CIPS Approved Exam Centre",
+  "CIPS Distance Learning Partner",
+  "UK-Qualified Tutors",
 ];
 
 const values = [
   {
     icon: Award,
     title: "Excellence",
-    desc: "Upholding the highest standards in education with globally benchmarked learning experiences that prepare students for international success.",
+    desc: "We uphold rigorous, internationally benchmarked standards in everything we teach, so every qualification reflects genuine, job-ready capability.",
   },
   {
     icon: Lightbulb,
     title: "Innovation",
-    desc: "Embracing modern methodologies and technology to create engaging, flexible, and forward-thinking educational pathways.",
+    desc: "We use modern teaching methods and technology to keep learning flexible, engaging and relevant to how people actually study today.",
   },
   {
     icon: Shield,
     title: "Integrity",
-    desc: "Transparency and ethical conduct form the foundation of every interaction with students, partners, and institutions.",
+    desc: "Transparency and ethical conduct guide every interaction we have with students, partners, and awarding bodies alike.",
   },
   {
     icon: Heart,
     title: "Inclusivity",
-    desc: "Education accessible to all fostering a diverse learning community regardless of background, location, or circumstance.",
+    desc: "We believe quality education should be accessible to everyone, regardless of background, location or circumstance.",
   },
 ];
 
-// ─── Component ───────────────────────────────────
+const ceoTags = [
+  "Sampan Group MD & CEO",
+  "Bangladesh PABX Assoc. SVP",
+  "Bangladesh LPG Assoc. VP",
+  "Barisal Bulls (BPL) Co-owner",
+];
+
+const academicTags = [
+  "FHEA (Advance HE, UK)",
+  "MBA, University of East London",
+  "Teaching Fellow, Arden University",
+  "CMI Professional Member",
+  "OTHM Honorary Member",
+];
+
+/* ─── Main Page Component ───────────────────────────────── */
+
 export default function AboutPage() {
   const pageRef = useRef<HTMLDivElement>(null);
-  const heroRef = useRef<HTMLDivElement>(null);
-  const highlightsRef = useRef<HTMLDivElement>(null);
-  const ceoRef = useRef<HTMLDivElement>(null);
-  const academicRef = useRef<HTMLDivElement>(null);
-  const teamHeaderRef = useRef<HTMLDivElement>(null);
-  const teamRow1Ref = useRef<HTMLDivElement>(null);
-  const teamRow2Ref = useRef<HTMLDivElement>(null);
-  const teamRow3Ref = useRef<HTMLDivElement>(null);
-  const storyRef = useRef<HTMLDivElement>(null);
-  const missionRef = useRef<HTMLDivElement>(null);
-  const valuesRef = useRef<HTMLDivElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
+  const heroBgRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+
     const ctx = gsap.context(() => {
-      // Hero
-      if (heroRef.current) {
-        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-        tl.fromTo(
-          heroRef.current.querySelector(".hero-line"),
-          { scaleX: 0 },
-          { scaleX: 1, duration: 0.8, transformOrigin: "left center" },
-          0,
-        );
-        tl.fromTo(
-          heroRef.current.querySelectorAll(".hero-anim"),
-          { y: 30, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.7, stagger: 0.08 },
-          0.2,
-        );
-      }
-
-      // Highlights
-      if (highlightsRef.current) {
-        gsap.fromTo(
-          highlightsRef.current.querySelectorAll(".hl-item"),
-          { x: -20, opacity: 0 },
-          {
-            x: 0,
-            opacity: 1,
-            duration: 0.5,
-            stagger: 0.06,
-            ease: "power2.out",
-            scrollTrigger: { trigger: highlightsRef.current, start: "top 85%" },
+      if (heroBgRef.current && heroRef.current) {
+        gsap.to(heroBgRef.current, {
+          yPercent: 25,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 1,
           },
-        );
+        });
       }
 
-      // CEO
-      if (ceoRef.current) {
-        gsap.fromTo(
-          ceoRef.current.querySelectorAll(".ceo-anim"),
-          { y: 35, opacity: 0 },
+      const heroTl = gsap.timeline({ delay: 0.4 });
+
+      heroTl
+        .from(".hero-badge", {
+          opacity: 0,
+          y: 30,
+          duration: 1,
+          ease: "power3.out",
+        })
+        .from(
+          ".split-word span",
           {
-            y: 0,
-            opacity: 1,
-            duration: 0.7,
+            y: "110%",
+            opacity: 0,
+            rotate: 3,
+            duration: 1.2,
+            stagger: 0.08,
+            ease: "power4.out",
+          },
+          "-=0.6",
+        )
+        .from(
+          ".hero-desc",
+          { opacity: 0, y: 40, duration: 1, ease: "power3.out" },
+          "-=0.8",
+        )
+        .from(
+          ".hero-cred",
+          {
+            opacity: 0,
+            y: 20,
+            duration: 0.8,
             stagger: 0.1,
             ease: "power3.out",
-            scrollTrigger: { trigger: ceoRef.current, start: "top 78%" },
           },
-        );
-      }
-
-      // Academic
-      if (academicRef.current) {
-        gsap.fromTo(
-          academicRef.current.querySelectorAll(".ac-anim"),
-          { y: 35, opacity: 0 },
+          "-=0.6",
+        )
+        .from(
+          ".hero-badge-item",
           {
-            y: 0,
-            opacity: 1,
-            duration: 0.7,
+            opacity: 0,
+            y: 20,
+            duration: 0.8,
             stagger: 0.1,
             ease: "power3.out",
-            scrollTrigger: { trigger: academicRef.current, start: "top 78%" },
           },
+          "-=0.6",
         );
-      }
 
-      // Team header
-      if (teamHeaderRef.current) {
+      gsap.to(".float-accent", {
+        y: -12,
+        duration: 2.5,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        stagger: 0.5,
+      });
+
+      const items = gsap.utils.toArray<HTMLElement>(".reveal-item");
+      items.forEach((item) => {
         gsap.fromTo(
-          teamHeaderRef.current.querySelectorAll(".th-anim"),
-          { y: 20, opacity: 0 },
+          item,
+          { opacity: 0, y: 40 },
           {
+            opacity: 1,
             y: 0,
-            opacity: 1,
-            duration: 0.6,
-            stagger: 0.08,
-            ease: "power2.out",
-            scrollTrigger: { trigger: teamHeaderRef.current, start: "top 85%" },
-          },
-        );
-      }
-
-      // Team rows stagger from sides
-      [teamRow1Ref, teamRow2Ref, teamRow3Ref].forEach((ref, rowIdx) => {
-        if (!ref.current) return;
-        const fromX = rowIdx % 2 === 0 ? -25 : 25;
-        gsap.fromTo(
-          ref.current.querySelectorAll(".tm"),
-          { x: fromX, opacity: 0 },
-          {
-            x: 0,
-            opacity: 1,
-            duration: 0.55,
-            stagger: 0.08,
-            ease: "power2.out",
-            scrollTrigger: { trigger: ref.current, start: "top 88%" },
+            duration: 1.2,
+            ease: "power3.out",
+            scrollTrigger: { trigger: item, start: "top 88%", once: true },
           },
         );
       });
-
-      // Story + Mission
-      [storyRef, missionRef].forEach((ref) => {
-        if (ref.current) {
-          gsap.fromTo(
-            ref.current.querySelectorAll(".sm-anim"),
-            { y: 30, opacity: 0 },
-            {
-              y: 0,
-              opacity: 1,
-              duration: 0.6,
-              stagger: 0.1,
-              ease: "power3.out",
-              scrollTrigger: { trigger: ref.current, start: "top 80%" },
-            },
-          );
-        }
-      });
-
-      // Values
-      if (valuesRef.current) {
-        gsap.fromTo(
-          valuesRef.current.querySelectorAll(".val-card"),
-          { y: 30, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.55,
-            stagger: 0.09,
-            ease: "power3.out",
-            scrollTrigger: { trigger: valuesRef.current, start: "top 80%" },
-          },
-        );
-      }
-
-      // CTA
-      if (ctaRef.current) {
-        gsap.fromTo(
-          ctaRef.current,
-          { y: 30, opacity: 0, scale: 0.98 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.7,
-            ease: "power3.out",
-            scrollTrigger: { trigger: ctaRef.current, start: "top 85%" },
-          },
-        );
-      }
     }, pageRef);
 
     return () => ctx.revert();
@@ -295,789 +202,638 @@ export default function AboutPage() {
 
   return (
     <main ref={pageRef} className="bg-white">
-      {/* ═══ BREADCRUMB ═══ */}
-      {/* <div className="border-b border-slate-100 bg-[#E8EDF3]/30">
-        <div className="mx-auto max-w-6xl px-6 py-3">
-          <nav className="flex items-center gap-1.5 text-[12px] text-slate-400">
-            <Link href="/" className="hover:text-[#002E4D] transition-colors">
-              Home
-            </Link>
-            <ChevronRight className="h-3 w-3" />
-            <span className="text-[#002E4D] font-medium">About Us</span>
-          </nav>
-        </div>
-      </div>
- */}
-      {/* ═══ HERO ═══ */}
+      {/* ═══════════════════════════════════════════════════ 1. HERO ═══════════════════════════════════════════════════ */}
       <section
         ref={heroRef}
-        className="relative overflow-hidden"
-        style={{
-          background: `linear-gradient(160deg, ${C.navyDark} 0%, ${C.navy} 40%, ${C.navyLight} 100%)`,
-        }}
+        className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-[#001B30]"
       >
         <div
-          className="absolute inset-0 opacity-[0.04] pointer-events-none"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
-            backgroundSize: "28px 28px",
-          }}
-        />
-        <div
-          className="absolute -top-32 -right-32 w-96 h-96 rounded-full opacity-[0.06] blur-[100px] pointer-events-none"
-          style={{ backgroundColor: C.gold }}
-        />
-        <div
-          className="absolute bottom-0 left-1/4 w-72 h-72 rounded-full opacity-[0.04] blur-[80px] pointer-events-none"
-          style={{ backgroundColor: C.cipsLight }}
-        />
-
-        <div className="relative z-10 mx-auto max-w-6xl px-6 py-16 sm:py-24">
-          <div
-            className="hero-line h-[2px] w-16 mb-8 rounded-full"
-            style={{ backgroundColor: C.gold, transform: "scaleX(0)" }}
+          ref={heroBgRef}
+          className="absolute inset-0 w-full h-[120%] -top-[10%] scale-105"
+        >
+          <Image
+            src="/about/about.jpg"
+            alt="Global Excellence"
+            fill
+            className="object-cover"
+            priority
           />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#001B30]/70 via-[#001B30]/60 to-[#001B30]/90 pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-size-[72px_72px] pointer-events-none" />
+        <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-[#0B73B9]/20 to-transparent pointer-events-none float-accent" />
+        <div className="absolute bottom-0 right-0 w-1/3 h-2/3 bg-gradient-to-tl from-[#f4d210]/10 to-transparent pointer-events-none float-accent" />
 
-          <p
-            className="hero-anim text-[11px] font-bold uppercase tracking-[0.3em] mb-5"
-            style={{ color: C.gold, opacity: 0 }}
-          >
-            About London School of Higher Studies
-          </p>
-
+        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center py-32 md:py-40">
+          <div className="hero-badge inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-8">
+            <Sparkles size={14} className="text-[#f4d210]" />
+            <span className="text-sm font-medium tracking-widest uppercase text-white/60">
+              About London School of Higher Studies
+            </span>
+          </div>
           <h1
-            className="hero-anim text-[36px] sm:text-5xl lg:text-[60px] font-bold text-white leading-[1.05] tracking-tight mb-6 max-w-4xl"
-            style={{ opacity: 0 }}
+            className="text-5xl md:text-6xl lg:text-7xl font-medium text-white leading-[1.05] tracking-tight mb-6"
+            style={{ fontFamily: "var(--font-playfair)" }}
           >
-            Your Path to
-            <br />
-            <span style={{ color: C.goldLight }}>Global Excellence.</span>
+            <SplitText
+              text="Your Path to Global Excellence"
+              className="block"
+            />
           </h1>
-
-          <p
-            className="hero-anim text-[16px] sm:text-[17px] text-white/40 leading-[1.8] max-w-2xl mb-12"
-            style={{ opacity: 0 }}
-          >
-            A UK-based CIPS Study Center, Exam Centre & Distance Learning
-            Partner offering world-class qualifications with expert, flexible
+          <p className="hero-desc text-base md:text-lg text-white/70 max-w-3xl mx-auto leading-relaxed font-light mb-8">
+            A UK-based CIPS Study Centre, Exam Centre and Distance Learning
+            Partner, offering world-class qualifications with expert, flexible
             learning that fits your life.
           </p>
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 mb-8">
+            {credentials.map((cred) => (
+              <div
+                key={cred}
+                className="hero-cred flex items-center gap-2.5 text-sm font-medium text-white/80"
+              >
+                <CheckCircle2
+                  className="h-4 w-4 text-[#0B73B9]"
+                  strokeWidth={2}
+                />
+                {cred}
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-wrap justify-center gap-3">
+            {badges.map((badge) => (
+              <div
+                key={badge}
+                className="hero-badge-item flex items-center gap-2 rounded-lg px-4 py-2.5 border border-white/10 bg-white/[0.04] backdrop-blur-sm"
+              >
+                <Award className="h-4 w-4 text-[#f4d210]" strokeWidth={2} />
+                <span className="text-sm font-semibold text-white/90 tracking-wide uppercase">
+                  {badge}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-          <div
-            className="hero-anim flex flex-wrap gap-3"
-            style={{ opacity: 0 }}
-          >
-            {[
-              { icon: Globe, label: "UK-Based" },
-              { icon: Award, label: "CIPS Approved" },
-              { icon: Users, label: "Expert Faculty" },
-              { icon: BookOpen, label: "Flexible Learning" },
-            ].map((item) => {
-              const Icon = item.icon;
+      {/* ═══════════════════════════════════════════════════ 2. OUR STORY ═══════════════════════════════════════════════════ */}
+      <section className="px-6 md:px-12 py-20 md:py-28">
+        <div className="max-w-7xl mx-auto">
+          <div className="reveal-item grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            <div className="lg:col-span-7">
+              <div className="flex items-center gap-4 mb-6">
+                <span className="text-sm tracking-[0.2em] font-semibold text-[#0B73B9] uppercase">
+                  Our Story
+                </span>
+                <div className="w-12 h-0.5 bg-[#0B73B9]" />
+              </div>
+              <h2
+                className="text-3xl lg:text-4xl font-medium text-slate-900 tracking-tight leading-[1.2] mb-6"
+                style={{ fontFamily: "var(--font-playfair)" }}
+              >
+                Our Story
+              </h2>
+              <div className="space-y-6 text-[15px] text-slate-600 leading-[1.8] mb-10">
+                <p>
+                  The London School of Higher Studies (LSHS) exists to make
+                  globally recognised qualifications genuinely accessible;
+                  combining rigorous, industry-aligned training with the
+                  flexibility learners need to study alongside work and other
+                  commitments.
+                </p>
+                <p>
+                  As a CIPS Approved Study Centre and Exam Centre, we support
+                  students at every stage of the procurement and supply chain
+                  career path, from a first qualification through to Chartered
+                  MCIPS status, delivered through structured distance learning,
+                  classroom-based study, or a blend of both.
+                </p>
+              </div>
+              <div className="flex items-center gap-4 pt-8 border-t border-slate-200">
+                <MapPin className="w-5 h-5 text-[#0B73B9] flex-shrink-0" />
+                <p className="text-sm font-semibold tracking-wide text-slate-500 uppercase">
+                  <span className="text-slate-900">UK</span>
+                  <span className="mx-2 text-slate-300">&middot;</span>
+                  <span className="text-slate-900">Bangladesh</span>
+                  <span className="mx-2 text-slate-300">&middot;</span>
+                  Serving students across borders
+                </p>
+              </div>
+            </div>
+            <div className="lg:col-span-5">
+              {/* Professional Framed Image */}
+              <div className="relative p-2 bg-slate-100 rounded-2xl shadow-2xl shadow-slate-200/50 rotate-1 hover:rotate-0 transition-transform duration-500">
+                <div className="relative aspect-[4/5] rounded-xl overflow-hidden">
+                  <Image
+                    src="/about/story.webp"
+                    alt="Our Story"
+                    fill
+                    className="object-cover transition-transform duration-700 hover:scale-105"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-6 md:px-12 pb-20 md:pb-28">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="reveal-item mb-12">
+            <div className="flex items-center gap-4 mb-6">
+              <span className="text-sm tracking-[0.2em] font-semibold text-[#0B73B9] uppercase">
+                Our Offices
+              </span>
+              <div className="w-12 h-0.5 bg-[#0B73B9]" />
+            </div>
+            <h2
+              className="text-3xl lg:text-4xl font-medium text-slate-900 tracking-tight leading-[1.2]"
+              style={{ fontFamily: "var(--font-playfair)" }}
+            >
+              Campus &amp; Offices
+            </h2>
+          </div>
+
+          {/* Zigzag Side-by-Side Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+            {/* Office 1: Image Left, Text Right */}
+            <div className="reveal-item group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl hover:border-[#0B73B9]/20 transition-all duration-500">
+              <div className="flex flex-col md:flex-row h-full">
+                {/* Image Container - Optimized for Tall/PDF images */}
+                <div className="relative md:w-2/5 h-[300px] md:h-auto bg-slate-50 flex-shrink-0 overflow-hidden border-b md:border-b-0 md:border-r border-slate-100">
+                  {/* object-contain ensures the whole "PDF" image is visible without cropping */}
+                  <Image
+                    src="/about/dhaka.webp"
+                    alt="LSHS Dhaka Office"
+                    fill
+                    className="object-contain p-6 transition-transform duration-700 group-hover:scale-105"
+                  />
+                  {/* Mobile Badge Overlay */}
+                  <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-black/50 to-transparent pointer-events-none md:hidden" />
+                  <div className="absolute bottom-4 left-4 flex items-center gap-2 z-10 md:hidden">
+                    <div className="w-7 h-7 rounded-md bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center">
+                      <Building2
+                        className="w-3.5 h-3.5 text-white"
+                        strokeWidth={1.5}
+                      />
+                    </div>
+                    <span className="text-xs font-bold text-white tracking-wider uppercase">
+                      Dhaka
+                    </span>
+                  </div>
+                </div>
+
+                {/* Text Container */}
+                <div className="p-6 md:p-8 md:w-3/5 flex flex-col justify-center">
+                  {/* Desktop Badge */}
+                  <div className="hidden md:flex items-center gap-2 mb-4">
+                    <div className="w-7 h-7 rounded-md bg-[#0B73B9]/10 flex items-center justify-center">
+                      <Building2
+                        className="w-3.5 h-3.5 text-[#0B73B9]"
+                        strokeWidth={1.5}
+                      />
+                    </div>
+                    <span className="text-[11px] font-bold tracking-[0.15em] uppercase text-[#0B73B9]">
+                      Dhaka Campus
+                    </span>
+                  </div>
+                  <h3
+                    className="text-xl font-medium text-slate-900 tracking-tight mb-3"
+                    style={{ fontFamily: "var(--font-playfair)" }}
+                  >
+                    LSHS Dhaka Office
+                  </h3>
+                  <p className="text-sm text-slate-500 leading-relaxed">
+                    Our Dhaka office supports learners locally with enrolment
+                    guidance, study material distribution and in-person tutor
+                    support, alongside full access to CIPS distance learning
+                    resources.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Office 2: Text Left, Image Right (Reversed) */}
+            <div className="reveal-item group bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl hover:border-[#0B73B9]/20 transition-all duration-500">
+              <div className="flex flex-col md:flex-row-reverse h-full">
+                {/* Image Container */}
+                <div className="relative md:w-2/5 h-[300px] md:h-auto bg-slate-50 flex-shrink-0 overflow-hidden border-b md:border-b-0 md:border-l border-slate-100">
+                  <Image
+                    src="/about/kashiani.webp"
+                    alt="LSHS Kashiani Office"
+                    fill
+                    className="object-contain p-6 transition-transform duration-700 group-hover:scale-105"
+                  />
+                  {/* Mobile Badge Overlay */}
+                  <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-black/50 to-transparent pointer-events-none md:hidden" />
+                  <div className="absolute bottom-4 left-4 flex items-center gap-2 z-10 md:hidden">
+                    <div className="w-7 h-7 rounded-md bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center">
+                      <Building2
+                        className="w-3.5 h-3.5 text-white"
+                        strokeWidth={1.5}
+                      />
+                    </div>
+                    <span className="text-xs font-bold text-white tracking-wider uppercase">
+                      Kashiani
+                    </span>
+                  </div>
+                </div>
+
+                {/* Text Container */}
+                <div className="p-6 md:p-8 md:w-3/5 flex flex-col justify-center">
+                  {/* Desktop Badge */}
+                  <div className="hidden md:flex items-center gap-2 mb-4">
+                    <div className="w-7 h-7 rounded-md bg-[#0B73B9]/10 flex items-center justify-center">
+                      <Building2
+                        className="w-3.5 h-3.5 text-[#0B73B9]"
+                        strokeWidth={1.5}
+                      />
+                    </div>
+                    <span className="text-[11px] font-bold tracking-[0.15em] uppercase text-[#0B73B9]">
+                      Kashiani Campus
+                    </span>
+                  </div>
+                  <h3
+                    className="text-xl font-medium text-slate-900 tracking-tight mb-3"
+                    style={{ fontFamily: "var(--font-playfair)" }}
+                  >
+                    LSHS Kashiani Office
+                  </h3>
+                  <p className="text-sm text-slate-500 leading-relaxed">
+                    The Kashiani office extends the same enrolment and study
+                    support to learners outside Dhaka, with the same access to
+                    CIPS-aligned course materials and tutor guidance.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════ 4. OUR MISSION ═══════════════════════════════════════════════════ */}
+      <section className="px-6 md:px-12 pb-20 md:pb-28">
+        <div className="max-w-7xl mx-auto">
+          <div className="reveal-item relative bg-[#001B30] rounded-2xl p-8 md:p-12 lg:p-16 text-white overflow-hidden">
+            <div className="absolute top-4 left-4 w-10 h-10 border-t-2 border-l-2 border-[#f4d210]/30 rounded-tl-xl pointer-events-none" />
+            <div className="absolute bottom-4 right-4 w-10 h-10 border-b-2 border-r-2 border-[#f4d210]/30 rounded-br-xl pointer-events-none" />
+            <div className="absolute top-0 right-0 w-64 h-64 rounded-full opacity-10 blur-[80px] bg-[#0B73B9] float-accent pointer-events-none" />
+
+            <div className="md:flex gap-12 lg:gap-16 items-center">
+              <div className="relative z-10 md:flex-1">
+                <h2
+                  className="text-3xl lg:text-4xl font-medium mb-6 tracking-tight leading-tight"
+                  style={{ fontFamily: "var(--font-playfair)" }}
+                >
+                  Our Mission
+                </h2>
+                <p className="text-[15px] text-white/60 leading-[1.8] mb-10">
+                  To deliver globally recognised education that equips students
+                  with the knowledge, skills and confidence to succeed
+                  academically and professionally, in an increasingly
+                  competitive international job market.
+                </p>
+                <Link
+                  href="/courses"
+                  className="group inline-flex items-center gap-3 px-8 py-4 bg-[#0B73B9] text-white rounded-lg text-sm font-semibold tracking-wider uppercase transition-all hover:bg-[#085C92] hover:shadow-lg hover:shadow-[#0B73B9]/20"
+                >
+                  Explore Our Programmes{" "}
+                  <ArrowRight
+                    size={16}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
+                </Link>
+              </div>
+              <div className="relative z-10 mt-10 md:mt-0 md:w-[400px] lg:w-[450px] flex-shrink-0">
+                <div className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-2xl border border-white/10">
+                  <Image
+                    src="/about/mission.jpg"
+                    alt="Our Mission"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════ 5. VALUES ═══════════════════════════════════════════════════ */}
+      <section className="px-6 md:px-12 pb-20 md:pb-28">
+        <div className="max-w-7xl mx-auto">
+          <div className="reveal-item text-center mb-14 max-w-2xl mx-auto">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-8 h-0.5 bg-[#0B73B9]" />
+              <span className="text-sm font-bold tracking-[0.2em] uppercase text-[#0B73B9]">
+                Principles
+              </span>
+              <div className="w-8 h-0.5 bg-[#0B73B9]" />
+            </div>
+            <h2
+              className="text-3xl lg:text-4xl font-medium text-slate-900 tracking-tight"
+              style={{ fontFamily: "var(--font-playfair)" }}
+            >
+              What We Stand For
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {values.map((val) => {
+              const Icon = val.icon;
               return (
                 <div
-                  key={item.label}
-                  className="flex items-center gap-2 rounded-lg px-4 py-2.5 border border-white/10 bg-white/[0.04] backdrop-blur-sm"
+                  key={val.title}
+                  className="reveal-item group relative p-6 rounded-xl border border-slate-100 bg-slate-50/50 hover:border-[#0B73B9]/20 hover:bg-white hover:shadow-md transition-all duration-300 hover:-translate-y-1 overflow-hidden"
                 >
-                  <Icon className="h-4 w-4" style={{ color: C.gold }} />
-                  <span className="text-[12px] font-semibold text-white/70">
-                    {item.label}
-                  </span>
+                  {/* Top accent line on hover */}
+                  <div className="absolute top-0 left-0 w-full h-0.5 bg-[#0B73B9] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+                  <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#0B73B9]/5 text-[#0B73B9] mb-4 group-hover:bg-[#0B73B9]/10 transition-colors duration-300">
+                    <Icon className="h-5 w-5" strokeWidth={1.5} />
+                  </div>
+                  <h4 className="text-base font-semibold text-slate-900 mb-2 tracking-tight">
+                    {val.title}
+                  </h4>
+                  <p className="text-sm text-slate-500 leading-relaxed">
+                    {val.desc}
+                  </p>
                 </div>
               );
             })}
           </div>
         </div>
-
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent pointer-events-none" />
       </section>
 
-      {/* ═══ HIGHLIGHTS BAR ═══ */}
-      <section className="relative -mt-6 z-10 mx-auto max-w-6xl px-6 mb-16">
-        <div
-          ref={highlightsRef}
-          className="rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-200/40 p-6 sm:p-8"
-        >
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {highlights.map((item) => (
-              <div
-                key={item}
-                className="hl-item flex items-center gap-2.5"
-                style={{ opacity: 0 }}
-              >
-                <div
-                  className="flex h-7 w-7 items-center justify-center rounded-md flex-shrink-0"
-                  style={{
-                    backgroundColor: C.cips + "0D",
-                    color: C.cips,
-                  }}
-                >
-                  <CheckCircle2 className="h-3.5 w-3.5" />
-                </div>
-                <span className="text-[12px] font-medium text-[#002E4D] leading-snug">
-                  {item}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ LEADERSHIP: CEO ═══ */}
-      <section className="mx-auto max-w-6xl px-6 mb-20 lg:mb-28">
-        <div
-          ref={ceoRef}
-          className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16"
-        >
-          <div className="lg:col-span-4 ceo-anim" style={{ opacity: 0 }}>
-            <div className="sticky top-8">
-              <div className="relative">
-                <div
-                  className="absolute -top-4 -left-4 right-4 bottom-4 rounded-2xl -z-10"
-                  style={{ backgroundColor: C.gold + "12" }}
-                />
-                <div
-                  className="relative rounded-2xl overflow-hidden border border-slate-200/80 aspect-[3/4] flex items-center justify-center"
-                  style={{
-                    background: `linear-gradient(180deg, ${C.navy50}, white)`,
-                  }}
-                >
-                  <div className="text-center px-6">
-                    <div
-                      className="flex h-32 w-32 items-center justify-center rounded-full text-[42px] font-bold text-white mx-auto mb-5"
-                      style={{
-                        backgroundColor: C.navy,
-                        boxShadow: `0 16px 50px ${C.navy}35`,
-                      }}
-                    >
-                      EH
-                    </div>
-                    <div className="flex items-center justify-center gap-2 mb-1">
-                      <div
-                        className="h-[1px] w-6"
-                        style={{ backgroundColor: C.gold }}
-                      />
-                      <span
-                        className="text-[10px] font-bold uppercase tracking-[0.25em]"
-                        style={{ color: C.gold }}
-                      >
-                        Leadership
-                      </span>
-                      <div
-                        className="h-[1px] w-6"
-                        style={{ backgroundColor: C.gold }}
-                      />
-                    </div>
-                    <p className="text-[12px] text-slate-400 font-medium mt-2">
-                      Managing Director & CEO
-                    </p>
-                  </div>
-                </div>
-              </div>
+      {/* ═══════════════════════════════════════════════════ 6. LEADERSHIP (REDESIGNED) ═══════════════════════════════════════ */}
+      <section className="bg-slate-50 py-20 md:py-28 px-6 md:px-12 border-y border-slate-100">
+        <div className="max-w-6xl mx-auto">
+          <div className="reveal-item text-center mb-16 md:mb-20 max-w-2xl mx-auto">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-8 h-0.5 bg-[#0B73B9]" />
+              <span className="text-sm font-bold tracking-[0.2em] uppercase text-[#0B73B9]">
+                The Team
+              </span>
+              <div className="w-8 h-0.5 bg-[#0B73B9]" />
             </div>
-          </div>
-
-          <div className="lg:col-span-8 flex flex-col justify-center">
-            <div className="ceo-anim" style={{ opacity: 0 }}>
-              <p
-                className="text-[11px] font-bold uppercase tracking-[0.25em] mb-3"
-                style={{ color: C.gold }}
-              >
-                Managing Director & CEO
-              </p>
-              <h2 className="text-[28px] sm:text-[34px] font-bold text-[#002E4D] tracking-tight leading-[1.15] mb-2">
-                Md. Emamul Hasan
-              </h2>
-              <p className="text-[13px] font-medium text-[#0975b7] mb-8">
-                Chairman, SAMPAN Group
-              </p>
-            </div>
-
-            <div className="ceo-anim space-y-5" style={{ opacity: 0 }}>
-              <p className="text-[14px] text-slate-600 leading-[1.85]">
-                Mr. Hasan is a distinguished entrepreneur, visionary corporate
-                leader, and dedicated social worker with impactful contributions
-                across petrochemicals, pet & beverage, hollow bricks & tiles,
-                hospitality, real estate, education, and agro-business in
-                Bangladesh. He leads SAMPAN Group&apos;s diverse portfolio of
-                successful ventures.
-              </p>
-              <p className="text-[14px] text-slate-600 leading-[1.85]">
-                He is the Owner of Sampan Agro & Golf Resort and Express Highway
-                Inn, and the Acting Director & President of Express Highway Club
-                & Lounge. He serves as Managing Director of SAMPAN Highway Inn —
-                serving over 5,000 guests daily and Managing Director of the
-                London School of Higher Studies, a prestigious CIPS-UK-approved
-                study, exam, and distance-learning center.
-              </p>
-            </div>
-
-            <div className="ceo-anim" style={{ opacity: 0 }}>
-              <p className="text-[14px] text-slate-600 leading-[1.85] mt-5">
-                Hasan holds notable leadership roles including Senior Vice
-                President of Bangladesh PABX Association, Joint Secretary of
-                BADIA & Shooters Club Ltd, Vice President of Bangladesh LPG
-                Association, and Co-owner of Barisal Bulls (BPL). Honored as the
-                highest tax & VAT payer in Dhaka Zone-03, he is widely respected
-                for his philanthropy supporting mosque development, flood
-                relief, and organic agro-food initiatives.
-              </p>
-            </div>
-
-            <div
-              className="ceo-anim flex flex-wrap gap-2 mt-8"
-              style={{ opacity: 0 }}
+            <h2
+              className="text-3xl md:text-4xl lg:text-5xl font-medium text-slate-900 tracking-tight"
+              style={{ fontFamily: "var(--font-playfair)" }}
             >
-              {[
-                "SAMPAN Group MD & CEO",
-                "Bangladesh PABX Assoc. SVP",
-                "Bangladesh LPG Assoc. VP",
-                "Barisal Bulls (BPL) Co-owner",
-                "Highest Tax Payer Dhaka Zone-03",
-              ].map((role) => (
-                <span
-                  key={role}
-                  className="inline-flex items-center rounded-md border border-slate-200 bg-[#E8EDF3]/50 px-3 py-1.5 text-[11px] font-medium text-[#002E4D]"
-                >
-                  <CircleDot
-                    className="h-2.5 w-2.5 mr-1.5 flex-shrink-0"
-                    style={{ color: C.gold }}
+              Leadership
+            </h2>
+          </div>
+
+          <div className="space-y-12 md:space-y-16">
+            {/* ── CEO ── */}
+            <div className="reveal-item grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
+              {/* Compact Image */}
+              <div className="md:col-span-4 lg:col-span-3 flex justify-center md:justify-end">
+                <div className="relative w-40 h-40 md:w-44 md:h-44 lg:w-48 lg:h-48 rounded-2xl overflow-hidden ring-1 ring-black/5 shadow-lg flex-shrink-0">
+                  <Image
+                    src="/ceo/ceo.jfif"
+                    alt="Md. Emamul Hasan"
+                    fill
+                    className="object-cover object-top"
                   />
-                  {role}
-                </span>
-              ))}
-            </div>
-
-            <div
-              className="ceo-anim mt-10 relative rounded-xl overflow-hidden"
-              style={{ opacity: 0 }}
-            >
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: `linear-gradient(135deg, ${C.navyDark}, ${C.navy})`,
-                }}
-              />
-              <div className="relative px-8 py-7 flex items-start gap-5">
-                <Quote
-                  className="h-8 w-8 flex-shrink-0 mt-0.5"
-                  style={{ color: C.gold + "40" }}
-                />
-                <div>
-                  <p className="text-[17px] font-medium text-white/90 italic leading-relaxed mb-2">
-                    &ldquo;The village will become the city.&rdquo;
-                  </p>
-                  <p className="text-[12px] text-white/30 font-medium">
-                    Md. Emamul Hasan, Managing Director & CEO
-                  </p>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* ═══ LEADERSHIP: ACADEMIC MANAGER ═══ */}
-      <section className="relative overflow-hidden mb-20 lg:mb-28">
-        <div
-          className="absolute inset-0"
-          style={{ backgroundColor: C.navy50 + "40" }}
-        />
-        <div
-          className="absolute inset-0 opacity-[0.03] pointer-events-none"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, #002E4D 1px, transparent 0)",
-            backgroundSize: "24px 24px",
-          }}
-        />
+              {/* Divider Line (Hidden on mobile) */}
+              <div className="hidden md:block w-px h-full min-h-[200px] bg-slate-200" />
 
-        <div className="relative z-10 mx-auto max-w-6xl px-6 py-16 sm:py-20">
-          <div
-            ref={academicRef}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16"
-          >
-            <div className="lg:col-span-7 flex flex-col justify-center order-2 lg:order-1">
-              <div className="ac-anim" style={{ opacity: 0 }}>
-                <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#0975b7] mb-3">
-                  Academic Manager
-                </p>
-                <h2 className="text-[28px] sm:text-[34px] font-bold text-[#002E4D] tracking-tight leading-[1.15] mb-2">
-                  Md. Muhammad Haque
-                </h2>
-                <p className="text-[13px] font-medium text-slate-400 mb-8">
-                  Teaching Fellow, Arden University UK
-                </p>
-              </div>
-
-              <div className="ac-anim space-y-5" style={{ opacity: 0 }}>
-                <p className="text-[14px] text-slate-600 leading-[1.85]">
-                  A dynamic professional driven by a passion for excellence in
-                  Higher Education and Business Management & Marketing. With an
-                  MBA from the University of East London, PgD, and DET, he
-                  possesses a solid foundation in both higher education and
-                  business.
-                </p>
-                <p className="text-[14px] text-slate-600 leading-[1.85]">
-                  Currently serving as a Teaching Fellow at Arden University,
-                  UK, he previously held the position of Lecturer at Canterbury
-                  Christ Church University. His dedication has been recognized
-                  through the Fellow (FHEA) designation from Advance HE, UK, and
-                  Professional Membership with the Chartered Institute of
-                  Management, UK.
-                </p>
-              </div>
-
-              <div className="ac-anim" style={{ opacity: 0 }}>
-                <p className="text-[14px] text-slate-600 leading-[1.85] mt-5">
-                  Honored with an Honorary Membership from OTHM Qualifications,
-                  UK, he has participated in programs at The Open University,
-                  Manchester Metropolitan University, UCL, University of Leeds,
-                  British Council, Coventry University, Royal College of Art,
-                  and The University of Glasgow.
-                </p>
-              </div>
-
-              <div
-                className="ac-anim flex flex-wrap gap-2 mt-8"
-                style={{ opacity: 0 }}
-              >
-                {credentials.map((cred) => (
-                  <span
-                    key={cred}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-[#0975b7]/15 bg-white px-3.5 py-2 text-[11px] font-semibold text-[#0975b7] shadow-sm"
-                  >
-                    <GraduationCap className="h-3 w-3" />
-                    {cred}
+              {/* Content */}
+              <div className="md:col-span-7 lg:col-span-8">
+                <div className="flex items-center gap-3 mb-4">
+                  <Briefcase className="h-4 w-4 text-[#f4d210]" />
+                  <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#f4d210]">
+                    Managing Director & CEO
                   </span>
-                ))}
-              </div>
-            </div>
-
-            <div
-              className="lg:col-span-5 ac-anim order-1 lg:order-2"
-              style={{ opacity: 0 }}
-            >
-              <div className="lg:sticky lg:top-8">
-                <div className="relative">
-                  <div
-                    className="absolute -top-4 -right-4 left-4 bottom-4 rounded-2xl -z-10"
-                    style={{ backgroundColor: C.navy + "08" }}
-                  />
-                  <div
-                    className="relative rounded-2xl overflow-hidden border border-slate-200/80 aspect-[3/4] flex items-center justify-center"
-                    style={{
-                      background: `linear-gradient(180deg, white, ${C.navy50})`,
-                    }}
-                  >
-                    <div className="text-center px-6">
-                      <div
-                        className="flex h-32 w-32 items-center justify-center rounded-full text-[42px] font-bold text-white mx-auto mb-5"
-                        style={{
-                          backgroundColor: C.cips,
-                          boxShadow: `0 16px 50px ${C.cips}35`,
-                        }}
-                      >
-                        MH
-                      </div>
-                      <div className="flex items-center justify-center gap-2 mb-1">
-                        <div
-                          className="h-[1px] w-6"
-                          style={{ backgroundColor: C.cips }}
-                        />
-                        <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#0975b7]">
-                          Academics
-                        </span>
-                        <div
-                          className="h-[1px] w-6"
-                          style={{ backgroundColor: C.cips }}
-                        />
-                      </div>
-                      <p className="text-[12px] text-slate-400 font-medium mt-2">
-                        Academic Manager
-                      </p>
-                    </div>
-                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ TEAM ═══ */}
-      <section className="mx-auto max-w-6xl px-6 mb-20 lg:mb-28">
-        <div ref={teamHeaderRef} className="text-center mb-16">
-          <p
-            className="th-anim text-[11px] font-bold uppercase tracking-[0.3em] text-[#0975b7] mb-4"
-            style={{ opacity: 0 }}
-          >
-            Our People
-          </p>
-          <h2
-            className="th-anim text-[30px] sm:text-[38px] font-bold text-[#002E4D] tracking-tight leading-[1.1] mb-4"
-            style={{ opacity: 0 }}
-          >
-            Meet the Team
-          </h2>
-          <p
-            className="th-anim text-[15px] text-slate-400 max-w-md mx-auto leading-relaxed"
-            style={{ opacity: 0 }}
-          >
-            The passionate experts behind our mission, united by a commitment to
-            delivering excellence.
-          </p>
-        </div>
-
-        {/* Row 1 4 featured */}
-        <div
-          ref={teamRow1Ref}
-          className="grid grid-cols-2 sm:grid-cols-4 gap-10 sm:gap-8 mb-10 sm:mb-12"
-        >
-          {teamFeatured.slice(0, 4).map((member, i) => (
-            <div
-              key={member.name}
-              className="tm flex flex-col items-center text-center group"
-              style={{ opacity: 0 }}
-            >
-              <div className="relative mb-5">
-                {/* Ring on hover */}
-                <div
-                  className="absolute inset-[-4px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  style={{
-                    background: `conic-gradient(from 0deg, ${C.cips}, ${C.cipsLight}, ${C.cips})`,
-                    opacity: 0,
-                  }}
-                />
-                <div
-                  className="relative flex h-[100px] w-[100px] sm:h-[120px] sm:w-[120px] items-center justify-center rounded-full text-[28px] sm:text-[32px] font-bold text-white transition-transform duration-500 group-hover:scale-105"
-                  style={{
-                    backgroundColor: C.navy,
-                    boxShadow: `0 8px 30px ${C.navy}25`,
-                  }}
+                <h3
+                  className="text-2xl lg:text-3xl font-medium text-slate-900 tracking-tight mb-1"
+                  style={{ fontFamily: "var(--font-playfair)" }}
                 >
-                  {member.initials}
-                </div>
-              </div>
-              <h4 className="text-[14px] sm:text-[15px] font-semibold text-[#002E4D] leading-tight mb-1.5 group-hover:text-[#0975b7] transition-colors duration-300">
-                {member.name}
-              </h4>
-              <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 leading-snug">
-                {member.role}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* Row 2 4 featured */}
-        <div
-          ref={teamRow2Ref}
-          className="grid grid-cols-2 sm:grid-cols-4 gap-10 sm:gap-8 mb-14 sm:mb-16"
-        >
-          {teamFeatured.slice(4, 8).map((member, i) => (
-            <div
-              key={member.name}
-              className="tm flex flex-col items-center text-center group"
-              style={{ opacity: 0 }}
-            >
-              <div className="relative mb-5">
-                <div
-                  className="relative flex h-[100px] w-[100px] sm:h-[120px] sm:w-[120px] items-center justify-center rounded-full text-[28px] sm:text-[32px] font-bold text-white transition-transform duration-500 group-hover:scale-105"
-                  style={{
-                    backgroundColor: C.cips,
-                    boxShadow: `0 8px 30px ${C.cips}25`,
-                  }}
-                >
-                  {member.initials}
-                </div>
-              </div>
-              <h4 className="text-[14px] sm:text-[15px] font-semibold text-[#002E4D] leading-tight mb-1.5 group-hover:text-[#0975b7] transition-colors duration-300">
-                {member.name}
-              </h4>
-              <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 leading-snug">
-                {member.role}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* Row 3 extended team, smaller */}
-        <div ref={teamRow3Ref} className="pt-12 border-t border-slate-100">
-          <p
-            className="tm text-[11px] font-bold uppercase tracking-[0.2em] text-slate-300 text-center mb-8"
-            style={{ opacity: 0 }}
-          >
-            Also Part of Our Team
-          </p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-10 sm:gap-8">
-            {teamExtended.map((member) => (
-              <div
-                key={member.name}
-                className="tm flex flex-col items-center text-center group"
-                style={{ opacity: 0 }}
-              >
-                <div className="relative mb-4">
-                  <div
-                    className="flex h-[80px] w-[80px] sm:h-[90px] sm:w-[90px] items-center justify-center rounded-full text-[22px] sm:text-[24px] font-bold text-white/80 transition-all duration-400 group-hover:scale-105 group-hover:text-white"
-                    style={{ backgroundColor: C.navyLight }}
-                  >
-                    {member.initials}
-                  </div>
-                </div>
-                <h4 className="text-[13px] sm:text-[14px] font-medium text-[#002E4D] leading-tight mb-1 group-hover:text-[#0975b7] transition-colors duration-300">
-                  {member.name}
-                </h4>
-                <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-slate-400 leading-snug">
-                  {member.role}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ STORY + MISSION ═══ */}
-      <section className="relative overflow-hidden mb-20 lg:mb-28">
-        <div
-          className="absolute inset-0"
-          style={{ backgroundColor: C.navyDark }}
-        />
-        <div
-          className="absolute inset-0 opacity-[0.03] pointer-events-none"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
-            backgroundSize: "28px 28px",
-          }}
-        />
-        <div
-          className="absolute top-1/2 left-0 w-96 h-96 -translate-y-1/2 -translate-x-1/2 rounded-full opacity-[0.06] blur-[120px] pointer-events-none"
-          style={{ backgroundColor: C.cips }}
-        />
-        <div
-          className="absolute top-1/3 right-0 w-72 h-72 translate-x-1/3 rounded-full opacity-[0.04] blur-[100px] pointer-events-none"
-          style={{ backgroundColor: C.gold }}
-        />
-
-        <div className="relative z-10 mx-auto max-w-6xl px-6 py-16 sm:py-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20">
-            <div ref={storyRef}>
-              <div
-                className="sm-anim flex items-center gap-3.5 mb-6"
-                style={{ opacity: 0 }}
-              >
-                <div
-                  className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10"
-                  style={{
-                    backgroundColor: "rgba(255,255,255,0.05)",
-                    color: C.gold,
-                  }}
-                >
-                  <BookOpen className="h-5 w-5" />
-                </div>
-                <h3 className="text-[22px] font-bold text-white tracking-tight">
-                  Our Story
+                  Md. Emamul Hasan
                 </h3>
-              </div>
-              <div className="sm-anim" style={{ opacity: 0 }}>
-                <p className="text-[15px] text-white/45 leading-[1.85]">
-                  The London School of Higher Studies (LSHS) is committed to
-                  providing globally recognized education, empowering students
-                  with knowledge, skills, and opportunities to achieve academic
-                  excellence and professional success worldwide.
+                <p className="text-sm text-slate-500 mb-6 font-medium">
+                  LSHS &middot; Chairman &amp; CEO, Sampan Group
                 </p>
-              </div>
-              <div
-                className="sm-anim mt-8 flex items-center gap-4"
-                style={{ opacity: 0 }}
-              >
-                <div className="flex -space-x-2">
-                  {[C.navy, C.cips, C.gold].map((c, i) => (
-                    <div
-                      key={i}
-                      className="h-8 w-8 rounded-full border-2 flex items-center justify-center text-[9px] font-bold text-white"
-                      style={{ borderColor: C.navyDark, backgroundColor: c }}
+
+                <div className="space-y-4 text-slate-600 leading-[1.8] text-[14px] mb-8">
+                  <p>
+                    Md. Emamul Hasan is an entrepreneur and business leader with
+                    interests spanning petrochemicals, hospitality, real estate,
+                    agro-business and education across Bangladesh, as Chairman
+                    of Sampan Group. He is the Managing Director of the London
+                    School of Higher Studies, a CIPS Approved Study, Exam and
+                    Distance Learning Centre.
+                  </p>
+                  <p>
+                    His other roles include ownership of Sampan Agro &amp; Golf
+                    Resort and Express Highway Inn, and leadership positions
+                    with the Bangladesh PABX Association, Bangladesh LPG
+                    Association, and Barisal Bulls (BPL).
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap gap-x-4 gap-y-2">
+                  {ceoTags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-slate-500"
                     >
-                      {["UK", "BD", "Global"][i]}
-                    </div>
+                      <CheckCircle2 className="h-3 w-3 text-[#0B73B9]" />
+                      {tag}
+                    </span>
                   ))}
                 </div>
-                <span className="text-[12px] text-white/30">
-                  Serving students across borders
-                </span>
               </div>
             </div>
 
-            <div className="hidden md:block absolute left-1/2 top-12 bottom-12 w-[1px] bg-white/[0.06]" />
-
-            <div ref={missionRef}>
-              <div
-                className="sm-anim flex items-center gap-3.5 mb-6"
-                style={{ opacity: 0 }}
-              >
-                <div
-                  className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10"
-                  style={{
-                    backgroundColor: "rgba(255,255,255,0.05)",
-                    color: C.cipsLight,
-                  }}
-                >
-                  <Target className="h-5 w-5" />
+            {/* ── Academic Director ── */}
+            <div className="reveal-item grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
+              {/* Content */}
+              <div className="md:col-span-7 lg:col-span-8 order-2 md:order-1">
+                <div className="flex items-center gap-3 mb-4">
+                  <GraduationCap className="h-4 w-4 text-[#0B73B9]" />
+                  <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#0B73B9]">
+                    Academic Director & COO
+                  </span>
                 </div>
-                <h3 className="text-[22px] font-bold text-white tracking-tight">
-                  Our Mission
-                </h3>
-              </div>
-              <div className="sm-anim" style={{ opacity: 0 }}>
-                <p className="text-[15px] text-white/45 leading-[1.85]">
-                  LSHS strives to deliver globally recognized education,
-                  equipping students with knowledge, skills, and opportunities
-                  to excel academically and professionally in a competitive
-                  international landscape.
-                </p>
-              </div>
-              <div className="sm-anim mt-8" style={{ opacity: 0 }}>
-                <Link
-                  href="/apprenticeships"
-                  className="inline-flex items-center gap-2 text-[13px] font-semibold text-white/60 hover:text-white transition-colors group"
+                <h3
+                  className="text-2xl lg:text-3xl font-medium text-slate-900 tracking-tight mb-1"
+                  style={{ fontFamily: "var(--font-playfair)" }}
                 >
-                  Explore our programmes
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+                  Muhammad Haque
+                </h3>
+                <p className="text-sm text-slate-500 mb-6 font-medium">
+                  LSHS &middot; Teaching Fellow, Arden University UK
+                </p>
 
-      {/* ═══ VALUES ═══ */}
-      <section className="mx-auto max-w-6xl px-6 mb-20 lg:mb-28">
-        <div className="text-center mb-12">
-          <p
-            className="val-card text-[11px] font-bold uppercase tracking-[0.25em] text-[#0975b7] mb-3"
-            style={{ opacity: 0 }}
-          >
-            What We Stand For
-          </p>
-          <h2
-            className="val-card text-[28px] sm:text-[34px] font-bold text-[#002E4D] tracking-tight"
-            style={{ opacity: 0 }}
-          >
-            Our Values
-          </h2>
-        </div>
-
-        <div
-          ref={valuesRef}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
-        >
-          {values.map((val, i) => {
-            const Icon = val.icon;
-            const colors = [C.gold, C.cips, C.navy, C.cipsLight];
-            const color = colors[i];
-            return (
-              <div
-                key={val.title}
-                className="val-card group relative rounded-2xl border border-slate-100 bg-white p-7 hover:shadow-xl hover:shadow-slate-200/50 hover:border-slate-200 transition-all duration-500 overflow-hidden"
-                style={{ opacity: 0 }}
-              >
-                <div
-                  className="absolute -top-16 -right-16 w-40 h-40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-3xl pointer-events-none"
-                  style={{ backgroundColor: color + "12" }}
-                />
-                <div className="relative">
-                  <div
-                    className="flex h-12 w-12 items-center justify-center rounded-xl mb-5 transition-transform duration-400 group-hover:scale-110"
-                    style={{ backgroundColor: color + "0D", color }}
-                  >
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <h4 className="text-[16px] font-bold text-[#002E4D] mb-2.5 tracking-tight">
-                    {val.title}
-                  </h4>
-                  <p className="text-[13px] text-slate-400 leading-[1.8]">
-                    {val.desc}
+                <div className="space-y-4 text-slate-600 leading-[1.8] text-[14px] mb-8">
+                  <p>
+                    Md. Muhammad Haque leads LSHS&apos;s academic delivery,
+                    bringing direct experience from UK higher education. He
+                    holds an MBA from the University of East London, is a Fellow
+                    of Advance HE (FHEA), and is a professional member of the
+                    Chartered Institute of Management, UK.
+                  </p>
+                  <p>
+                    He currently serves as a Teaching Fellow at Arden University
+                    and previously lectured at Canterbury Christ Church
+                    University, alongside programme involvement at institutions
+                    including UCL, the University of Leeds, and Coventry
+                    University.
                   </p>
                 </div>
-              </div>
-            );
-          })}
-        </div>
 
-        <div
-          className="val-card mt-10 rounded-2xl border border-slate-100 bg-white p-8 flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left"
-          style={{ opacity: 0 }}
-        >
-          <div
-            className="flex h-12 w-12 items-center justify-center rounded-xl flex-shrink-0"
-            style={{ backgroundColor: C.gold + "0D", color: C.gold }}
-          >
-            <Sparkles className="h-6 w-6" />
+                <div className="flex flex-wrap gap-x-4 gap-y-2">
+                  {academicTags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#0B73B9]"
+                    >
+                      <CheckCircle2 className="h-3 w-3 text-[#0B73B9]" />
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Divider Line (Hidden on mobile) */}
+              <div className="hidden md:block w-px h-full min-h-[200px] bg-slate-200 order-1 md:order-2" />
+
+              {/* Compact Image */}
+              <div className="md:col-span-4 lg:col-span-3 flex justify-center md:justify-start order-1 md:order-3">
+                <div className="relative w-40 h-40 md:w-44 md:h-44 lg:w-48 lg:h-48 rounded-2xl overflow-hidden ring-1 ring-black/5 shadow-lg flex-shrink-0">
+                  <Image
+                    src="/ceo/coo.webp"
+                    alt="Muhammad Haque"
+                    fill
+                    className="object-cover object-top"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-          <p className="text-[15px] font-semibold text-[#002E4D] leading-relaxed">
-            At LSHS, we are committed to empowering students with global
-            knowledge, fostering lifelong learning, and preparing them for
-            success in an evolving world.
-          </p>
         </div>
       </section>
 
-      {/* ═══ CTA ═══ */}
-      <section className="mx-auto max-w-6xl px-6 mb-20 lg:mb-28">
-        <div
-          ref={ctaRef}
-          className="relative rounded-2xl overflow-hidden"
-          style={{ opacity: 0 }}
-        >
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `linear-gradient(135deg, ${C.navyDark}, ${C.navy} 50%, ${C.navyLight})`,
-            }}
-          />
-          <div
-            className="absolute inset-0 opacity-[0.04] pointer-events-none"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
-              backgroundSize: "24px 24px",
-            }}
-          />
-          <div
-            className="absolute -bottom-20 -right-20 w-80 h-80 rounded-full opacity-[0.08] blur-[80px] pointer-events-none"
-            style={{ backgroundColor: C.gold }}
-          />
+      {/* ═══════════════════════════════════════════════════ 7. TUTORS ═══════════════════════════════════════════════════ */}
+      <section className="px-6 md:px-12 py-20 md:py-28">
+        <div className="max-w-7xl mx-auto">
+          <div className="reveal-item text-center mb-14 max-w-2xl mx-auto">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-8 h-0.5 bg-[#0B73B9]" />
+              <span className="text-sm font-bold tracking-[0.2em] uppercase text-[#0B73B9]">
+                Expert Team
+              </span>
+              <div className="w-8 h-0.5 bg-[#0B73B9]" />
+            </div>
+            <h2
+              className="text-3xl lg:text-4xl font-medium text-slate-900 tracking-tight mb-4"
+              style={{ fontFamily: "var(--font-playfair)" }}
+            >
+              LSHS Trainers
+            </h2>
+            <p className="text-[15px] text-slate-500 leading-relaxed">
+              Our programmes are delivered by qualified professionals with
+              direct industry and academic experience in procurement and supply
+              chain management.
+            </p>
+          </div>
+          <div className="reveal-item grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                name: "CIPS-Qualified Tutors",
+                desc: "All trainers hold relevant CIPS qualifications and bring real-world procurement expertise to every session.",
+                icon: UserCheck,
+              },
+              {
+                name: "Industry Practitioners",
+                desc: "Our team includes working professionals who apply procurement and supply chain principles daily in global organisations.",
+                icon: Briefcase,
+              },
+              {
+                name: "Academic Specialists",
+                desc: "Selected tutors hold UK teaching fellowships and higher education credentials, ensuring academic rigour in every module.",
+                icon: GraduationCap,
+              },
+            ].map((tutor, i) => {
+              const Icon = tutor.icon;
+              return (
+                <div
+                  key={i}
+                  className="group p-6 rounded-xl border border-slate-200 bg-slate-50/50 hover:border-[#0B73B9]/20 hover:bg-white hover:shadow-md transition-all duration-300 hover:-translate-y-1"
+                >
+                  <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#0B73B9]/5 text-[#0B73B9] mb-4 group-hover:bg-[#0B73B9]/10 transition-colors duration-300">
+                    <Icon className="h-5 w-5" strokeWidth={1.5} />
+                  </div>
+                  <h4 className="text-base font-semibold text-slate-900 mb-2 tracking-tight">
+                    {tutor.name}
+                  </h4>
+                  <p className="text-sm text-slate-500 leading-relaxed">
+                    {tutor.desc}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+          <div className="reveal-item text-center mt-10">
+            <Link
+              href="/contact"
+              className="group inline-flex items-center gap-2 text-sm font-semibold text-[#0B73B9] hover:text-[#085C92] transition-colors"
+            >
+              Get in touch to learn about our tutoring team{" "}
+              <ArrowRight
+                size={14}
+                className="group-hover:translate-x-1 transition-transform"
+              />
+            </Link>
+          </div>
+        </div>
+      </section>
 
-          <div className="relative z-10 px-8 py-14 sm:px-16 sm:py-20 flex flex-col lg:flex-row items-center justify-between gap-10">
-            <div className="text-center lg:text-left">
-              <p
-                className="text-[11px] font-bold uppercase tracking-[0.3em] mb-4"
-                style={{ color: C.gold }}
-              >
+      {/* ═══════════════════════════════════════════════════ 8. CLOSING CTA ═══════════════════════════════════════════════════ */}
+      <section className="px-6 md:px-12 pb-20 md:pb-28">
+        <div className="max-w-7xl mx-auto relative rounded-2xl overflow-hidden shadow-2xl reveal-item">
+          <div className="absolute inset-0 bg-[#001B30]" />
+          <Image
+            src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2000&auto=format&fit=crop"
+            alt="Office Background"
+            fill
+            className="object-cover opacity-10"
+            unoptimized
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-size-[72px_72px] pointer-events-none" />
+          <div className="absolute -bottom-20 -right-20 w-96 h-96 rounded-full opacity-10 blur-[100px] bg-[#0B73B9] pointer-events-none float-accent" />
+          <div className="absolute -top-20 -left-20 w-80 h-80 rounded-full opacity-5 blur-[80px] bg-[#f4d210] pointer-events-none float-accent" />
+
+          <div className="relative z-10 px-8 py-16 md:px-16 md:py-24 flex flex-col lg:flex-row items-center justify-between gap-12">
+            <div className="text-center lg:text-left max-w-2xl">
+              <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#f4d210] mb-4">
                 Take the Next Step
               </p>
-              <h3 className="text-[28px] sm:text-[36px] font-bold text-white tracking-tight leading-[1.15] mb-4">
-                Ready to Begin
-                <br />
-                <span style={{ color: C.goldLight }}>Your Journey?</span>
-              </h3>
-              <p className="text-[15px] text-white/40 leading-relaxed max-w-md">
+              <h2
+                className="text-3xl md:text-4xl lg:text-5xl font-medium text-white tracking-tight mb-4"
+                style={{ fontFamily: "var(--font-playfair)" }}
+              >
+                Ready to Begin Your Journey?
+              </h2>
+              <p className="text-base md:text-lg text-white/50 leading-relaxed">
                 Explore our CIPS qualifications and take the next step toward
-                global professional recognition.
+                globally recognised professional status.
               </p>
             </div>
-            <div className="flex flex-col gap-3 flex-shrink-0">
+            <div className="flex flex-col sm:flex-row gap-4 flex-shrink-0">
               <Link
-                href="/apprenticeships"
-                className="inline-flex items-center justify-center gap-2.5 rounded-xl px-8 py-4 text-[14px] font-semibold text-[#002E4D] bg-white hover:bg-slate-50 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl shadow-white/10"
+                href="/courses"
+                className="inline-flex items-center justify-center gap-2.5 rounded-xl px-8 py-4 text-sm font-bold tracking-wide uppercase text-[#001B30] bg-white hover:bg-slate-100 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl"
               >
-                View Our Courses
-                <ArrowRight className="h-4 w-4" />
+                View Our Courses <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-2.5 rounded-xl px-8 py-4 text-[14px] font-semibold text-white border border-white/15 hover:bg-white/[0.06] transition-all duration-200"
+                className="inline-flex items-center justify-center gap-2.5 rounded-xl px-8 py-4 text-sm font-bold tracking-wide uppercase text-white border border-white/20 hover:bg-white/5 backdrop-blur-sm transition-all duration-200"
               >
                 Contact Us
               </Link>
@@ -1085,9 +841,6 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
-      {/* ═══ CIPS COURSES BANNER ═══ */}
-      <CipsCoursesBanner />
     </main>
   );
 }

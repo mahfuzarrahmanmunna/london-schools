@@ -1,57 +1,83 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'next/navigation';
-import Link from 'next/link';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useEffect, useRef, useState } from "react";
+import { useParams } from "next/navigation";
+import Link from "next/link";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowRight,
-  Award,
-  BookOpen,
   CheckCircle2,
   ChevronDown,
   Clock,
   Download,
-  GraduationCap,
-  ListChecks,
-  Sparkles,
-  Target,
-  Trophy,
-  Users,
-  Zap,
-} from 'lucide-react';
-import { cipsCoursesData } from '@/app/data/cipsCoursesData';
+  MapPin,
+  BookOpen,
+  RotateCw,
+  Award,
+  Plus,
+  ArrowUpRight,
+  MessageCircle,
+} from "lucide-react";
+
+// Import the JSON data
+import cipsCoursesData from "../../data/cipsCourse.json";
+import { useModal } from "@/app/context/ModalContext";
 
 gsap.registerPlugin(ScrollTrigger);
-
 // ─── Types & Config ───────────────────────────────────────────
 interface LevelTheme {
   accent: string;
   accentRgb: string;
   text: string;
   bg: string;
-  glow: string;
   border: string;
-  darkBg: string;
 }
 
 const LEVEL_THEMES: Record<number, LevelTheme> = {
-  2: { accent: '#00A8A8', accentRgb: '0, 168, 168', text: '#00A8A8', bg: 'rgba(0, 168, 168, 0.04)', glow: 'rgba(0, 168, 168, 0.3)', border: 'rgba(0, 168, 168, 0.2)', darkBg: 'rgba(0, 168, 168, 0.1)' },
-  3: { accent: '#0077C8', accentRgb: '0, 119, 200', text: '#0077C8', bg: 'rgba(0, 119, 200, 0.04)', glow: 'rgba(0, 119, 200, 0.3)', border: 'rgba(0, 119, 200, 0.2)', darkBg: 'rgba(0, 119, 200, 0.1)' },
-  4: { accent: '#5B2C83', accentRgb: '91, 44, 131', text: '#5B2C83', bg: 'rgba(91, 44, 131, 0.04)', glow: 'rgba(91, 44, 131, 0.3)', border: 'rgba(91, 44, 131, 0.2)', darkBg: 'rgba(91, 44, 131, 0.1)' },
-  5: { accent: '#C8102E', accentRgb: '200, 16, 46', text: '#C8102E', bg: 'rgba(200, 16, 46, 0.04)', glow: 'rgba(200, 16, 46, 0.3)', border: 'rgba(200, 16, 46, 0.2)', darkBg: 'rgba(200, 16, 46, 0.1)' },
-  6: { accent: '#F2C300', accentRgb: '242, 195, 0', text: '#B89500', bg: 'rgba(242, 195, 0, 0.05)', glow: 'rgba(242, 195, 0, 0.3)', border: 'rgba(242, 195, 0, 0.25)', darkBg: 'rgba(242, 195, 0, 0.1)' },
-  7: { accent: '#D4AF37', accentRgb: '212, 175, 55', text: '#D4AF37', bg: 'rgba(212, 175, 55, 0.04)', glow: 'rgba(212, 175, 55, 0.35)', border: 'rgba(212, 175, 55, 0.25)', darkBg: 'rgba(212, 175, 55, 0.1)' },
+  2: {
+    accent: "#0F766E",
+    accentRgb: "15, 118, 110",
+    text: "#0F766E",
+    bg: "rgba(15, 118, 110, 0.05)",
+    border: "rgba(15, 118, 110, 0.2)",
+  },
+  3: {
+    accent: "#1D4ED8",
+    accentRgb: "29, 78, 216",
+    text: "#1D4ED8",
+    bg: "rgba(29, 78, 216, 0.05)",
+    border: "rgba(29, 78, 216, 0.2)",
+  },
+  4: {
+    accent: "#6D28D9",
+    accentRgb: "109, 40, 217",
+    text: "#6D28D9",
+    bg: "rgba(109, 40, 217, 0.05)",
+    border: "rgba(109, 40, 217, 0.2)",
+  },
+  5: {
+    accent: "#BE123C",
+    accentRgb: "190, 18, 60",
+    text: "#BE123C",
+    bg: "rgba(190, 18, 60, 0.05)",
+    border: "rgba(190, 18, 60, 0.2)",
+  },
+  6: {
+    accent: "#CA8A04",
+    accentRgb: "202, 138, 4",
+    text: "#CA8A04",
+    bg: "rgba(202, 138, 4, 0.05)",
+    border: "rgba(202, 138, 4, 0.2)",
+  },
 };
 
 const LEVEL_IMAGES: Record<number, string> = {
-  2: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=2070&auto=format&fit=crop',
-  3: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070&auto=format&fit=crop',
-  4: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2070&auto=format&fit=crop',
-  5: 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop',
-  6: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2070&auto=format&fit=crop',
-  7: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2069&auto=format&fit=crop',
+  2: "https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=2070&auto=format&fit=crop",
+  3: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070&auto=format&fit=crop",
+  4: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2070&auto=format&fit=crop",
+  5: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop",
+  6: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2070&auto=format&fit=crop",
 };
 
 // ─── Sub-Components ──────────────────────────────────────────
@@ -59,9 +85,12 @@ const LEVEL_IMAGES: Record<number, string> = {
 function SplitText({ text, className }: { text: string; className?: string }) {
   return (
     <span className={className} aria-label={text}>
-      {text.split(' ').map((word, i) => (
+      {text.split(" ").map((word, i) => (
         <span key={i} className="split-word inline-block overflow-hidden">
-          <span className="inline-block" style={{ willChange: 'transform, opacity' }}>
+          <span
+            className="inline-block"
+            style={{ willChange: "transform, opacity" }}
+          >
             {word}&nbsp;
           </span>
         </span>
@@ -70,100 +99,177 @@ function SplitText({ text, className }: { text: string; className?: string }) {
   );
 }
 
-function FaqItem({ question, answer, isOpen, onClick, theme }: { 
-  question: string; answer: string; isOpen: boolean; onClick: () => void; theme: LevelTheme 
+function FaqItem({
+  question,
+  answer,
+  list,
+  isOpen,
+  onClick,
+  theme,
+}: {
+  question: string;
+  answer: string;
+  list?: string[];
+  isOpen: boolean;
+  onClick: () => void;
+  theme: LevelTheme;
 }) {
   return (
-    <div className="border-b border-gray-100 last:border-b-0">
+    <div className="border-b border-slate-200 last:border-b-0">
       <button
-        className="w-full flex items-center justify-between py-6 text-left group"
         onClick={onClick}
+        className="w-full flex items-center justify-between gap-6 py-6 text-left group"
       >
-        <span className="text-base md:text-lg font-medium text-gray-800 group-hover:text-gray-900 transition-colors pr-8">
+        <span
+          className={`text-base md:text-lg font-medium transition-colors duration-300 ${
+            isOpen ? "" : "text-primary group-hover:opacity-80"
+          }`}
+          style={isOpen ? { color: theme.text } : {}}
+        >
           {question}
         </span>
-        <div 
-          className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 border"
-          style={{ 
-            backgroundColor: isOpen ? theme.accent : 'transparent',
-            borderColor: isOpen ? theme.accent : '#E5E7EB',
-            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)'
-          }}
+
+        <div
+          className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${
+            isOpen
+              ? "rotate-180"
+              : "bg-white border-slate-200 group-hover:border-slate-400"
+          }`}
+          style={
+            isOpen
+              ? {
+                  backgroundColor: theme.accent,
+                  borderColor: theme.accent,
+                }
+              : {}
+          }
         >
-          <ChevronDown size={14} className={`transition-colors ${isOpen ? 'text-white' : 'text-gray-400'}`} />
+          <Plus
+            className={`w-4 h-4 transition-colors duration-300 ${
+              isOpen
+                ? "text-white"
+                : "text-slate-400 group-hover:text-slate-600"
+            }`}
+            strokeWidth={2.5}
+          />
         </div>
       </button>
-      <div 
-        className="overflow-hidden transition-all duration-500 ease-in-out"
-        style={{ maxHeight: isOpen ? '300px' : '0px', opacity: isOpen ? 1 : 0 }}
+
+      {/* Smooth height transition using CSS Grid */}
+      <div
+        className={`grid transition-all duration-500 ease-in-out ${
+          isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        }`}
       >
-        <p className="pb-6 text-gray-500 leading-relaxed pl-1">
-          {answer}
-        </p>
+        <div className="overflow-hidden">
+          <div className="pb-6 pr-12">
+            <p className="text-base font-normal leading-relaxed tracking-normal text-slate-600 mb-4">
+              {answer}
+            </p>
+
+            {/* Render List if present */}
+            {list && list.length > 0 && (
+              <ul className="space-y-3 mt-2">
+                {list.map((item, idx) => (
+                  <li key={idx} className="flex items-start gap-3">
+                    <span
+                      className="flex-shrink-0 mt-2 w-1.5 h-1.5 rounded-full"
+                      style={{ backgroundColor: theme.accent }}
+                    />
+                    <span className="text-base font-normal leading-relaxed tracking-normal text-slate-600">
+                      {item}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-function CurriculumTabs({ coreModules, electiveModules, theme }: { 
-  coreModules: any[]; electiveModules: any[]; theme: LevelTheme 
+function CurriculumTabs({
+  coreModules,
+  electiveModules,
+  theme,
+}: {
+  coreModules: any[];
+  electiveModules: any[];
+  theme: LevelTheme;
 }) {
-  const [activeTab, setActiveTab] = useState<'core' | 'elective'>('core');
-  const modulesToShow = activeTab === 'core' ? coreModules : electiveModules;
+  const [activeTab, setActiveTab] = useState<"core" | "elective">("core");
+  const modulesToShow = activeTab === "core" ? coreModules : electiveModules;
 
   return (
     <div>
-      <div className="flex gap-2 mb-8 bg-gray-100 p-1.5 rounded-xl w-fit">
+      <div className="flex gap-1 mb-10 border-b border-slate-200">
         <button
-          onClick={() => setActiveTab('core')}
-          className="px-5 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wider transition-all duration-300"
-          style={{ 
-            backgroundColor: activeTab === 'core' ? theme.accent : 'transparent', 
-            color: activeTab === 'core' ? 'white' : '#6B7280',
-            boxShadow: activeTab === 'core' ? `0 4px 12px ${theme.glow}` : 'none'
+          onClick={() => setActiveTab("core")}
+          className="px-6 py-3 text-sm font-bold uppercase tracking-wider transition-all duration-300 relative -mb-px"
+          style={{
+            color: activeTab === "core" ? theme.text : "#64748B",
           }}
         >
           Core Modules ({coreModules.length})
+          {activeTab === "core" && (
+            <span
+              className="absolute bottom-0 left-0 right-0 h-0.5"
+              style={{ backgroundColor: theme.accent }}
+            />
+          )}
         </button>
         {electiveModules.length > 0 && (
           <button
-            onClick={() => setActiveTab('elective')}
-            className="px-5 py-2.5 rounded-lg text-sm font-bold uppercase tracking-wider transition-all duration-300"
-            style={{ 
-              backgroundColor: activeTab === 'elective' ? theme.accent : 'transparent', 
-              color: activeTab === 'elective' ? 'white' : '#6B7280',
-              boxShadow: activeTab === 'elective' ? `0 4px 12px ${theme.glow}` : 'none'
+            onClick={() => setActiveTab("elective")}
+            className="px-6 py-3 text-sm font-bold uppercase tracking-wider transition-all duration-300 relative -mb-px"
+            style={{
+              color: activeTab === "elective" ? theme.text : "#64748B",
             }}
           >
             Electives ({electiveModules.length})
+            {activeTab === "elective" && (
+              <span
+                className="absolute bottom-0 left-0 right-0 h-0.5"
+                style={{ backgroundColor: theme.accent }}
+              />
+            )}
           </button>
         )}
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-px bg-slate-200 border border-slate-200">
         {modulesToShow.map((mod, i) => (
-          <div 
-            key={mod.code} 
-            className="flex items-center gap-5 p-5 rounded-2xl bg-white border border-gray-100 hover:border-gray-200 hover:shadow-lg transition-all duration-300 group"
-            style={{ animationDelay: `${i * 50}ms` }}
+          <div
+            key={mod.code}
+            className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-6 md:p-8 bg-white transition-all duration-300 hover:bg-slate-50 group"
           >
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center font-mono text-xs font-bold text-gray-500 bg-gray-50 border border-gray-100 group-hover:border-gray-200 transition-colors">
+            <div className="w-16 h-16 flex items-center justify-center text-sm font-bold text-slate-500 bg-slate-100 border border-slate-200 flex-shrink-0">
               {mod.code}
             </div>
             <div className="flex-grow">
-              <p className="font-semibold text-gray-900 group-hover:text-gray-800 transition-colors">{mod.title}</p>
-              <div className="flex items-center gap-3 mt-1">
-                <span className="text-xs text-gray-400 flex items-center gap-1">
-                  <Zap size={10} className="text-yellow-500" /> {mod.credits} Credits
+              <p className="font-semibold text-primary text-lg mb-2">
+                {mod.name}
+              </p>
+              <p className="text-sm text-slate-500 leading-relaxed mb-3">
+                {mod.description}
+              </p>
+              <div className="flex items-center gap-4">
+                <span className="text-xs text-slate-500 flex items-center gap-1.5 font-medium uppercase tracking-wider">
+                  <Clock size={12} /> {mod.credits} Credits
                 </span>
-                <span className={`text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full ${
-                  mod.type === 'CORE' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-500'
-                }`}>
+                <span
+                  className={`text-[10px] font-bold tracking-wider uppercase px-2 py-1 ${
+                    mod.type.toUpperCase() === "CORE"
+                      ? "bg-slate-900 text-white"
+                      : "bg-slate-100 text-slate-600 border border-slate-200"
+                  }`}
+                >
                   {mod.type}
                 </span>
               </div>
             </div>
-            <ArrowRight size={16} className="text-gray-300 group-hover:text-gray-500 group-hover:translate-x-1 transition-all" />
           </div>
         ))}
       </div>
@@ -175,67 +281,72 @@ function CurriculumTabs({ coreModules, electiveModules, theme }: {
 export default function CourseDetailsPage() {
   const params = useParams();
   const slug = params.slug as string;
-  const course = cipsCoursesData.find((c) => c.href === `/courses/${slug}`);
+    const { openModal } = useModal();
+
+  // Typecast JSON data to find the correct course
+  const course = (cipsCoursesData as any[]).find((c) => c.slug === slug);
 
   const pageRef = useRef<HTMLDivElement>(null);
-  const heroImgRef = useRef<HTMLDivElement>(null);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(0); // Open the first one by default
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
   }, [slug]);
 
   useEffect(() => {
     if (!course) return;
 
     const ctx = gsap.context(() => {
-      // Hero Text
-      gsap.from('.split-word span', {
-        y: '110%',
+      // Hero Text Animation
+      gsap.from(".split-word span", {
+        y: "110%",
         opacity: 0,
-        duration: 1.2,
-        stagger: 0.04,
-        ease: 'power4.out',
-        delay: 0.3,
-      });
-
-      gsap.from('.hero-meta', {
-        opacity: 0,
-        y: 30,
         duration: 1,
-        stagger: 0.1,
-        ease: 'power3.out',
-        delay: 1,
+        stagger: 0.03,
+        ease: "power3.out",
+        delay: 0.2,
       });
 
-      // Hero Image Parallax
-      if (heroImgRef.current) {
-        gsap.to(heroImgRef.current, {
-          y: '20%',
-          ease: 'none',
-          scrollTrigger: {
-            trigger: heroImgRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1,
-          },
-        });
-      }
+      gsap.from(".hero-anim", {
+        opacity: 0,
+        y: 20,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out",
+        delay: 0.5,
+      });
 
-      // Sections
-      gsap.utils.toArray<HTMLElement>('.detail-section').forEach((sec) => {
+      // Scroll Reveal Animation for Sections
+      gsap.utils.toArray<HTMLElement>(".reveal").forEach((sec) => {
         gsap.from(sec.children, {
-          y: 40,
+          y: 30,
           opacity: 0,
           duration: 0.8,
-          stagger: 0.15,
-          ease: 'power3.out',
+          stagger: 0.1,
+          ease: "power3.out",
           scrollTrigger: {
             trigger: sec,
-            start: 'top 85%',
+            start: "top 85%",
           },
         });
       });
+
+      // Scroll Reveal for individual items (like FAQ)
+      gsap.utils.toArray<HTMLElement>(".reveal-item").forEach((item) => {
+        gsap.from(item, {
+          opacity: 0,
+          y: 30,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: item,
+            start: "top 85%",
+          },
+        });
+      });
+
+      // Crucial for Lenis compatibility: Refresh ScrollTrigger after initial load
+      ScrollTrigger.refresh();
     }, pageRef);
 
     return () => ctx.revert();
@@ -243,132 +354,179 @@ export default function CourseDetailsPage() {
 
   if (!course) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-[#FAFAFA]">
+      <main className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Course Not Found</h1>
-          <Link href="/qualifications" className="text-[#D4AF37] font-bold hover:underline">
-            Back to Qualifications
+          <h1
+            className="hero-title text-white font-light tracking-[-0.025em] leading-[1.05]"
+            style={{
+              fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
+            }}
+          >
+            Course Not Found
+          </h1>
+          <Link
+            href="/courses"
+            className="text-slate-500 font-medium hover:text-slate-900 underline underline-offset-4"
+          >
+            Back to Courses
           </Link>
         </div>
       </main>
     );
   }
 
-  const theme = LEVEL_THEMES[course.level];
-  const coreModules = course.modules.filter((m) => m.type === 'CORE');
-  const electiveModules = course.modules.filter((m) => m.type === 'ELECTIVE');
+  const theme = LEVEL_THEMES[course.level] || LEVEL_THEMES[2];
 
   return (
-    <main ref={pageRef} className="bg-[#FAFAFA] overflow-x-hidden">
-      
+    // Removed overflow-x-hidden here to fix Lenis scroll locking
+    <main ref={pageRef} className="bg-white">
       {/* ═══════════════════ EDITORIAL HERO ═══════════════════ */}
-      <section className="relative h-[85vh] min-h-[600px] flex items-end overflow-hidden bg-[#050505]">
-        <div ref={heroImgRef} className="absolute inset-0 -top-20 -bottom-20 w-full">
+      <section className="relative min-h-[80vh] flex items-center overflow-hidden bg-[#0F172A]">
+        <div className="absolute inset-0 w-full h-full">
           <img
             src={LEVEL_IMAGES[course.level]}
-            alt={course.title}
-            className="w-full h-full object-cover scale-110 opacity-50"
+            alt={course.hero.headline}
+            className="w-full h-full object-cover opacity-20"
           />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0F172A] via-[#0F172A]/90 to-[#0F172A]/60" />
         </div>
-        
-        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/70 to-[#050505]/20" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#050505]/80 to-transparent" />
-        
-        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 pb-20 pt-40 w-full">
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-32 md:py-40 w-full">
           {/* Breadcrumb */}
-          <div className="hero-meta flex flex-wrap items-center gap-3 mb-8">
-            <Link href="/qualifications" className="text-xs font-medium tracking-widest uppercase text-white/30 hover:text-white/60 transition-colors">
-              Qualifications
+          <div className="hero-anim flex flex-wrap items-center gap-3 mb-10">
+            <Link
+              href="/courses"
+              className="text-xs font-medium tracking-widest uppercase text-slate-400 hover:text-white transition-colors"
+            >
+              Courses
             </Link>
-            <span className="text-white/10">/</span>
-            <span className="text-xs font-bold tracking-wider uppercase px-3 py-1.5 rounded-md border backdrop-blur-md text-white/90"
-              style={{ background: `rgba(${theme.accentRgb}, 0.2)`, borderColor: `rgba(${theme.accentRgb}, 0.3)` }}
+            <span className="text-slate-600">/</span>
+            <span
+              className="text-xs font-bold tracking-wider uppercase px-3 py-1 border text-white"
+              style={{ borderColor: theme.border, color: theme.text }}
             >
               Level {course.level}
             </span>
           </div>
 
           {/* Title */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-[0.95] tracking-tighter mb-8 max-w-4xl">
-            <SplitText text={course.title} />
+          <h1
+            className="hero-title text-white font-light tracking-[-0.025em] leading-[1.05]"
+            style={{
+              fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
+            }}
+          >
+            {course.hero.headline}
           </h1>
 
           {/* Subtitle */}
-          <p className="hero-meta text-lg md:text-xl text-white/40 max-w-2xl leading-relaxed mb-12 font-light">
-            {course.subtitle}
+          <p className="hero-anim text-lg md:text-xl text-slate-400 max-w-3xl leading-relaxed mb-12 font-light">
+            {course.hero.sub_headline}
           </p>
 
+          {/* Key Facts Strip */}
+          <div className="hero-anim flex flex-wrap gap-x-8 gap-y-4 mb-12 border-t border-b border-slate-700 py-6">
+            {course.hero.key_facts.map((fact: string, i: number) => (
+              <div
+                key={i}
+                className="flex items-center gap-2 text-sm font-medium text-slate-300"
+              >
+                <CheckCircle2 size={14} style={{ color: theme.accent }} />
+                {fact}
+              </div>
+            ))}
+          </div>
+
           {/* Hero CTAs */}
-          <div className="hero-meta flex flex-wrap gap-4">
+          <div className="hero-anim flex flex-wrap gap-4">
             <a
-              href="#curriculum"
-              className="group inline-flex items-center gap-3 px-8 py-4 text-black rounded-xl text-sm font-bold uppercase tracking-wider transition-all hover:brightness-110 hover:scale-105 transform"
-              style={{ backgroundColor: theme.accent, boxShadow: `0 15px 40px -10px ${theme.glow}` }}
+              href="https://forms.gle/kHkicZ6TaHQRoMck6"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-md text-sm font-bold uppercase tracking-wider transition-all hover:bg-primary/90"
             >
-              View Curriculum
-              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              {course.hero.cta_buttons[0]}
+              <ArrowRight
+                size={16}
+                className="group-hover:translate-x-1 transition-transform"
+              />
             </a>
-            <a
-              href={course.brochureUrl}
-              className="group inline-flex items-center gap-3 px-8 py-4 border border-white/20 text-white/80 rounded-xl text-sm font-bold uppercase tracking-wider hover:bg-white/5 hover:border-white/40 backdrop-blur-sm transition-all"
+            <button
+              onClick={() => openModal("brochure")}
+              className="group inline-flex items-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-md text-sm font-bold uppercase tracking-wider hover:bg-white/20 transition-all"
             >
               <Download size={16} />
-              Download Brochure
-            </a>
+              {course.hero.cta_buttons[1]}
+            </button>
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════ OVERVIEW + SIDEBAR ═══════════════════ */}
-      <section className="detail-section py-24 bg-white border-b border-gray-100">
+      {/* ═══════════════════ COURSE OVERVIEW ═══════════════════ */}
+      <section className="reveal py-24 bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-6 md:px-12 grid lg:grid-cols-12 gap-16">
           {/* Main Content */}
-          <div className="lg:col-span-8">
-            <p className="text-xs font-bold tracking-[0.2em] uppercase mb-6" style={{ color: theme.text }}>Overview</p>
-            <p className="text-xl text-gray-600 leading-relaxed font-light">{course.overview}</p>
-            
-            <div className="mt-12 p-6 rounded-2xl border flex flex-col md:flex-row items-start md:items-center gap-4 bg-gray-50/50"
-              style={{ borderColor: theme.border }}>
-              <div className="p-2.5 rounded-xl bg-white border border-gray-100" style={{ color: theme.accent }}>
-                <BookOpen size={20} />
-              </div>
-              <div>
-                <p className="text-sm font-bold text-gray-900 mb-1">Assessment Method</p>
-                <p className="text-sm text-gray-500 leading-relaxed">{course.exam}</p>
-              </div>
+          <div className="lg:col-span-7">
+            <p
+              className="text-xs font-bold tracking-[0.2em] uppercase mb-6"
+              style={{ color: theme.text }}
+            >
+              Course Overview
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-primary tracking-tight mb-8">
+              {course.course_overview.headline}
+            </h2>
+            <div className="space-y-6 text-slate-600 leading-[1.8] text-base">
+              {course.course_overview.body
+                .split("\n\n")
+                .map((paragraph: string, i: number) => (
+                  <p key={i}>{paragraph}</p>
+                ))}
             </div>
           </div>
 
-          {/* Sticky Sidebar */}
-          <div className="lg:col-span-4">
-            <div className="sticky top-24 bg-gray-50 rounded-3xl p-8 border border-gray-100 shadow-sm">
-              <GraduationCap size={28} style={{ color: theme.accent }} className="mb-6" />
-              <p className="text-xs font-bold tracking-[0.2em] uppercase text-gray-400 mb-2">Equivalent to</p>
-              <p className="text-base font-semibold text-gray-900 mb-8">{course.equivalent}</p>
-              
-              <div className="pt-6 border-t border-gray-200">
-                <p className="text-xs font-bold tracking-[0.2em] uppercase text-gray-400 mb-2">Total Credits</p>
-                <p className="text-4xl font-bold tracking-tight" style={{ color: theme.text }}>{course.totalCredits}</p>
-              </div>
-
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <p className="text-xs font-bold tracking-[0.2em] uppercase text-gray-400 mb-4">Study Options</p>
-                <div className="space-y-3">
-                  {course.studyModes.map((mode, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: theme.accent }} />
-                      <span className="text-sm text-gray-600 font-medium">{mode.mode}</span>
-                    </div>
-                  ))}
+          {/* Sticky Sidebar (Left Side Form Data) */}
+          <div className="lg:col-span-5">
+            <div className="sticky top-24 bg-slate-50 border border-slate-200 p-8">
+              <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-200">
+                <div
+                  className="p-2.5 bg-white border border-slate-200"
+                  style={{ color: theme.accent }}
+                >
+                  <BookOpen size={20} />
                 </div>
+                <p className="text-lg font-bold text-primary">
+                  {course.course_overview.left_side.course_name}
+                </p>
               </div>
 
-              <Link 
-                href="/contact" 
-                className="mt-8 w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl text-sm font-bold uppercase tracking-wider text-white transition-all hover:brightness-110"
-                style={{ backgroundColor: theme.accent }}
+              <div
+                className="p-4 mb-6 border"
+                style={{ backgroundColor: theme.bg, borderColor: theme.border }}
               >
-                Enrol Now
+                <div className="flex items-center gap-2 mb-2">
+                  <RotateCw size={14} style={{ color: theme.accent }} />
+                  <p
+                    className="text-xs font-bold tracking-wider uppercase"
+                    style={{ color: theme.text }}
+                  >
+                    {course.course_overview.left_side.counter_text}
+                  </p>
+                </div>
+                <p className="text-xl font-bold text-primary">
+                  {course.course_overview.left_side.discount}
+                </p>
+              </div>
+
+              <p className="text-sm text-slate-600 leading-relaxed mb-8">
+                {course.course_overview.left_side.contact_text}
+              </p>
+
+              <Link
+                href="/contact"
+                className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary text-white rounded-md text-sm font-bold uppercase tracking-wider transition-all hover:bg-primary/90"
+              >
+                {course.course_overview.left_side.cta}
                 <ArrowRight size={16} />
               </Link>
             </div>
@@ -376,163 +534,381 @@ export default function CourseDetailsPage() {
         </div>
       </section>
 
-      {/* ═══════════════════ WHO & WHY (Bento Grid) ═══════════════════ */}
-      <section className="detail-section py-24 bg-[#FAFAFA]">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 grid md:grid-cols-2 gap-6">
-          {/* Who is this for */}
-          <div className="bg-white rounded-3xl p-10 md:p-12 border border-gray-100 shadow-sm flex flex-col">
-            <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-8" style={{ backgroundColor: theme.bg, border: `1px solid ${theme.border}` }}>
-              <Users size={28} style={{ color: theme.accent }} />
-            </div>
-            <h3 className="text-3xl font-bold text-gray-900 mb-6 tracking-tight">Who is this for?</h3>
-            <p className="text-gray-500 leading-relaxed text-lg flex-grow">{course.whoIsThisFor}</p>
+      {/* ═══════════════════ WHO IT'S FOR ═══════════════════ */}
+      <section className="reveal py-24 bg-slate-50 border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="max-w-3xl mb-12">
+            <p
+              className="text-xs font-bold tracking-[0.2em] uppercase mb-6"
+              style={{ color: theme.text }}
+            >
+              Who It's For
+            </p>
+            <h2 className="text-3xl md:text-5xl font-bold text-primary tracking-tight mb-6">
+              {course.who_its_for.headline}
+            </h2>
+            <p className="text-lg text-slate-600 leading-relaxed font-light">
+              {course.who_its_for.body}
+            </p>
           </div>
 
-          {/* Why Choose LSHS */}
-          <div className="rounded-3xl p-10 md:p-12 text-white relative overflow-hidden flex flex-col" style={{ backgroundColor: '#0A0A0A' }}>
-            <div className="absolute top-0 right-0 w-64 h-64 rounded-full opacity-10 blur-[80px]" style={{ background: theme.accent }} />
-            <div className="relative z-10 flex flex-col h-full">
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-8" style={{ backgroundColor: theme.darkBg, border: `1px solid rgba(${theme.accentRgb}, 0.3)` }}>
-                <Trophy size={28} style={{ color: theme.accent }} />
-              </div>
-              <h3 className="text-3xl font-bold mb-6 tracking-tight">Why Choose LSHS?</h3>
-              <p className="text-white/50 leading-relaxed text-lg flex-grow">{course.whyChooseLshs}</p>
+          <div className="p-8 md:p-10 bg-white border border-slate-200 flex flex-col md:flex-row items-start gap-6">
+            <div
+              className="w-12 h-12 flex items-center justify-center flex-shrink-0 border"
+              style={{
+                backgroundColor: theme.bg,
+                border: `1px solid ${theme.border}`,
+              }}
+            >
+              <CheckCircle2 size={24} style={{ color: theme.accent }} />
+            </div>
+            <div>
+              <h4 className="text-lg font-bold text-primary mb-2">
+                Entry Requirements
+              </h4>
+              <p className="text-slate-600 leading-relaxed">
+                {course.who_its_for.entry_requirements}
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════ CURRICULUM ═══════════════════ */}
-      <section id="curriculum" className="detail-section py-24 bg-white">
+      {/* ═══════════════════ WHAT YOU'LL STUDY (MODULES) ═══════════════════ */}
+      <section
+        id="curriculum"
+        className="reveal py-24 bg-white border-b border-slate-200"
+      >
         <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <div className="mb-16">
-            <p className="text-xs font-bold tracking-[0.2em] uppercase mb-4" style={{ color: theme.text }}>Syllabus</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">Course Curriculum</h2>
+          <div className="mb-16 max-w-2xl">
+            <p
+              className="text-xs font-bold tracking-[0.2em] uppercase mb-6"
+              style={{ color: theme.text }}
+            >
+              What You'll Study
+            </p>
+            <h2 className="text-3xl md:text-5xl font-bold text-primary tracking-tight mb-4">
+              {course.modules.headline}
+            </h2>
+            <p className="text-lg text-slate-600 font-light">
+              {course.modules.sub_text}
+            </p>
           </div>
 
-          <CurriculumTabs 
-            coreModules={coreModules} 
-            electiveModules={electiveModules} 
-            theme={theme} 
+          <CurriculumTabs
+            coreModules={course.modules.core_modules}
+            electiveModules={course.modules.elective_modules}
+            theme={theme}
           />
         </div>
       </section>
 
-      {/* ═══════════════════ OUTCOMES & REQUIREMENTS ═══════════════════ */}
-      <section className="detail-section py-24 bg-[#FAFAFA]">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 grid lg:grid-cols-2 gap-16">
-          
-          {/* Outcomes */}
-          <div>
-            <p className="text-xs font-bold tracking-[0.2em] uppercase mb-4" style={{ color: theme.text }}>Return on Investment</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight mb-10">Key Benefits</h2>
-            <div className="space-y-4">
-              {course.outcomes.map((outcome, i) => (
-                <div key={i} className="flex items-start gap-4 bg-white p-6 rounded-2xl border border-gray-100 group hover:shadow-md transition-shadow">
-                  <div className="mt-0.5 flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: theme.bg }}>
-                    <CheckCircle2 size={18} style={{ color: theme.accent }} />
-                  </div>
-                  <p className="text-gray-700 font-medium leading-relaxed">{outcome}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+      {/* ═══════════════════ BROCHURE & FEES ═══════════════════ */}
+      <section className="reveal py-24 bg-slate-50 border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="relative overflow-hidden p-12 md:p-20 text-center bg-[#0F172A]">
+            <div
+              className="absolute inset-0 opacity-[0.05] pointer-events-none"
+              style={{
+                backgroundImage: `linear-gradient(to right, ${theme.accent} 1px, transparent 1px), linear-gradient(to bottom, ${theme.accent} 1px, transparent 1px)`,
+                backgroundSize: "40px 40px",
+              }}
+            ></div>
 
-          {/* Requirements */}
-          <div>
-            <p className="text-xs font-bold tracking-[0.2em] uppercase mb-4" style={{ color: theme.text }}>Entry Criteria</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight mb-10">Prerequisites</h2>
-            
-            <div className="space-y-4">
-              {course.requirements.map((req, i) => (
-                <div key={i} className="flex items-center gap-5 p-6 rounded-2xl bg-white border border-gray-100">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-gray-900 text-white font-bold text-sm">
-                    0{i + 1}
-                  </div>
-                  <p className="text-gray-700 font-medium">{req}</p>
-                </div>
-              ))}
+            <div className="relative z-10">
+              <Download
+                size={32}
+                style={{ color: theme.accent }}
+                className="mx-auto mb-8"
+              />
+              <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight mb-8 max-w-3xl mx-auto">
+                {course.brochure_fees.headline}
+              </h2>
+              <button
+                onClick={() => openModal("brochure")}
+                className="group inline-flex items-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-md text-sm font-bold uppercase tracking-wider hover:bg-white/20 transition-all"
+              >
+                {course.brochure_fees.cta}
+                <ArrowRight size={16} />
+              </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════ STUDY MODES ═══════════════════ */}
-      <section className="detail-section py-24 bg-[#050505]">
+      {/* ═══════════════════ HOW YOU'LL STUDY ═══════════════════ */}
+      <section className="reveal py-24 bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <div className="text-center mb-16">
-            <p className="text-xs font-bold tracking-[0.2em] uppercase text-white/30 mb-4">Flexibility</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">How You Can Study</h2>
+          <div className="text-center mb-16 max-w-2xl mx-auto">
+            <p
+              className="text-xs font-bold tracking-[0.2em] uppercase mb-4"
+              style={{ color: theme.text }}
+            >
+              How You'll Study
+            </p>
+            <h2 className="text-3xl md:text-5xl font-bold text-primary tracking-tight mb-4">
+              {course.how_youll_study.headline}
+            </h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {course.studyModes.map((mode, i) => (
-              <div key={i} className="p-8 md:p-10 rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-sm group hover:bg-white/[0.05] transition-all duration-500">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-8 border" style={{ borderColor: `rgba(${theme.accentRgb}, 0.3)`, backgroundColor: theme.darkBg }}>
-                  <Clock size={24} style={{ color: theme.accent }} />
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-slate-200 border border-slate-200">
+            {course.how_youll_study.modes.map((mode: string, i: number) => {
+              const isClassroom = mode.toLowerCase().includes("classroom");
+              return (
+                <div
+                  key={i}
+                  className="p-8 bg-white transition-all duration-300 hover:bg-slate-50 group"
+                >
+                  <div
+                    className="w-10 h-10 flex items-center justify-center mb-6 border"
+                    style={{
+                      borderColor: theme.border,
+                      backgroundColor: theme.bg,
+                    }}
+                  >
+                    {isClassroom ? (
+                      <MapPin size={20} style={{ color: theme.accent }} />
+                    ) : (
+                      <Clock size={20} style={{ color: theme.accent }} />
+                    )}
+                  </div>
+                  <p className="text-slate-700 font-medium leading-relaxed text-sm">
+                    {mode}
+                  </p>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-4">{mode.mode}</h3>
-                <p className="text-white/40 leading-relaxed">{mode.description}</p>
+              );
+            })}
+          </div>
+
+          <div className="mt-12 text-center">
+            <button className="inline-flex items-center gap-2 px-8 py-4 bg-white/60 backdrop-blur-md border border-slate-200 text-primary rounded-md text-sm font-bold uppercase tracking-wider hover:bg-white transition-all shadow-sm">
+              {course.how_youll_study.cta}
+              <ArrowRight size={14} />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════ NEXT STEP ═══════════════════ */}
+      <section className="reveal py-24 bg-slate-50 border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div
+            className="flex flex-col lg:flex-row items-center gap-12 p-12 md:p-16 border"
+            style={{ borderColor: theme.border, backgroundColor: theme.bg }}
+          >
+            <div className="flex-1">
+              <p
+                className="text-xs font-bold tracking-[0.2em] uppercase mb-4"
+                style={{ color: theme.text }}
+              >
+                Where This Qualification Takes You
+              </p>
+              <h2 className="text-3xl md:text-4xl font-bold text-primary tracking-tight mb-6">
+                {course.next_step.headline}
+              </h2>
+              <p className="text-lg text-slate-600 leading-relaxed font-light">
+                {course.next_step.body}
+              </p>
+            </div>
+            <div className="flex-shrink-0">
+              <Link
+                href="/courses"
+                className="group inline-flex items-center gap-3 px-8 py-4 bg-white/60 backdrop-blur-md border border-white/80 text-primary rounded-md text-sm font-bold uppercase tracking-wider transition-all hover:bg-white shadow-sm"
+              >
+                {course.next_step.cta}
+                <ArrowRight
+                  size={16}
+                  className="group-hover:translate-x-1 transition-transform"
+                  style={{ color: theme.accent }}
+                />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════ LSHS BENEFITS ═══════════════════ */}
+      <section className="reveal py-24 bg-white border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="text-center mb-16 max-w-2xl mx-auto">
+            <p
+              className="text-xs font-bold tracking-[0.2em] uppercase mb-4"
+              style={{ color: theme.text }}
+            >
+              Why Choose Us
+            </p>
+            <h2 className="text-3xl md:text-5xl font-bold text-primary tracking-tight mb-4">
+              {course.lshs_benefits.headline}
+            </h2>
+            <p className="text-lg text-slate-600 font-light">
+              {course.lshs_benefits.sub_text}
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-px bg-slate-200 border border-slate-200">
+            {course.lshs_benefits.benefits.map((benefit: string, i: number) => (
+              <div
+                key={i}
+                className="flex items-start gap-5 p-8 bg-white transition-all duration-300 hover:bg-slate-50 group"
+              >
+                <div
+                  className="mt-0.5 flex-shrink-0 w-8 h-8 flex items-center justify-center"
+                  style={{
+                    backgroundColor: theme.bg,
+                    border: `1px solid ${theme.border}`,
+                  }}
+                >
+                  <CheckCircle2 size={16} style={{ color: theme.accent }} />
+                </div>
+                <p className="text-slate-700 font-medium leading-relaxed pt-1">
+                  {benefit}
+                </p>
               </div>
             ))}
+          </div>
+
+          <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/courses"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-white rounded-md text-sm font-bold uppercase tracking-wider hover:bg-primary/90 transition-all"
+            >
+              {course.lshs_benefits.cta_buttons[0]}
+            </Link>
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/60 backdrop-blur-md border border-slate-200 text-primary rounded-md text-sm font-bold uppercase tracking-wider hover:bg-white transition-all shadow-sm"
+            >
+              {course.lshs_benefits.cta_buttons[1]}
+              <ArrowRight size={16} />
+            </Link>
           </div>
         </div>
       </section>
 
       {/* ═══════════════════ FAQ ═══════════════════ */}
-      <section className="detail-section py-24 bg-white">
-        <div className="max-w-3xl mx-auto px-6 md:px-12">
-          <div className="text-center mb-16">
-            <p className="text-xs font-bold tracking-[0.2em] uppercase mb-4" style={{ color: theme.text }}>Support</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">Frequently Asked Questions</h2>
-          </div>
+      <section className="reveal py-24 bg-slate-50 border-b border-slate-200">
+        <div className="mx-auto max-w-7xl px-6 md:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
+            {/* Left Column: Sticky Header & CTA */}
+            <div className="lg:col-span-5 lg:sticky lg:top-24 self-start">
+              <div className="reveal-item flex items-center gap-4 mb-6">
+                <span
+                  className="text-sm tracking-[0.2em] font-semibold uppercase"
+                  style={{ color: theme.text }}
+                >
+                  FAQs
+                </span>
+                <div
+                  className="w-12 h-0.5"
+                  style={{ backgroundColor: theme.accent }}
+                />
+              </div>
 
-          <div className="bg-gray-50 rounded-3xl p-6 md:p-8 border border-gray-100">
-            {course.faq.map((item, i) => (
-              <FaqItem 
-                key={i} 
-                question={item.question} 
-                answer={item.answer} 
-                isOpen={openFaq === i}
-                onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                theme={theme}
-              />
-            ))}
+              <h2 className="reveal-item text-3xl lg:text-4xl font-medium text-primary tracking-tight leading-[1.2] mb-6">
+                Frequently Asked Questions
+              </h2>
+
+              <p className="reveal-item text-base font-normal leading-relaxed tracking-normal text-slate-600 mb-10">
+                Find answers to the most common questions about our CIPS
+                qualifications, study modes, and the enrolment process.
+              </p>
+
+              {/* Support CTA Card */}
+              <div className="reveal-item relative bg-white border border-slate-200 rounded-xl p-6 overflow-hidden shadow-sm">
+                <div
+                  className="absolute top-0 left-0 w-1 h-full"
+                  style={{ backgroundColor: theme.accent }}
+                />
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-md bg-slate-50 border border-slate-200 flex items-center justify-center">
+                    <MessageCircle
+                      className="w-5 h-5"
+                      style={{ color: theme.accent }}
+                      strokeWidth={1.5}
+                    />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-semibold text-primary tracking-tight mb-1">
+                      Still have questions?
+                    </h3>
+                    <p className="text-sm font-normal leading-relaxed text-slate-500 mb-4">
+                      Our academic support team is here to help you choose the
+                      right path.
+                    </p>
+                    <Link
+                      href="/contact"
+                      className="group inline-flex items-center gap-2 text-sm font-semibold tracking-wider uppercase transition-colors duration-300 border-b pb-1"
+                      style={{
+                        color: theme.text,
+                        borderColor: `${theme.accent}30`,
+                      }}
+                    >
+                      Talk to an Advisor
+                      <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Accordion List */}
+            <div className="lg:col-span-7">
+              <div className="reveal-item bg-white border border-slate-200 p-6 md:p-10 rounded-lg shadow-sm">
+                {course.faq.map((item: any, i: number) => (
+                  <FaqItem
+                    key={i}
+                    question={item.question}
+                    answer={item.answer}
+                    list={item.list}
+                    isOpen={openFaq === i}
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                    theme={theme}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════ FINAL CTA ═══════════════════ */}
-      <section className="relative py-32 overflow-hidden" style={{ background: `linear-gradient(135deg, #050505 0%, rgba(${theme.accentRgb}, 0.15) 100%)` }}>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full opacity-20 blur-[100px]" style={{ background: theme.accent }} />
-
-        <div className="relative z-10 max-w-3xl mx-auto px-6 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-8 border" style={{ borderColor: `rgba(${theme.accentRgb}, 0.3)`, backgroundColor: theme.darkBg }}>
-            <Award size={32} style={{ color: theme.accent }} />
-          </div>
-          <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tight mb-6">
-            Ready to Start?
-          </h2>
-          <p className="text-lg text-white/30 leading-relaxed mb-12 max-w-xl mx-auto">
-            Take the next step in your procurement career. Enrol today or download our comprehensive brochure.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              href="/contact"
-              className="group inline-flex items-center gap-3 px-10 py-5 text-black rounded-xl text-sm font-bold uppercase tracking-wider transition-all hover:brightness-110 hover:scale-105 transform"
-              style={{ backgroundColor: theme.accent, boxShadow: `0 20px 40px -10px ${theme.glow}` }}
+      {/* ═══════════════════ CLOSING CTA ═══════════════════ */}
+      <section className="relative py-24 md:py-32 overflow-hidden bg-slate-50">
+        <div className="cta-box-container relative z-10 max-w-5xl py-16 md:py-20 bg-[#050505] rounded-[2rem] mx-auto px-6 md:px-12 shadow-2xl border border-white/10">
+          {/* Centered Content Wrapper */}
+          <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
+            <div
+              className="inline-flex items-center justify-center w-16 h-16 mb-8 border rounded-2xl"
+              style={{ borderColor: theme.border, backgroundColor: theme.bg }}
             >
-              Enrol Now
-              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <a
-              href={course.brochureUrl}
-              className="inline-flex items-center gap-3 px-10 py-5 border border-white/20 text-white/80 rounded-xl text-sm font-bold uppercase tracking-wider hover:bg-white/5 transition-all"
-            >
-              <Download size={16} />
-              Download Brochure
-            </a>
+              <Award size={32} style={{ color: theme.accent }} />
+            </div>
+
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-6 leading-tight">
+              {course.closing_cta.headline}
+            </h2>
+
+            <p className="text-base md:text-lg text-slate-400 leading-relaxed mb-12 max-w-xl mx-auto">
+              {course.closing_cta.body}
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+              <Link
+                href="/contact"
+                className="group inline-flex items-center gap-3 px-10 py-5 bg-primary text-white rounded-md text-sm font-bold uppercase tracking-wider transition-all hover:bg-primary/90 w-full sm:w-auto justify-center"
+              >
+                {course.closing_cta.cta_buttons[0]}
+                <ArrowRight
+                  size={16}
+                  className="group-hover:translate-x-1 transition-transform"
+                />
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-3 px-10 py-5 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-md text-sm font-bold uppercase tracking-wider hover:bg-white/20 transition-all w-full sm:w-auto justify-center"
+              >
+                {course.closing_cta.cta_buttons[1]}
+              </Link>
+            </div>
           </div>
         </div>
       </section>

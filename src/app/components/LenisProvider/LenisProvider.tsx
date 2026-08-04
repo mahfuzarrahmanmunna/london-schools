@@ -32,7 +32,14 @@ export default function LenisProvider({ children }: LenisProviderProps) {
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
 
+    // Pro-Tip: Force ScrollTrigger to recalculate positions
+    // after a short delay to account for font/image layout shifts in Next.js
+    const refreshTimeout = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 500);
+
     return () => {
+      clearTimeout(refreshTimeout);
       gsap.ticker.remove(raf);
       lenis.destroy();
     };

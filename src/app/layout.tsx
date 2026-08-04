@@ -1,19 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 import LayoutProvider from "./provider/LayoutProvider";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -117,7 +106,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${GeistSans.variable} ${GeistMono.variable} h-full antialiased`}
     >
       <head>
         {/* Direct fav link for maximum browser compat */}
@@ -125,7 +114,12 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/logo/fav.png" />
 
         {/* Preload sharing image for faster OG rendering */}
-        <link rel="preload" href="/logo/logo.webp" as="image" type="image/png" />
+        <link
+          rel="preload"
+          href="/logo/logo.webp"
+          as="image"
+          type="image/png"
+        />
 
         {/* Structured Data Educational Organization */}
         <script

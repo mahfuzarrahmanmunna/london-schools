@@ -1,18 +1,20 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
-  ArrowRight,
-  Clock,
   Mail,
   MapPin,
   Phone,
   Send,
+  Clock,
   Sparkles,
   CheckCircle2,
-} from 'lucide-react';
+  Loader2,
+  AlertCircle,
+} from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,9 +23,12 @@ gsap.registerPlugin(ScrollTrigger);
 function SplitText({ text, className }: { text: string; className?: string }) {
   return (
     <span className={className} aria-label={text}>
-      {text.split(' ').map((word, i) => (
-        <span key={i} className="split-word inline-block overflow-hidden">
-          <span className="inline-block" style={{ willChange: 'transform, opacity' }}>
+      {text.split(" ").map((word, i) => (
+        <span key={i} className="split-word inline-block overflow-hidden pb-2">
+          <span
+            className="inline-block"
+            style={{ willChange: "transform, opacity" }}
+          >
             {word}&nbsp;
           </span>
         </span>
@@ -36,360 +41,667 @@ function SplitText({ text, className }: { text: string; className?: string }) {
 export default function ContactUsPage() {
   const pageRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
+  const heroBgRef = useRef<HTMLDivElement>(null);
 
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    interest: '',
-    message: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    country: "",
+    city: "",
+    company: "",
+    designation: "",
+    interest: "",
+    message: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  // Form State Management
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here (e.g., API call)
-    alert('Form submitted successfully!');
+    setError("");
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          source: "Contact Page",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.message || "Unable to send your message right now.",
+        );
+      }
+
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        country: "",
+        city: "",
+        company: "",
+        designation: "",
+        interest: "",
+        message: "",
+      });
+      setIsSubmitted(true);
+
+      setTimeout(() => setIsSubmitted(false), 6000);
+    } catch (err: any) {
+      setError(
+        err.message ||
+          "Unable to send your message right now. Please try again or contact us directly.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // ─── Master Animations ─────────────────────────
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
 
     const ctx = gsap.context(() => {
-      // Hero Animations
-      const heroTl = gsap.timeline({ delay: 0.3 });
+      if (heroBgRef.current && heroRef.current) {
+        gsap.to(heroBgRef.current, {
+          yPercent: 25,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 1,
+          },
+        });
+      }
+
+      const heroTl = gsap.timeline({ delay: 0.4 });
 
       heroTl
-        .from('.hero-badge', {
+        .from(".hero-badge", {
           opacity: 0,
-          y: 20,
-          duration: 0.8,
-          ease: 'power3.out',
+          y: 30,
+          duration: 1,
+          ease: "power3.out",
         })
         .from(
-          '.split-word span',
+          ".split-word span",
           {
-            y: '110%',
+            y: "110%",
             opacity: 0,
-            duration: 1,
-            stagger: 0.05,
-            ease: 'power4.out',
+            rotate: 3,
+            duration: 1.2,
+            stagger: 0.08,
+            ease: "power4.out",
           },
-          '-=0.4'
+          "-=0.6",
         )
         .from(
-          '.hero-desc',
+          ".hero-desc",
           {
             opacity: 0,
-            y: 30,
-            duration: 0.8,
-            ease: 'power3.out',
+            y: 40,
+            duration: 1,
+            ease: "power3.out",
           },
-          '-=0.5'
+          "-=0.8",
         );
 
-      // Floating Orbs Parallax
-      gsap.to('.hero-orb-1', {
-        y: -100,
-        x: 50,
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: 1,
-        },
+      gsap.to(".float-accent", {
+        y: -12,
+        duration: 2.5,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        stagger: 0.5,
       });
 
-      // Info Cards Stagger
-      gsap.from('.info-card', {
-        y: 40,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: '.info-grid',
-          start: 'top 85%',
-        },
-      });
-
-      // Form & Sidebar Stagger
-      gsap.from('.contact-animate', {
-        y: 50,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: '.contact-grid',
-          start: 'top 85%',
-        },
+      const items = gsap.utils.toArray<HTMLElement>(".reveal-item");
+      items.forEach((item) => {
+        gsap.from(item, {
+          opacity: 0,
+          y: 40,
+          duration: 1.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: item,
+            start: "top 88%",
+          },
+        });
       });
     }, pageRef);
 
     return () => ctx.revert();
   }, []);
 
+  const inputClasses =
+    "w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0B73B9] focus:border-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed";
+  const labelClasses =
+    "block text-xs font-bold tracking-wider uppercase text-slate-500 mb-2";
+
   return (
-    <main ref={pageRef} className="bg-[#FAFAFA] overflow-x-hidden" style={{ position: 'relative', top: 0, left: 0 }}>
-      
+    <main ref={pageRef} className="bg-white">
       {/* ═══════════════════ HERO ═══════════════════ */}
       <section
         ref={heroRef}
-        className="relative min-h-[60vh] flex items-center justify-center overflow-hidden bg-[#050505]"
+        className="relative min-h-[60vh] flex items-center justify-center overflow-hidden bg-[#001B30]"
       >
-        <div className="absolute inset-0">
-          <div
-            className="hero-orb-1 absolute top-1/4 right-1/4 w-[500px] h-[500px] rounded-full opacity-30"
-            style={{
-              background: 'radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%)',
-              willChange: 'transform',
-            }}
-          />
-          <div
-            className="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full opacity-20"
-            style={{
-              background: 'radial-gradient(circle, rgba(0, 168, 168, 0.15) 0%, transparent 70%)',
-            }}
-          />
-          <div
-            className="absolute inset-0 opacity-[0.03]"
-            style={{
-              backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-              backgroundSize: '60px 60px',
-            }}
+        <div
+          ref={heroBgRef}
+          className="absolute inset-0 w-full h-[120%] -top-[10%] scale-105"
+        >
+          <img
+            src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2000&auto=format&fit=crop"
+            alt="Corporate Background"
+            className="w-full h-full object-cover opacity-20"
           />
         </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center py-32">
-          <div className="hero-badge inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-10">
-            <Mail size={14} className="text-[#D4AF37]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#001B30]/80 via-[#001B30]/70 to-[#001B30] pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-size-[72px_72px] pointer-events-none" />
+
+        <div className="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-[#0B73B9]/20 to-transparent pointer-events-none float-accent" />
+        <div className="absolute bottom-0 right-0 w-1/3 h-2/3 bg-gradient-to-tl from-[#f4d210]/10 to-transparent pointer-events-none float-accent" />
+
+        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center py-32 md:py-40 ">
+          <div className="hero-badge inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-8">
+            <Mail size={14} className="text-[#f4d210]" />
             <span className="text-xs font-medium tracking-widest uppercase text-white/60">
               Get in Touch
             </span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-[0.95] tracking-tighter mb-8">
+          <h1
+            className="text-5xl md:text-6xl lg:text-7xl font-medium text-white leading-[1.05] tracking-tight mb-6"
+            style={{ fontFamily: "var(--font-playfair)" }}
+          >
             <SplitText text="Contact Us" className="block" />
           </h1>
 
-          <p className="hero-desc text-base md:text-lg text-white/40 max-w-2xl mx-auto leading-relaxed font-light">
-            Ready to start your MCIPS journey or have a question for our team? 
-            We&apos;d love to hear from you.
+          <p className="hero-desc text-base md:text-lg text-white/50 max-w-2xl mx-auto leading-relaxed font-light">
+            Ready to start your CIPS journey, or have a question before you
+            enrol? We&apos;d love to hear from you.
           </p>
         </div>
       </section>
 
-      {/* ═══════════════════ QUICK INFO BAR ═══════════════════ */}
-      <section className="relative z-10 -mt-16 mb-20 px-6">
-        <div className="info-grid max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            { icon: Mail, title: 'Email Us', info: 'admissions@lshs.co.uk', sub: 'Reply within 24 hours' },
-            { icon: Phone, title: 'Call Us', info: '+44 (0) 20 1234 5678', sub: 'Mon-Fri, 9am - 6pm' },
-            { icon: MapPin, title: 'Visit Us', info: 'London, United Kingdom', sub: 'By appointment only' },
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="info-card bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex items-start gap-4 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-            >
-              <div className="w-12 h-12 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center flex-shrink-0">
-                <item.icon size={22} className="text-[#D4AF37]" />
+      {/* ═══════════════════ QUICK INFO STRIP ═══════════════════ */}
+      <section className="border-b border-slate-100 bg-white relative z-10">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-slate-100">
+          {/* Email Block */}
+          <div className="reveal-item flex items-start gap-4 py-8 md:py-10 md:pr-8">
+            <div className="flex-shrink-0 w-10 h-10 rounded-md bg-[#0B73B9]/5 border border-[#0B73B9]/10 flex items-center justify-center">
+              <Mail size={18} className="text-[#0B73B9]" strokeWidth={1.5} />
+            </div>
+            <div className="flex flex-col gap-3">
+              <div>
+                <p className="text-xs font-bold tracking-wider uppercase text-slate-500 mb-1.5">
+                  Email Us
+                </p>
+                <a
+                  href="mailto:info@lshs.co.uk"
+                  className="text-base font-semibold text-slate-900 hover:text-[#0B73B9] transition-colors block"
+                >
+                  info@lshs.co.uk
+                </a>
+                <p className="text-sm text-slate-500 mt-0.5">
+                  Reply within 24 hours
+                </p>
               </div>
               <div>
-                <p className="text-xs font-bold tracking-wider uppercase text-gray-400 mb-1">{item.title}</p>
-                <p className="text-sm font-bold text-gray-900">{item.info}</p>
-                <p className="text-xs text-gray-400 mt-0.5">{item.sub}</p>
+                <a
+                  href="mailto:info@samangroup.com.bd"
+                  className="text-base font-semibold text-slate-900 hover:text-[#0B73B9] transition-colors block"
+                >
+                  info@samangroup.com.bd
+                </a>
+                <p className="text-sm text-slate-500 mt-0.5">Company Email</p>
               </div>
             </div>
-          ))}
+          </div>
+
+          {/* Phone Block */}
+          <div className="reveal-item flex items-start gap-4 py-8 md:py-10 md:px-8">
+            <div className="flex-shrink-0 w-10 h-10 rounded-md bg-[#f4d210]/5 border border-[#f4d210]/10 flex items-center justify-center">
+              <Phone size={18} className="text-[#b58b00]" strokeWidth={1.5} />
+            </div>
+            <div>
+              <p className="text-xs font-bold tracking-wider uppercase text-slate-500 mb-1.5">
+                Call Us
+              </p>
+              <div className="grid grid-cols-1 gap-x-4 gap-y-0.5">
+                <a
+                  href="tel:+447515106586"
+                  className="text-sm font-medium text-slate-700 hover:text-[#0B73B9] transition-colors"
+                >
+                  +44 7515 106586
+                </a>
+                <a
+                  href="tel:+442033766160"
+                  className="text-sm font-medium text-slate-700 hover:text-[#0B73B9] transition-colors"
+                >
+                  +44 2033 766160
+                </a>
+                <a
+                  href="tel:+8801912234588"
+                  className="text-sm font-medium text-slate-700 hover:text-[#0B73B9] transition-colors"
+                >
+                  +880 19 1223 4588
+                </a>
+                <a
+                  href="tel:+8801906896326"
+                  className="text-sm font-medium text-slate-700 hover:text-[#0B73B9] transition-colors"
+                >
+                  +880 19 0689 6326
+                </a>
+              </div>
+              <p className="text-sm text-slate-500 mt-1.5">24/7 Available</p>
+            </div>
+          </div>
+
+          {/* Location Block */}
+          <div className="reveal-item col-span-2 flex items-start gap-4 py-8 md:py-10 md:pl-8">
+            <div className="flex-shrink-0 w-10 h-10 rounded-md bg-[#0B73B9]/5 border border-[#0B73B9]/10 flex items-center justify-center">
+              <MapPin size={18} className="text-[#0B73B9]" strokeWidth={1.5} />
+            </div>
+            {/* Updated to Two-Column Layout */}
+            <div className="flex-1">
+              <p className="text-xs font-bold tracking-wider uppercase text-slate-500 mb-3">
+                Our Location
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm text-slate-600">
+                <div>
+                  <span className="block font-semibold text-slate-900 mb-1">
+                    Registered Address
+                  </span>
+                  135 Tiptree Crescent, Ilford IG5 0SX, UK
+                </div>
+                <div>
+                  <span className="block font-semibold text-slate-900 mb-1">
+                    UK Office
+                  </span>
+                  Unit 7 Stanton Gate, 49 Mawney Road, Essex RM7 7HL, UK
+                </div>
+                <div>
+                  <span className="block font-semibold text-slate-900 mb-1">
+                    BD Office
+                  </span>
+                  Prantik, House - 412, Road - 29, Mohakhali DOHS, Dhaka, BD
+                </div>
+                <div>
+                  <span className="block font-semibold text-slate-900 mb-1">
+                    Sampan HQ
+                  </span>
+                  SAMPAN 21ST CENTURY TOWER, House - 284, Block - B, Road - 1/A,
+                  Bashundhara R/A, BD
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* ═══════════════════ FORM & SIDEBAR ═══════════════════ */}
-      <section className="pb-32 px-6">
-        <div className="contact-grid max-w-6xl mx-auto grid lg:grid-cols-5 gap-12 lg:gap-16">
-          
-          {/* --- Form Column --- */}
-          <div className="contact-animate lg:col-span-3 bg-white rounded-3xl p-8 md:p-12 border border-gray-100 shadow-sm">
-            <h2 className="text-3xl font-bold text-gray-900 tracking-tight mb-2">Send us a message</h2>
-            <p className="text-gray-500 mb-10">Fill out the form below and a member of our team will get back to you shortly.</p>
-            
+      <section className="px-6 md:px-12 py-20 md:py-32">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          {/* --- Form Column (Scrollable) --- */}
+          <div className="reveal-item lg:col-span-7">
+            <div className="flex items-center gap-4 mb-6">
+              <span className="text-sm tracking-[0.2em] font-semibold text-[#0B73B9] uppercase">
+                Enquiry Form
+              </span>
+              <div className="w-12 h-0.5 bg-[#0B73B9]" />
+            </div>
+
+            <h2
+              className="text-3xl lg:text-4xl font-medium text-slate-900 tracking-tight leading-[1.2] mb-4"
+              style={{ fontFamily: "var(--font-playfair)" }}
+            >
+              Send Us a Message
+            </h2>
+            <p className="text-base text-slate-500 mb-10 max-w-xl">
+              Fill out the form below and a member of our team will get back to
+              you shortly.
+            </p>
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-bold tracking-wider uppercase text-gray-400 mb-2">First Name *</label>
+                  <label className={labelClasses}>First Name *</label>
                   <input
                     type="text"
                     name="firstName"
                     required
                     value={formData.firstName}
                     onChange={handleChange}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-all"
+                    disabled={isSubmitting || isSubmitted}
+                    className={inputClasses}
                     placeholder="John"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold tracking-wider uppercase text-gray-400 mb-2">Last Name *</label>
+                  <label className={labelClasses}>Last Name *</label>
                   <input
                     type="text"
                     name="lastName"
                     required
                     value={formData.lastName}
                     onChange={handleChange}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-all"
+                    disabled={isSubmitting || isSubmitted}
+                    className={inputClasses}
                     placeholder="Doe"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold tracking-wider uppercase text-gray-400 mb-2">Email Address *</label>
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-all"
-                  placeholder="john@company.com"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className={labelClasses}>Email Address *</label>
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    disabled={isSubmitting || isSubmitted}
+                    className={inputClasses}
+                    placeholder="john@company.com"
+                  />
+                </div>
+                <div>
+                  <label className={labelClasses}>Phone Number *</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    required
+                    value={formData.phone}
+                    onChange={handleChange}
+                    disabled={isSubmitting || isSubmitted}
+                    className={inputClasses}
+                    placeholder="+44 7700 000000"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className={labelClasses}>Country Name</label>
+                  <input
+                    type="text"
+                    name="country"
+                    value={formData.country}
+                    onChange={handleChange}
+                    disabled={isSubmitting || isSubmitted}
+                    className={inputClasses}
+                    placeholder="United Kingdom"
+                  />
+                </div>
+                <div>
+                  <label className={labelClasses}>
+                    City/area Name/Postcode
+                  </label>
+                  <input
+                    type="text"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                    disabled={isSubmitting || isSubmitted}
+                    className={inputClasses}
+                    placeholder="London, E1 1AB"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className={labelClasses}>Your Company Name</label>
+                  <input
+                    type="text"
+                    name="company"
+                    value={formData.company}
+                    onChange={handleChange}
+                    disabled={isSubmitting || isSubmitted}
+                    className={inputClasses}
+                    placeholder="Company Ltd."
+                  />
+                </div>
+                <div>
+                  <label className={labelClasses}>Your Designation</label>
+                  <input
+                    type="text"
+                    name="designation"
+                    value={formData.designation}
+                    onChange={handleChange}
+                    disabled={isSubmitting || isSubmitted}
+                    className={inputClasses}
+                    placeholder="Procurement Manager"
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold tracking-wider uppercase text-gray-400 mb-2">Phone Number</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-all"
-                  placeholder="+44 7700 000000"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold tracking-wider uppercase text-gray-400 mb-2">I am interested in...</label>
+                <label className={labelClasses}>I am interested in...</label>
                 <select
                   name="interest"
                   value={formData.interest}
                   onChange={handleChange}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-all appearance-none"
-                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%239CA3AF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1.25rem center', backgroundSize: '1.25rem' }}
+                  disabled={isSubmitting || isSubmitted}
+                  className={`${inputClasses} appearance-none cursor-pointer`}
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "right 1rem center",
+                    backgroundSize: "1.25rem",
+                  }}
                 >
-                  <option value="" disabled>Select a qualification</option>
-                  <option value="level-2">CIPS Level 2 (Foundation)</option>
-                  <option value="level-3">CIPS Level 3 (Advanced Certificate)</option>
-                  <option value="level-4">CIPS Level 4 (Diploma)</option>
-                  <option value="level-5">CIPS Level 5 (Advanced Diploma)</option>
-                  <option value="level-6">CIPS Level 6 (Professional Diploma)</option>
-                  <option value="mcips">MCIPS Chartered Status</option>
+                  <option value="" disabled>
+                    Select an option
+                  </option>
+                  <option value="cips">CIPS Courses</option>
+                  <option value="pricing">Pricing and Payment Models</option>
                   <option value="other">Other / General Enquiry</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-bold tracking-wider uppercase text-gray-400 mb-2">Message *</label>
+                <label className={labelClasses}>Message *</label>
                 <textarea
                   name="message"
                   required
                   rows={5}
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 text-sm text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-all resize-none"
+                  disabled={isSubmitting || isSubmitted}
+                  className={`${inputClasses} resize-none`}
                   placeholder="Tell us about your procurement goals..."
-                />
+                ></textarea>
               </div>
+
+              {error && (
+                <div className="flex items-center gap-2 text-red-700 bg-red-50 border border-red-200 px-4 py-3 rounded-lg text-sm font-medium">
+                  <AlertCircle className="h-5 w-5 flex-shrink-0" />
+                  <span>{error}</span>
+                </div>
+              )}
+
+              {isSubmitted && (
+                <div className="flex items-center gap-3 text-emerald-700 bg-emerald-50 border border-emerald-200 px-4 py-4 rounded-lg text-sm font-medium">
+                  <CheckCircle2 className="h-5 w-5 flex-shrink-0" />
+                  <div>
+                    <p className="font-bold">Message Sent Successfully</p>
+                    <p className="text-xs text-emerald-600 mt-0.5">
+                      Thank you for contacting London School of Higher Studies.
+                      Our admissions team will get back to you shortly.
+                    </p>
+                  </div>
+                </div>
+              )}
 
               <button
                 type="submit"
-                className="group w-full flex items-center justify-center gap-3 px-8 py-5 bg-[#D4AF37] text-black rounded-xl text-sm font-bold uppercase tracking-wider transition-all hover:bg-[#e0bd45] hover:shadow-lg hover:shadow-[#D4AF37]/20"
+                disabled={isSubmitting || isSubmitted}
+                className={`group w-full md:w-auto flex items-center justify-center gap-3 px-10 py-4 text-white rounded-lg text-sm font-semibold tracking-wider uppercase transition-all duration-300 min-h-[52px] ${
+                  isSubmitted
+                    ? "bg-emerald-500 cursor-not-allowed"
+                    : isSubmitting
+                      ? "bg-[#085C92] cursor-wait"
+                      : "bg-[#0B73B9] hover:bg-[#085C92] hover:shadow-lg hover:shadow-[#0B73B9]/20"
+                }`}
               >
-                Send Message
-                <Send size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                {isSubmitted ? (
+                  <>
+                    <CheckCircle2 size={16} />
+                    Message Sent
+                  </>
+                ) : isSubmitting ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" />
+                    Sending Message...
+                  </>
+                ) : (
+                  <>
+                    Send Message
+                    <Send
+                      size={16}
+                      className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
+                    />
+                  </>
+                )}
               </button>
             </form>
           </div>
 
-          {/* --- Sidebar Column --- */}
-          <div className="contact-animate lg:col-span-2 flex flex-col gap-8">
-            
-            {/* Why Contact Us Card */}
-            <div className="rounded-3xl p-8 md:p-10 text-white relative overflow-hidden flex-grow" style={{ backgroundColor: '#0A0A0A' }}>
-              <div className="absolute top-0 right-0 w-64 h-64 rounded-full opacity-10 blur-[80px] bg-[#D4AF37]" />
-              
-              <div className="relative z-10">
-                <h3 className="text-2xl font-bold mb-6 tracking-tight">Why speak to us?</h3>
-                <div className="space-y-5">
-                  {[
-                    'Get personalized study advice tailored to your experience.',
-                    'Understand the fastest route to MCIPS Chartered Status.',
-                    'Learn about our flexible payment plans and funding options.',
-                    'Meet our expert tutors and support staff.'
-                  ].map((text, i) => (
-                    <div key={i} className="flex items-start gap-3">
-                      <CheckCircle2 size={18} className="text-[#D4AF37] mt-0.5 flex-shrink-0" />
-                      <p className="text-white/50 text-sm leading-relaxed">{text}</p>
-                    </div>
-                  ))}
-                </div>
+          {/* --- Sidebar Column (Sticky) --- */}
+          <div className="reveal-item lg:col-span-5 lg:sticky lg:top-24 self-start">
+            <div className="contact-animate flex flex-col gap-8">
+              {/* Why Contact Us Card */}
+              <div
+                className="rounded-3xl p-8 md:p-10 text-white relative overflow-hidden flex-grow"
+                style={{ backgroundColor: "#0A0A0A" }}
+              >
+                <div className="absolute top-0 right-0 w-64 h-64 rounded-full opacity-10 blur-[80px] bg-[#D4AF37]" />
 
-                <div className="mt-10 pt-8 border-t border-white/10">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-10 h-10 rounded-full bg-[#D4AF37]/20 flex items-center justify-center">
-                      <Clock size={18} className="text-[#D4AF37]" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-white">Average Response Time</p>
-                      <p className="text-xs text-white/40">Under 24 hours</p>
-                    </div>
+                <div className="relative z-10">
+                  <h3 className="text-2xl font-bold mb-6 tracking-tight">
+                    Why speak to us?
+                  </h3>
+                  <div className="space-y-5">
+                    {[
+                      "Get personalized study advice tailored to your experience.",
+                      "Understand the fastest route to MCIPS Chartered Status.",
+                      "Learn about our flexible payment plans and funding options.",
+                      "Meet our expert tutors and support staff.",
+                    ].map((text, i) => (
+                      <div key={i} className="flex items-start gap-3">
+                        <CheckCircle2
+                          size={18}
+                          className="text-[#D4AF37] mt-0.5 flex-shrink-0"
+                        />
+                        <p className="text-white/50 text-sm leading-relaxed">
+                          {text}
+                        </p>
+                      </div>
+                    ))}
                   </div>
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-[#D4AF37]/20 flex items-center justify-center">
-                      <Sparkles size={18} className="text-[#D4AF37]" />
+
+                  <div className="mt-10 pt-8 border-t border-white/10">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-10 h-10 rounded-full bg-[#D4AF37]/20 flex items-center justify-center">
+                        <Clock size={18} className="text-[#D4AF37]" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-white">
+                          Average Response Time
+                        </p>
+                        <p className="text-xs text-white/40">Under 24 hours</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-bold text-white">No Obligation</p>
-                      <p className="text-xs text-white/40">Completely free consultation</p>
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-[#D4AF37]/20 flex items-center justify-center">
+                        <Sparkles size={18} className="text-[#D4AF37]" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-white">
+                          No Obligation
+                        </p>
+                        <p className="text-xs text-white/40">
+                          Completely free consultation
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Direct Contact Card */}
-            <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
-              <h3 className="text-lg font-bold text-gray-900 mb-6 tracking-tight">Need immediate help?</h3>
-              <a 
-                href="tel:+442012345678" 
-                className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 border border-gray-100 hover:bg-gray-100 transition-colors group mb-4"
-              >
-                <Phone size={20} className="text-[#D4AF37]" />
-                <div>
-                  <p className="text-sm font-bold text-gray-900 group-hover:text-[#D4AF37] transition-colors">+44 (0) 20 1234 5678</p>
-                  <p className="text-xs text-gray-400">Call our admissions team directly</p>
-                </div>
-              </a>
-              <a 
-                href="mailto:admissions@lshs.co.uk" 
-                className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 border border-gray-100 hover:bg-gray-100 transition-colors group"
-              >
-                <Mail size={20} className="text-[#D4AF37]" />
-                <div>
-                  <p className="text-sm font-bold text-gray-900 group-hover:text-[#D4AF37] transition-colors">admissions@lshs.co.uk</p>
-                  <p className="text-xs text-gray-400">Send us an email directly</p>
-                </div>
-              </a>
-            </div>
+              {/* Immediate Help / WhatsApp Card */}
+              <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
+                <h3 className="text-lg font-bold text-gray-900 mb-2 tracking-tight">
+                  Need Immediate Help?
+                </h3>
+                <p className="text-sm text-gray-500 mb-6">
+                  Call our admissions team directly
+                </p>
 
+                <a
+                  href="https://wa.me/447515106586"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 border border-gray-100 hover:bg-gray-100 transition-colors group mb-4"
+                >
+                  <FaWhatsapp size={20} className="text-[#25D366]" />
+                  <div>
+                    <p className="text-sm font-bold text-gray-900 group-hover:text-[#25D366] transition-colors">
+                      +44 7515 106586
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      tap/click to WhatsApp
+                    </p>
+                  </div>
+                </a>
+
+                <a
+                  href="https://wa.me/8801906896326"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 border border-gray-100 hover:bg-gray-100 transition-colors group"
+                >
+                  <FaWhatsapp size={20} className="text-[#25D366]" />
+                  <div>
+                    <p className="text-sm font-bold text-gray-900 group-hover:text-[#25D366] transition-colors">
+                      +880 19 0689 6326
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      tap/click to WhatsApp
+                    </p>
+                  </div>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
-
     </main>
   );
 }

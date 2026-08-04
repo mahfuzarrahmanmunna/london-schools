@@ -1,0 +1,775 @@
+[
+  {
+    "slug": "level-2-certificate",
+    "level": 2,
+    "hero": {
+      "breadcrumb": ["Home", "Courses", "Level 2 Certificate"],
+      "headline": "CIPS Level 2 Certificate in Procurement and Supply Operations",
+      "sub_headline": "Take your first step into procurement and supply, no prior experience needed. Build the foundational knowledge that starts your journey toward MCIPS.",
+      "key_facts": [
+        "5 Core Modules",
+        "18 Credits",
+        "Entry Level - no formal entry requirements",
+        "Up to 12 months typical study duration"
+      ],
+      "cta_buttons": [
+        "Enrol Now",
+        "Download Course Guide",
+        "Speak to an Advisor"
+      ]
+    },
+    "course_overview": {
+      "headline": "About This Qualification",
+      "body": "The CIPS Level 2 Certificate in Procurement and Supply Operations is the first qualification on the CIPS pathway; designed for anyone new to the profession. There's no prior procurement knowledge or business experience required, making it the natural starting point for school leavers, administrative staff, or anyone considering a career change into procurement and supply.\n\nYou'll build a clear understanding of core procurement processes, terminology and best practice, setting you up to progress confidently to Level 3 and beyond.",
+      "left_side": {
+        "course_name": "CIPS Level 2",
+        "discount": "25% Early Bird Discount Available",
+        "counter_text": "Use the counter for 7 days, rotated weekly",
+        "contact_text": "We'll contact you to discuss your enquiry, help you choose the right course, and let you know of any special offers.",
+        "cta": "Enrol Now"
+      }
+    },
+    "who_its_for": {
+      "headline": "Is Level 2 Right for You?",
+      "body": "Level 2 is designed for anyone starting out in procurement with little or no prior business experience - including school leavers, those in an administrative or support role, and career changers exploring procurement for the first time.",
+      "entry_requirements": "No formal entry requirements. This qualification is open to anyone ready to begin their procurement career."
+    },
+    "modules": {
+      "headline": "Course Modules",
+      "sub_text": "Complete all five core modules to achieve the full Certificate.",
+      "core_modules": [
+        {
+          "code": "L2M1",
+          "name": "Introducing Procurement and Supply",
+          "credits": 6,
+          "type": "Core",
+          "description": "Understand the role of procurement and supply in organisations, the \"Five Rights\" of procurement, the stages of the sourcing process, and the ethical responsibilities involved."
+        },
+        {
+          "code": "L2M2",
+          "name": "Procurement and Supply Operations",
+          "credits": 3,
+          "type": "Core",
+          "description": "Understand different types of organisations, how they operate, contractual agreements, sources of supplier information, and basic pricing techniques."
+        },
+        {
+          "code": "L2M3",
+          "name": "Stakeholder Relationships",
+          "credits": 3,
+          "type": "Core",
+          "description": "Identify internal and external stakeholders in procurement and supply, key market factors, effective communication techniques, and approaches to conflict resolution."
+        },
+        {
+          "code": "L2M4",
+          "name": "Systems Technology",
+          "credits": 3,
+          "type": "Core",
+          "description": "Understand the systems and technology used to support procurement and supply operations, including e-procurement and data handling basics."
+        },
+        {
+          "code": "L2M5",
+          "name": "Inventory, Logistics and Expediting",
+          "credits": 3,
+          "type": "Core",
+          "description": "Understand inventory management, logistics processes, and the techniques used to expedite orders and manage supply flow."
+        }
+      ],
+      "elective_modules": []
+    },
+    "brochure_fees": {
+      "headline": "Need to know about pricing? Get our brochure now!",
+      "cta": "Download"
+    },
+    "how_youll_study": {
+      "headline": "Study Modes Available",
+      "modes": [
+        "Distance Learning - study remotely, at your own pace, with tutor support",
+        "Part-Time Learning - structured around work commitments",
+        "Full-Time Learning - accelerated, intensive delivery",
+        "Classroom-Based - in-person sessions at our Dhaka centre"
+      ],
+      "cta": "Compare Study Modes"
+    },
+    "next_step": {
+      "headline": "Your Next Step",
+      "body": "On completing Level 2, you're ready to progress to the Level 3 Advanced Certificate, building further operational capability on your path toward MCIPS Chartered status.",
+      "cta": "View Level 3 Advanced Certificate →"
+    },
+    "lshs_benefits": {
+      "headline": "LSHS Benefits",
+      "sub_text": "Everything you need to study, sit your exams, and progress toward MCIPS, in one place.",
+      "benefits": [
+        "CIPS Approved Study Centre & Exam Centre - Study and sit your exams through the same approved centre - no need to arrange assessment elsewhere.",
+        "Flexible Study Modes - Choose distance learning, part-time, full-time or classroom-based study, built around your work and life.",
+        "Study Materials - Get up-to-date CIPS study books and exam study papers.",
+        "Qualified Tutors - Learn from tutors with real procurement and academic experience, supporting you through each module.",
+        "Structured Pathway Guidance - Clear progression support from your first CIPS level through to MCIPS Chartered status, with advisors to help you choose the right starting point.",
+        "Transparent Fees - Clear course pricing with no hidden costs, and flexible payment plans available."
+      ],
+      "cta_buttons": ["Explore Our Courses", "Speak to an Advisor"]
+    },
+    "faq": [
+      {
+        "question": "Do I need any experience to start Level 2?",
+        "answer": "No - Level 2 has no formal entry requirements and is designed for anyone new to procurement and supply."
+      },
+      {
+        "question": "How long does the Level 2 Certificate take?",
+        "answer": "Typically up to 12 months, depending on your study mode and pace."
+      },
+      {
+        "question": "Do I need to pass all 5 modules to get the Certificate?",
+        "answer": "Yes, all five core modules must be completed and passed to achieve the full Level 2 Certificate."
+      },
+      {
+        "question": "What happens after Level 2?",
+        "answer": "You progress to the Level 3 Advanced Certificate, continuing your journey on the CIPS pathway."
+      }
+    ],
+    "closing_cta": {
+      "headline": "Ready to Start Your Level 2 Certificate?",
+      "body": "Speak to our admissions team to get started and receive a personalised study plan.",
+      "cta_buttons": ["Enrol Now", "Speak to an Advisor"]
+    }
+  },
+  {
+    "slug": "level-3-certificate",
+    "level": 3,
+    "hero": {
+      "breadcrumb": ["Home", "Courses", "Level 3 Advanced Certificate"],
+      "headline": "CIPS Level 3 Advanced Certificate in Procurement and Supply Operations",
+      "sub_headline": "Sharpen your operational skills and start choosing your specialism; the next step for anyone building a career in procurement and supply.",
+      "key_facts": [
+        "5 Modules (4 Core + 1 Elective)",
+        "30 Credits",
+        "Entry Level - no formal entry requirements",
+        "Up to 12 months typical study duration"
+      ],
+      "cta_buttons": [
+        "Enrol Now",
+        "Download Course Guide",
+        "Speak to an Advisor"
+      ]
+    },
+    "course_overview": {
+      "headline": "About This Qualification",
+      "body": "The CIPS Level 3 Advanced Certificate in Procurement and Supply Operations builds on the fundamentals covered at Level 2, developing the operational skills needed to carry out procurement and supply tasks effectively. It's also the first level where you get to specialise - choosing an elective module that suits your interests, whether that's socially responsible procurement or warehousing and distribution.\n\nLevel 3 is one of the first steps on the pathway to MCIPS Chartered status, bridging the gap between operational tasks and the strategic capability you'll build from Level 4 onward.",
+      "left_side": {
+        "course_name": "CIPS Level 3",
+        "discount": "25% Early Bird Discount Available",
+        "counter_text": "Use the counter for 7 days, rotated weekly",
+        "contact_text": "We'll contact you to discuss your enquiry, help you choose the right course, and let you know of any special offers.",
+        "cta": "Enrol Now"
+      }
+    },
+    "who_its_for": {
+      "headline": "Is Level 3 Right for You?",
+      "body": "Level 3 is designed for those already in an operational procurement or supply role, or with under 12 months' experience in the field, who want to strengthen their fundamentals and understand how their work fits into the wider organisation. It also suits Level 2 graduates ready for the next step.",
+      "entry_requirements": "No formal entry requirements. Completing Level 2 first is recommended but not required."
+    },
+    "modules": {
+      "headline": "Course Modules",
+      "sub_text": "Complete all four core modules, plus one elective of your choice, to achieve the full Advanced Certificate.",
+      "core_modules": [
+        {
+          "code": "L3M1",
+          "name": "Procurement and Supply Environments",
+          "credits": 6,
+          "type": "Core",
+          "description": "Explore the range of environments in which procurement and supply operates, the external factors that affect success, and the procedures that regulate the profession."
+        },
+        {
+          "code": "L3M2",
+          "name": "Ethical Procurement and Supply",
+          "credits": 6,
+          "type": "Core",
+          "description": "Understand the significance of ethics in procurement and supply, applying codes of conduct and the stages of the sourcing process to support value-added operations."
+        },
+        {
+          "code": "L3M3",
+          "name": "Contract Administration",
+          "credits": 6,
+          "type": "Core",
+          "description": "Build your understanding of how contracts are administered, monitored and managed throughout their lifecycle."
+        },
+        {
+          "code": "L3M4",
+          "name": "Team Dynamics and Change",
+          "credits": 6,
+          "type": "Core",
+          "description": "Identify the influence that people and teams have on procurement outcomes, and understand how to manage change effectively within a team."
+        }
+      ],
+      "elective_modules": [
+        {
+          "code": "L3M5",
+          "name": "Socially Responsible Procurement",
+          "credits": 6,
+          "type": "Elective",
+          "description": "Explore the principles of socially responsible and sustainable procurement practice."
+        },
+        {
+          "code": "L3M6",
+          "name": "Socially Responsible Warehousing and Distribution",
+          "credits": 6,
+          "type": "Elective",
+          "description": "Explore sustainable and responsible practice within warehousing and distribution operations."
+        }
+      ]
+    },
+    "brochure_fees": {
+      "headline": "Need to know about pricing? Get our brochure now!",
+      "cta": "Download"
+    },
+    "how_youll_study": {
+      "headline": "Study Modes Available",
+      "modes": [
+        "Distance Learning - study remotely, at your own pace, with tutor support",
+        "Part-Time Learning - structured around work commitments",
+        "Full-Time Learning - accelerated, intensive delivery",
+        "Classroom-Based - in-person sessions at our Dhaka centre"
+      ],
+      "cta": "Compare Study Modes"
+    },
+    "next_step": {
+      "headline": "Your Next Step",
+      "body": "On completing Level 3, you're ready to progress to the Level 4 Diploma, moving from operational tasks into strategic sourcing, contracting and negotiation on your path toward MCIPS Chartered status.",
+      "cta": "View Level 4 Diploma →"
+    },
+    "lshs_benefits": {
+      "headline": "LSHS Benefits",
+      "sub_text": "Everything you need to study, sit your exams, and progress toward MCIPS - in one place.",
+      "benefits": [
+        "CIPS Approved Study Centre & Exam Centre - Study and sit your exams through the same approved centre - no need to arrange assessment elsewhere.",
+        "Flexible Study Modes - Choose distance learning, part-time, full-time or classroom-based study, built around your work and life.",
+        "Study Materials - Get up-to-date CIPS study books and exam study papers.",
+        "Qualified Tutors - Learn from tutors with real procurement and academic experience, supporting you through each module.",
+        "Structured Pathway Guidance - Clear progression support from your first CIPS level through to MCIPS Chartered status, with advisors to help you choose the right starting point.",
+        "Transparent Fees - Clear course pricing with no hidden costs, and flexible payment plans available."
+      ],
+      "cta_buttons": ["Explore Our Courses", "Speak to an Advisor"]
+    },
+    "faq": [
+      {
+        "question": "Do I need to complete Level 2 before starting Level 3?",
+        "answer": "No - there are no formal entry requirements for Level 3, though completing Level 2 first is recommended if you're entirely new to procurement."
+      },
+      {
+        "question": "How long does the Level 3 Advanced Certificate take?",
+        "answer": "Typically up to 12 months, depending on your study mode and pace."
+      },
+      {
+        "question": "Which elective module should I choose?",
+        "answer": "It depends on your interests and career direction. Socially Responsible Procurement suits those focused on sourcing and supplier practice, while Socially Responsible Warehousing and Distribution suits those focused on logistics and operations. Our advisors can help you decide."
+      },
+      {
+        "question": "What happens after Level 3?",
+        "answer": "You progress to the Level 4 Diploma, continuing toward MCIPS Chartered status."
+      }
+    ],
+    "closing_cta": {
+      "headline": "Ready to Start Your Level 3 Advanced Certificate?",
+      "body": "Speak to our admissions team to confirm your elective choice and get a personalised study plan.",
+      "cta_buttons": ["Enrol Now", "Speak to an Advisor"]
+    }
+  },
+  {
+    "slug": "level-4-certificate",
+    "level": 4,
+    "hero": {
+      "breadcrumb": ["Home", "Courses", "Level 4 Diploma"],
+      "headline": "CIPS Level 4 Diploma in Procurement and Supply",
+      "sub_headline": "Move from operational buying into strategic sourcing, commercial contracting and negotiation; the qualification most professionals choose to begin their journey toward MCIPS.",
+      "key_facts": [
+        "8 Core Modules",
+        "60 Credits",
+        "Ofqual Regulated - equivalent to first-year undergraduate level",
+        "12–18 months typical study duration"
+      ],
+      "cta_buttons": [
+        "Enrol Now",
+        "Download Course Guide",
+        "Speak to an Advisor"
+      ]
+    },
+    "course_overview": {
+      "headline": "About This Qualification",
+      "body": "The CIPS Level 4 Diploma in Procurement and Supply is the highest level you can start at directly, without completing Levels 2 or 3 first, provided you meet the entry requirements below. It's built for professionals ready to move beyond day-to-day operational buying into strategic sourcing, contract management and supplier relationships.\n\nThis is the first of the three qualifications (Levels 4, 5 and 6) that make up the direct pathway to MCIPS Chartered status.",
+      "left_side": {
+        "course_name": "CIPS Level 4",
+        "discount": "25% Early Bird Discount Available",
+        "counter_text": "Use the counter for 7 days, which will be rotated every week",
+        "contact_text": "We’ll contact you to discuss your enquiry, help you choose the right course, and let you know of any special offers.",
+        "cta": "Enrol Now"
+      }
+    },
+    "who_its_for": {
+      "headline": "Is Level 4 Right for You?",
+      "body": "Level 4 is designed for professionals who already have some grounding in a business environment and are ready to build a comprehensive procurement toolkit. It suits people working toward or already in roles such as Buyer, Contract Officer, or Procurement Executive.",
+      "entry_requirements": "A minimum of two A-Levels (or an equivalent international qualification), or a CIPS Level 3 Advanced Certificate, or a minimum of two years' relevant commercial experience."
+    },
+    "modules": {
+      "headline": "Course Modules",
+      "sub_text": "Complete all eight core modules to achieve the full Diploma.",
+      "core_modules": [
+        {
+          "code": "L4M1",
+          "name": "Scope and Influence of Procurement and Supply",
+          "credits": 12,
+          "type": "Core",
+          "description": "Understand how procurement adds value to an organisation, the key steps in procuring goods and services, and the compliance considerations that shape procurement activity."
+        },
+        {
+          "code": "L4M2",
+          "name": "Defining Business Need",
+          "credits": 6,
+          "type": "Core",
+          "description": "Learn to build a business case for external sourcing, and understand market management and specification-writing in procurement and supply."
+        },
+        {
+          "code": "L4M3",
+          "name": "Commercial Contracting",
+          "credits": 6,
+          "type": "Core",
+          "description": "Understand the legal foundations of contract formation, key contract clauses, and the options available when sourcing from suppliers."
+        },
+        {
+          "code": "L4M4",
+          "name": "Ethical and Responsible Sourcing",
+          "credits": 6,
+          "type": "Core",
+          "description": "Explore ethical and sustainable sourcing practice, and how responsible procurement supports long-term organisational value."
+        },
+        {
+          "code": "L4M5",
+          "name": "Commercial Negotiation",
+          "credits": 6,
+          "type": "Core",
+          "description": "Build practical negotiation skills for commercial procurement scenarios, from preparation through to closing agreements."
+        },
+        {
+          "code": "L4M6",
+          "name": "Supplier Relationships",
+          "credits": 6,
+          "type": "Core",
+          "description": "Understand relationship dynamics across the supply chain, and when and how to build effective supplier partnerships."
+        },
+        {
+          "code": "L4M7",
+          "name": "Whole Life Asset Management",
+          "credits": 6,
+          "type": "Core",
+          "description": "Learn to manage inventory, storage and movement, and apply whole-life costing principles to procurement decisions."
+        },
+        {
+          "code": "L4M8",
+          "name": "Procurement and Supply in Practice",
+          "credits": 12,
+          "type": "Core",
+          "description": "Apply the procurement cycle, sourcing process, whole life asset management, and ethical sourcing principles in a practical, applied assessment."
+        }
+      ],
+      "elective_modules": []
+    },
+    "brochure_fees": {
+      "headline": "Need to know about pricing. Get our brochure now!",
+      "cta": "Download"
+    },
+    "how_youll_study": {
+      "headline": "Study Modes Available",
+      "modes": [
+        "Distance Learning - study remotely, at your own pace, with tutor support",
+        "Part-Time Learning - structured around work commitments",
+        "Full-Time Learning - accelerated, intensive delivery",
+        "Classroom-Based - in-person sessions at our Dhaka centre"
+      ],
+      "cta": "Compare Study Modes"
+    },
+    "next_step": {
+      "headline": "Your Next Step",
+      "body": "On completing Level 4, you're ready to progress to the Level 5 Advanced Diploma, building further toward MCIPS Chartered status; CIPS's mark of full professional recognition.",
+      "cta": "View Level 5 Advanced Diploma →"
+    },
+    "lshs_benefits": {
+      "headline": "LSHS Benefits",
+      "sub_text": "Everything you need to study, sit your exams, and progress toward MCIPS - in one place.",
+      "benefits": [
+        "CIPS Approved Study Centre & Exam Centre Study and sit your exams through the same approved centre - no need to arrange assessment elsewhere.",
+        "Flexible Study Modes Choose distance learning, part-time, full-time or classroom-based study, built around your work and life.",
+        "Study Materials Get up-to-date CIPS study books and exam study papers.",
+        "Qualified Tutors Learn from tutors with real procurement and academic experience, supporting you through each module.",
+        "Structured Pathway Guidance Clear progression support from your first CIPS level through to MCIPS Chartered status, with advisors to help you choose the right starting point.",
+        "Transparent Fees Clear course pricing with no hidden costs, and flexible payment plans available."
+      ],
+      "cta_buttons": ["Explore Our Courses", "Speak to an Advisor"]
+    },
+    "faq": [
+      {
+        "question": "Can I start at Level 4 without doing Levels 2 or 3 first?",
+        "answer": "Yes - Level 4 is the highest level you can start at directly, provided you meet the entry requirements above."
+      },
+      {
+        "question": "How long does the Level 4 Diploma take?",
+        "answer": "Typically 9–18 months, depending on your study mode and pace."
+      },
+      {
+        "question": "Do I need to pass all 8 modules to get the Diploma?",
+        "answer": "Yes, all eight core modules must be completed and passed to achieve the full Level 4 Diploma."
+      },
+      {
+        "question": "What happens after Level 4?",
+        "answer": "You progress to the Level 5 Advanced Diploma, continuing toward MCIPS Chartered status."
+      }
+    ],
+    "closing_cta": {
+      "headline": "Ready to Start Your Level 4 Diploma?",
+      "body": "Speak to our admissions team to confirm your entry route and get a personalised study plan.",
+      "cta_buttons": ["Enrol Now", "Speak to an Advisor"]
+    }
+  },
+  {
+    "slug": "level-5-certificate",
+    "level": 5,
+    "hero": {
+      "breadcrumb": ["Home", "Courses", "Level 5 Advanced Diploma"],
+      "headline": "CIPS Level 5 Advanced Diploma in Procurement and Supply",
+      "sub_headline": "Step into senior-level capability, managing risk, contracts and teams, and specialising in the areas that matter most to your career.",
+      "key_facts": [
+        "8 Modules (5 Core + 3 Elective, chosen from 6)",
+        "60 Credits",
+        "Ofqual Regulated - equivalent to second-year undergraduate level",
+        "12–14 months typical study duration"
+      ],
+      "cta_buttons": [
+        "Enrol Now",
+        "Download Course Guide",
+        "Speak to an Advisor"
+      ]
+    },
+    "course_overview": {
+      "headline": "About This Qualification",
+      "body": "The CIPS Level 5 Advanced Diploma in Procurement and Supply builds directly on the Level 4 Diploma, developing higher-level practical, theoretical and technical expertise. You'll take a whole-organisation, whole-supply-chain view learning to manage risk in supply chains, assess the legal implications of contracts, and lead teams through change.\n\nLevel 5 is the second of the three qualifications (Levels 4, 5 and 6) that make up the direct pathway to MCIPS Chartered status, and it's where you begin to specialise in the areas most relevant to your career direction.",
+      "left_side": {
+        "course_name": "CIPS Level 5",
+        "discount": "25% Early Bird Discount Available",
+        "counter_text": "Use the counter for 7 days, rotated weekly",
+        "contact_text": "We'll contact you to discuss your enquiry, help you choose the right course, and let you know of any special offers.",
+        "cta": "Enrol Now"
+      }
+    },
+    "who_its_for": {
+      "headline": "Is Level 5 Right for You?",
+      "body": "Level 5 is designed for experienced procurement professionals, senior buyers and managers ready to move into strategic management and leadership roles, including Category Manager, Procurement Manager, or Supply Chain Lead positions.",
+      "entry_requirements": "Completion of the CIPS Level 4 Diploma (or an accepted exemption). This is not an entry-level qualification."
+    },
+    "modules": {
+      "headline": "Course Modules",
+      "sub_text": "Complete all five core modules, plus three elective modules of your choice, to achieve the full Advanced Diploma.",
+      "core_modules": [
+        {
+          "code": "L5M1",
+          "name": "Managing Teams and Individuals",
+          "credits": 12,
+          "type": "Core",
+          "description": "Explore different approaches to managing individuals and teams within procurement and supply, building the leadership skills to develop fulfilling organisational objectives."
+        },
+        {
+          "code": "L5M2",
+          "name": "Managing Supply Chain Risk",
+          "credits": 6,
+          "type": "Core",
+          "description": "Learn to establish the level of risk in a supply chain and apply methods for avoiding, mitigating or managing that risk."
+        },
+        {
+          "code": "L5M3",
+          "name": "Managing Contractual Risk",
+          "credits": 6,
+          "type": "Core",
+          "description": "Develop your understanding of the legal and procedural issues related to contract formation, breach, and the coping remedies available."
+        },
+        {
+          "code": "L5M4",
+          "name": "Advanced Contract and Financial Management",
+          "credits": 12,
+          "type": "Core",
+          "description": "Assess strategic sourcing and the financial factors that impact procurement and supply activity, from cost analysis to investment appraisal."
+        },
+        {
+          "code": "L5M5",
+          "name": "Managing Ethical Procurement and Supply",
+          "credits": 6,
+          "type": "Core",
+          "description": "Build your capability to embed ethical practice across complex procurement and supply environments."
+        }
+      ],
+      "elective_modules": [
+        {
+          "code": "L5M6",
+          "name": "Category Management",
+          "credits": 6,
+          "type": "Elective",
+          "description": "Develop a category management approach to procurement, aligning strategy with organisational priorities."
+        },
+        {
+          "code": "L5M7",
+          "name": "Achieving Competitive Advantage Through the Supply Chain",
+          "credits": 6,
+          "type": "Elective",
+          "description": "Learn how supply chain strategy can be used to create genuine competitive advantage for an organisation."
+        },
+        {
+          "code": "L5M8",
+          "name": "Project and Change Management",
+          "credits": 6,
+          "type": "Elective",
+          "description": "Build practical skills in leading projects and managing organisational change."
+        },
+        {
+          "code": "L5M9",
+          "name": "Operations Management",
+          "credits": 6,
+          "type": "Elective",
+          "description": "Understand the principles of operations management and their application to procurement and supply."
+        },
+        {
+          "code": "L5M10",
+          "name": "Logistics Management",
+          "credits": 6,
+          "type": "Elective",
+          "description": "Develop expertise in logistics strategy, planning and execution."
+        },
+        {
+          "code": "L5M15",
+          "name": "Advanced Negotiation",
+          "credits": 6,
+          "type": "Elective",
+          "description": "Build advanced negotiation skills for complex, high-value commercial scenarios."
+        }
+      ]
+    },
+    "brochure_fees": {
+      "headline": "Need to know about pricing? Get our brochure now!",
+      "cta": "Download"
+    },
+    "how_youll_study": {
+      "headline": "Study Modes Available",
+      "modes": [
+        "Distance Learning - study remotely, at your own pace, with tutor support",
+        "Part-Time Learning - structured around work commitments",
+        "Full-Time Learning - accelerated, intensive delivery",
+        "Classroom-Based - in-person sessions at our Dhaka centre"
+      ],
+      "cta": "Compare Study Modes"
+    },
+    "next_step": {
+      "headline": "Your Next Step",
+      "body": "On completing Level 5, you're ready to progress to the Level 6 Professional Diploma - the final level on your direct pathway to MCIPS Chartered status.",
+      "cta": "View Level 6 Professional Diploma →"
+    },
+    "lshs_benefits": {
+      "headline": "LSHS Benefits",
+      "sub_text": "Everything you need to study, sit your exams, and progress toward MCIPS - in one place.",
+      "benefits": [
+        "CIPS Approved Study Centre & Exam Centre - Study and sit your exams through the same approved centre - no need to arrange assessment elsewhere.",
+        "Flexible Study Modes - Choose distance learning, part-time, full-time or classroom-based study, built around your work and life.",
+        "Study Materials - Get up-to-date CIPS study books and exam study papers.",
+        "Qualified Tutors - Learn from tutors with real procurement and academic experience, supporting you through each module.",
+        "Structured Pathway Guidance - Clear progression support from your first CIPS level through to MCIPS Chartered status, with advisors to help you choose the right starting point.",
+        "Transparent Fees - Clear course pricing with no hidden costs, and flexible payment plans available."
+      ],
+      "cta_buttons": ["Explore Our Courses", "Speak to an Advisor"]
+    },
+    "faq": [
+      {
+        "question": "Do I need to complete Level 4 before starting Level 5?",
+        "answer": "Yes - Level 5 builds directly on Level 4 knowledge, so you'll need to have completed the Level 4 Diploma (or hold an accepted exemption) first."
+      },
+      {
+        "question": "How long does the Level 5 Advanced Diploma take?",
+        "answer": "Typically 12–14 months, depending on your study mode, pace, and elective choices."
+      },
+      {
+        "question": "How do I choose my three electives?",
+        "answer": "It depends on your career direction - for example, Category Management and Advanced Negotiation suit those focused on strategic sourcing, while Logistics Management and Operations Management suit those focused on supply chain operations. Our advisors can help you choose the combination that best fits your goals."
+      },
+      {
+        "question": "What happens after Level 5?",
+        "answer": "You progress to the Level 6 Professional Diploma, the final qualification before MCIPS Chartered status."
+      }
+    ],
+    "closing_cta": {
+      "headline": "Ready to Start Your Level 5 Advanced Diploma?",
+      "body": "Speak to our admissions team to confirm your entry route, choose your electives, and get a personalised study plan.",
+      "cta_buttons": ["Enrol Now", "Speak to an Advisor"]
+    }
+  },
+  {
+    "slug": "level-6-certificate",
+    "level": 6,
+    "hero": {
+      "breadcrumb": ["Home", "Courses", "Level 6 Professional Diploma"],
+      "headline": "CIPS Level 6 Professional Diploma in Procurement and Supply",
+      "sub_headline": "The final step on your journey to MCIPS: strategic leadership, global commercial strategy, and the capability to shape procurement direction at the highest level.",
+      "key_facts": [
+        "7 Modules (4 Core + 3 Elective, chosen from 6)",
+        "60 Credits",
+        "Ofqual Regulated - equivalent to Honours-level degree",
+        "12–18 months typical study duration"
+      ],
+      "cta_buttons": [
+        "Enrol Now",
+        "Download Course Guide",
+        "Speak to an Advisor"
+      ]
+    },
+    "course_overview": {
+      "headline": "About This Qualification",
+      "body": "The CIPS Level 6 Professional Diploma in Procurement and Supply is the final qualification on the direct pathway to MCIPS Chartered status. It's built for senior professionals ready to lead at a strategic level - evaluating global commercial strategy, driving ethical leadership, and shaping the future direction of procurement and supply within their organisation.\n\nOnce you've completed Level 6 (alongside the required relevant experience), you're ready to apply for MCIPS Chartered status - CIPS's mark of full professional recognition.",
+      "left_side": {
+        "course_name": "CIPS Level 6",
+        "discount": "25% Early Bird Discount Available",
+        "counter_text": "Use the counter for 7 days, rotated weekly",
+        "contact_text": "We'll contact you to discuss your enquiry, help you choose the right course, and let you know of any special offers.",
+        "cta": "Enrol Now"
+      }
+    },
+    "who_its_for": {
+      "headline": "Is Level 6 Right for You?",
+      "body": "Level 6 is designed for senior procurement and supply chain professionals who have completed Level 5 and are ready to operate at a strategic leadership level - evaluating and shaping commercial strategy, global supply chain performance, and organisational direction.",
+      "entry_requirements": "Completion of the CIPS Level 5 Advanced Diploma (or an accepted exemption). This is not an entry-level qualification."
+    },
+    "modules": {
+      "headline": "Course Modules",
+      "sub_text": "Complete all four core modules, plus three elective modules of your choice, to achieve the full Professional Diploma.",
+      "core_modules": [
+        {
+          "code": "L6M1",
+          "name": "Strategic Ethical Leadership",
+          "credits": 12,
+          "type": "Core",
+          "description": "Critically evaluate the leadership skills and behaviours needed to achieve organisational and stakeholder commitment to strategic change, and understand the ethical practices, standards and ESG considerations that shape procurement decisions."
+        },
+        {
+          "code": "L6M2",
+          "name": "Global Commercial Strategy",
+          "credits": 12,
+          "type": "Core",
+          "description": "Evaluate the concept of global commercial strategy, the challenges of formulating and implementing it, and the impact of finance on strategic decision-making."
+        },
+        {
+          "code": "L6M3",
+          "name": "Global Strategic Supply Chain Management",
+          "credits": 12,
+          "type": "Core",
+          "description": "Evaluate the influence of strategic supply chain management, and the methods available to measure, improve and optimise supply chain performance."
+        },
+        {
+          "code": "L6M4",
+          "name": "Future Strategic Challenges for the Profession",
+          "credits": 6,
+          "type": "Core",
+          "description": "Explore the emerging challenges facing the procurement and supply profession, and how strategic leaders can prepare their organisations to respond."
+        }
+      ],
+      "elective_modules": [
+        {
+          "code": "L6M5",
+          "name": "Strategic Programme Leadership",
+          "credits": 6,
+          "type": "Elective",
+          "description": "Develop the skills to lead large-scale strategic programmes across an organisation."
+        },
+        {
+          "code": "L6M7",
+          "name": "Commercial Data Management",
+          "credits": 6,
+          "type": "Elective",
+          "description": "Build capability in using commercial data to inform procurement strategy and decision-making."
+        },
+        {
+          "code": "L6M8",
+          "name": "Innovation in Procurement and Supply",
+          "credits": 6,
+          "type": "Elective",
+          "description": "Explore how innovation can be embedded into procurement and supply practice to drive organisational value."
+        },
+        {
+          "code": "L6M9",
+          "name": "Supply Network Design",
+          "credits": 6,
+          "type": "Elective",
+          "description": "Develop strategic capability in designing and optimising supply networks."
+        },
+        {
+          "code": "L6M10",
+          "name": "Global Logistics Strategy",
+          "credits": 6,
+          "type": "Elective",
+          "description": "Build expertise in shaping logistics strategy at a global, organisational level."
+        },
+        {
+          "code": "L6M11",
+          "name": "Environmental, Social and Governance (ESG) Principles",
+          "credits": 6,
+          "type": "Elective",
+          "description": "Understand ESG principles, why they matter globally, and how they apply to procurement and supply. (New module - confirm current availability/exam series with CIPS before publishing, as it was introduced for the March 2026 exam series.)"
+        }
+      ]
+    },
+    "brochure_fees": {
+      "headline": "Need to know about pricing? Get our brochure now!",
+      "cta": "Download"
+    },
+    "how_youll_study": {
+      "headline": "Study Modes Available",
+      "modes": [
+        "Distance Learning - study remotely, at your own pace, with tutor support",
+        "Part-Time Learning - structured around work commitments",
+        "Full-Time Learning - accelerated, intensive delivery",
+        "Classroom-Based - in-person sessions at our Dhaka centre"
+      ],
+      "cta": "Compare Study Modes"
+    },
+    "next_step": {
+      "headline": "Your Next Step",
+      "body": "On completing Level 6 - alongside the required relevant procurement and supply experience - you're ready to apply for MCIPS Chartered status, CIPS's mark of full professional recognition and the definitive benchmark of expertise in the profession.",
+      "cta": "Learn About MCIPS Chartered Status →"
+    },
+    "lshs_benefits": {
+      "headline": "LSHS Benefits",
+      "sub_text": "Everything you need to study, sit your exams, and progress toward MCIPS - in one place.",
+      "benefits": [
+        "CIPS Approved Study Centre & Exam Centre - Study and sit your exams through the same approved centre - no need to arrange assessment elsewhere.",
+        "Flexible Study Modes - Choose distance learning, part-time, full-time or classroom-based study, built around your work and life.",
+        "Study Materials - Get up-to-date CIPS study books and exam study papers.",
+        "Qualified Tutors - Learn from tutors with real procurement and academic experience, supporting you through each module.",
+        "Structured Pathway Guidance - Clear progression support from your first CIPS level through to MCIPS Chartered status, with advisors to help you choose the right starting point.",
+        "Transparent Fees - Clear course pricing with no hidden costs, and flexible payment plans available."
+      ],
+      "cta_buttons": ["Explore Our Courses", "Speak to an Advisor"]
+    },
+    "faq": [
+      {
+        "question": "Do I need to complete Level 5 before starting Level 6?",
+        "answer": "Yes - Level 6 builds directly on Level 5 knowledge, so you'll need to have completed the Level 5 Advanced Diploma (or hold an accepted exemption) first."
+      },
+      {
+        "question": "How long does the Level 6 Professional Diploma take?",
+        "answer": "Typically 12–18 months, depending on your study mode, pace, and elective choices."
+      },
+      {
+        "question": "Does completing Level 6 automatically make me MCIPS Chartered?",
+        "answer": "Not automatically - you'll also need to meet CIPS's relevant experience requirement (currently three years in a procurement and supply role) to apply for MCIPS Chartered status."
+      },
+      {
+        "question": "How do I choose my three electives?",
+        "answer": "It depends on your strategic focus - for example, Commercial Data Management and Innovation in Procurement and Supply suit those focused on strategic decision-making, while Supply Network Design and Global Logistics Strategy suit those focused on global supply chain leadership. Our advisors can help you choose."
+      }
+    ],
+    "closing_cta": {
+      "headline": "Ready to Start Your Level 6 Professional Diploma?",
+      "body": "Speak to our admissions team to confirm your entry route, choose your electives, and get a personalised study plan toward MCIPS Chartered status.",
+      "cta_buttons": ["Enrol Now", "Speak to an Advisor"]
+    }
+  }
+]
