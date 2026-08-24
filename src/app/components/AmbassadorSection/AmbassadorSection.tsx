@@ -256,56 +256,6 @@ export default function AmbassadorSection() {
           </p>
         </div>
 
-        {/* ── Ambassador Grid (5-6 per line) ── */}
-        <div
-          ref={gridRef}
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-6 gap-y-10 md:gap-y-12"
-        >
-          {ambassadors.map((amb, index) => (
-            <div
-              key={index}
-              className="amb-item flex flex-col items-center text-center group"
-            >
-              {/* Full Rounded Image */}
-              <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full overflow-hidden ring-1 ring-slate-100 group-hover:ring-[#0B73B9]/20 transition-all duration-500 group-hover:shadow-xl group-hover:shadow-slate-200/50">
-                <Image
-                  src={amb.image}
-                  alt={`${amb.name} - ${amb.country} Ambassador`}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 128px"
-                />
-              </div>
-
-              {/* Name */}
-              <h3 className="mt-4 text-sm md:text-base font-semibold text-slate-900 tracking-tight leading-tight">
-                {amb.name}
-              </h3>
-
-              {/* Country */}
-              <p className="mt-1.5 text-[10px] md:text-[11px] font-bold text-[#0B73B9] uppercase tracking-widest flex items-center gap-1.5">
-                <span className="text-xs">{amb.flag}</span>
-                {amb.country}
-              </p>
-
-              {/* Experience */}
-              <p className="mt-1 text-[11px] md:text-xs text-slate-400 font-medium leading-relaxed max-w-[160px]">
-                {amb.experience}
-              </p>
-
-              {/* Contact Redirect */}
-              <Link
-                href="/contact"
-                className="mt-3 text-[11px] font-semibold text-slate-300 hover:text-[#0B73B9] transition-colors duration-300 flex items-center gap-1"
-              >
-                Contact
-                <span className="inline-block transition-transform duration-300 group-hover:translate-x-0.5">
-                  →
-                </span>
-              </Link>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   );

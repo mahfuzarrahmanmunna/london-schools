@@ -8,23 +8,25 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowRight,
   CheckCircle2,
-  ChevronDown,
   Clock,
   Download,
   MapPin,
   BookOpen,
-  RotateCw,
   Award,
   Plus,
   ArrowUpRight,
   MessageCircle,
+  Tag,
+  Phone,
+  Zap,
 } from "lucide-react";
 
-// Import the JSON data
 import cipsCoursesData from "../../data/cipsCourse.json";
 import { useModal } from "@/app/context/ModalContext";
+import BrochureMorphSection from "./components/BrochureMorphSection";
 
 gsap.registerPlugin(ScrollTrigger);
+
 // ─── Types & Config ───────────────────────────────────────────
 interface LevelTheme {
   accent: string;
@@ -32,6 +34,13 @@ interface LevelTheme {
   text: string;
   bg: string;
   border: string;
+}
+
+interface TimeLeft {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
 }
 
 const LEVEL_THEMES: Record<number, LevelTheme> = {
@@ -80,6 +89,8 @@ const LEVEL_IMAGES: Record<number, string> = {
   6: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2070&auto=format&fit=crop",
 };
 
+const ENROL_URL = "https://forms.gle/kHkicZ6TaHQRoMck6";
+
 // ─── Sub-Components ──────────────────────────────────────────
 
 function SplitText({ text, className }: { text: string; className?: string }) {
@@ -96,6 +107,38 @@ function SplitText({ text, className }: { text: string; className?: string }) {
         </span>
       ))}
     </span>
+  );
+}
+
+function CountdownDigit({
+  value,
+  label,
+  theme,
+}: {
+  value: number;
+  label: string;
+  theme: LevelTheme;
+}) {
+  return (
+    <div className="flex flex-col items-center">
+      <div
+        className="w-12 h-12 flex items-center justify-center rounded-lg border"
+        style={{
+          backgroundColor: theme.bg,
+          borderColor: theme.border,
+        }}
+      >
+        <span
+          className="text-lg font-bold font-mono tracking-tight"
+          style={{ color: theme.text }}
+        >
+          {String(value).padStart(2, "0")}
+        </span>
+      </div>
+      <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-[0.12em] mt-1">
+        {label}
+      </span>
+    </div>
   );
 }
 
@@ -155,7 +198,6 @@ function FaqItem({
         </div>
       </button>
 
-      {/* Smooth height transition using CSS Grid */}
       <div
         className={`grid transition-all duration-500 ease-in-out ${
           isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
@@ -167,7 +209,6 @@ function FaqItem({
               {answer}
             </p>
 
-            {/* Render List if present */}
             {list && list.length > 0 && (
               <ul className="space-y-3 mt-2">
                 {list.map((item, idx) => (
@@ -240,7 +281,7 @@ function CurriculumTabs({
       </div>
 
       <div className="space-y-px bg-slate-200 border border-slate-200">
-        {modulesToShow.map((mod, i) => (
+        {modulesToShow.map((mod) => (
           <div
             key={mod.code}
             className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8 p-6 md:p-8 bg-white transition-all duration-300 hover:bg-slate-50 group"
@@ -281,13 +322,65 @@ function CurriculumTabs({
 export default function CourseDetailsPage() {
   const params = useParams();
   const slug = params.slug as string;
-    const { openModal } = useModal();
+  const { openModal } = useModal();
 
-  // Typecast JSON data to find the correct course
   const course = (cipsCoursesData as any[]).find((c) => c.slug === slug);
 
   const pageRef = useRef<HTMLDivElement>(null);
-  const [openFaq, setOpenFaq] = useState<number | null>(0); // Open the first one by default
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  // Timer state
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>({
+    days: 6,
+    hours: 23,
+    minutes: 59,
+    seconds: 59,
+  });
+
+  // Countdown timer
+  useEffect(() => {
+    if (!course) return;
+
+    const storageKey = `lshs_timer_end_${slug}`;
+    const now = new Date();
+
+    const endOfWeek = new Date(now);
+    const dayOfWeek = now.getDay();
+    const daysUntilSunday = dayOfWeek === 0 ? 7 : 7 - dayOfWeek;
+    endOfWeek.setDate(now.getDate() + daysUntilSunday);
+    endOfWeek.setHours(23, 59, 59, 999);
+
+    let endTime: number;
+
+    const stored =
+      typeof window !== "undefined" ? localStorage.getItem(storageKey) : null;
+
+    if (stored) {
+      endTime = parseInt(stored, 10);
+      if (endTime < now.getTime()) {
+        endTime = endOfWeek.getTime();
+        localStorage.setItem(storageKey, endTime.toString());
+      }
+    } else {
+      endTime = endOfWeek.getTime();
+      localStorage.setItem(storageKey, endTime.toString());
+    }
+
+    const updateTimer = () => {
+      const diff = Math.max(0, endTime - Date.now());
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor(
+        (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+      );
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      setTimeLeft({ days, hours, minutes, seconds });
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [slug, course]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
@@ -297,7 +390,6 @@ export default function CourseDetailsPage() {
     if (!course) return;
 
     const ctx = gsap.context(() => {
-      // Hero Text Animation
       gsap.from(".split-word span", {
         y: "110%",
         opacity: 0,
@@ -316,7 +408,6 @@ export default function CourseDetailsPage() {
         delay: 0.5,
       });
 
-      // Scroll Reveal Animation for Sections
       gsap.utils.toArray<HTMLElement>(".reveal").forEach((sec) => {
         gsap.from(sec.children, {
           y: 30,
@@ -331,7 +422,6 @@ export default function CourseDetailsPage() {
         });
       });
 
-      // Scroll Reveal for individual items (like FAQ)
       gsap.utils.toArray<HTMLElement>(".reveal-item").forEach((item) => {
         gsap.from(item, {
           opacity: 0,
@@ -345,7 +435,6 @@ export default function CourseDetailsPage() {
         });
       });
 
-      // Crucial for Lenis compatibility: Refresh ScrollTrigger after initial load
       ScrollTrigger.refresh();
     }, pageRef);
 
@@ -357,10 +446,8 @@ export default function CourseDetailsPage() {
       <main className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
           <h1
-            className="hero-title text-white font-light tracking-[-0.025em] leading-[1.05]"
-            style={{
-              fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
-            }}
+            className="text-slate-900 font-light tracking-[-0.025em] leading-[1.05]"
+            style={{ fontSize: "clamp(2.5rem, 6vw, 5.5rem)" }}
           >
             Course Not Found
           </h1>
@@ -378,8 +465,7 @@ export default function CourseDetailsPage() {
   const theme = LEVEL_THEMES[course.level] || LEVEL_THEMES[2];
 
   return (
-    // Removed overflow-x-hidden here to fix Lenis scroll locking
-    <main ref={pageRef} className="bg-white">
+    <main ref={pageRef} className="bg-white pb-28 lg:pb-0">
       {/* ═══════════════════ EDITORIAL HERO ═══════════════════ */}
       <section className="relative min-h-[80vh] flex items-center overflow-hidden bg-[#0F172A]">
         <div className="absolute inset-0 w-full h-full">
@@ -392,7 +478,6 @@ export default function CourseDetailsPage() {
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-32 md:py-40 w-full">
-          {/* Breadcrumb */}
           <div className="hero-anim flex flex-wrap items-center gap-3 mb-10">
             <Link
               href="/courses"
@@ -409,22 +494,17 @@ export default function CourseDetailsPage() {
             </span>
           </div>
 
-          {/* Title */}
           <h1
             className="hero-title text-white font-light tracking-[-0.025em] leading-[1.05]"
-            style={{
-              fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
-            }}
+            style={{ fontSize: "clamp(2.5rem, 6vw, 5.5rem)" }}
           >
             {course.hero.headline}
           </h1>
 
-          {/* Subtitle */}
           <p className="hero-anim text-lg md:text-xl text-slate-400 max-w-3xl leading-relaxed mb-12 font-light">
             {course.hero.sub_headline}
           </p>
 
-          {/* Key Facts Strip */}
           <div className="hero-anim flex flex-wrap gap-x-8 gap-y-4 mb-12 border-t border-b border-slate-700 py-6">
             {course.hero.key_facts.map((fact: string, i: number) => (
               <div
@@ -437,13 +517,12 @@ export default function CourseDetailsPage() {
             ))}
           </div>
 
-          {/* Hero CTAs */}
           <div className="hero-anim flex flex-wrap gap-4">
             <a
-              href="https://forms.gle/kHkicZ6TaHQRoMck6"
+              href={ENROL_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-3 px-8 py-4 bg-primary text-white rounded-md text-sm font-bold uppercase tracking-wider transition-all hover:bg-primary/90"
+              className="group inline-flex items-center gap-3 px-8 py-4 text-white rounded-md text-sm font-bold uppercase tracking-wider transition-all hover:brightness-110 bg-primary"
             >
               {course.hero.cta_buttons[0]}
               <ArrowRight
@@ -458,13 +537,23 @@ export default function CourseDetailsPage() {
               <Download size={16} />
               {course.hero.cta_buttons[1]}
             </button>
+            <Link
+              href={'/contact'}
+              className="group inline-flex items-center gap-3 px-8 py-4 text-white rounded-md text-sm font-bold uppercase tracking-wider transition-all hover:brightness-110 bg-secondary"
+            >
+              {course.hero.cta_buttons[2]}
+              <ArrowRight
+                size={16}
+                className="group-hover:translate-x-1 transition-transform"
+              />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════ COURSE OVERVIEW ═══════════════════ */}
-      <section className="reveal py-24 bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 grid lg:grid-cols-12 gap-16">
+      {/* ═══════════════════ COURSE OVERVIEW + SIDEBAR CARD ═══════════════════ */}
+      <section className="reveal py-20 md:py-24 bg-white border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           {/* Main Content */}
           <div className="lg:col-span-7">
             <p
@@ -473,7 +562,7 @@ export default function CourseDetailsPage() {
             >
               Course Overview
             </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-primary tracking-tight mb-8">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight mb-8">
               {course.course_overview.headline}
             </h2>
             <div className="space-y-6 text-slate-600 leading-[1.8] text-base">
@@ -485,66 +574,152 @@ export default function CourseDetailsPage() {
             </div>
           </div>
 
-          {/* Sticky Sidebar (Left Side Form Data) */}
+          {/* ── Sidebar Card (matching reference design) ── */}
           <div className="lg:col-span-5">
-            <div className="sticky top-24 bg-slate-50 border border-slate-200 p-8">
-              <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-200">
-                <div
-                  className="p-2.5 bg-white border border-slate-200"
-                  style={{ color: theme.accent }}
-                >
-                  <BookOpen size={20} />
-                </div>
-                <p className="text-lg font-bold text-primary">
-                  {course.course_overview.left_side.course_name}
-                </p>
-              </div>
-
+            <div className="sticky top-24 bg-white border border-slate-200 overflow-hidden">
+              {/* Top accent bar */}
               <div
-                className="p-4 mb-6 border"
-                style={{ backgroundColor: theme.bg, borderColor: theme.border }}
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <RotateCw size={14} style={{ color: theme.accent }} />
+                className="h-1 w-full"
+                style={{ backgroundColor: theme.accent }}
+              />
+
+              <div className="p-8">
+                {/* Course Name */}
+                <div className="flex items-center gap-3 mb-6 pb-5 border-b border-slate-100">
+                  <div
+                    className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{
+                      backgroundColor: theme.bg,
+                      border: `1px solid ${theme.border}`,
+                    }}
+                  >
+                    <BookOpen size={18} style={{ color: theme.accent }} />
+                  </div>
+                  <p className="text-xl font-bold text-slate-900 tracking-tight">
+                    {course.course_overview.left_side.course_name}
+                  </p>
+                </div>
+
+                {/* Counter Label */}
+                <div className="flex items-center gap-2 mb-3">
+                  <Zap size={12} style={{ color: theme.accent }} />
                   <p
-                    className="text-xs font-bold tracking-wider uppercase"
+                    className="text-[11px] font-bold tracking-[0.15em] uppercase"
                     style={{ color: theme.text }}
                   >
                     {course.course_overview.left_side.counter_text}
                   </p>
                 </div>
-                <p className="text-xl font-bold text-primary">
-                  {course.course_overview.left_side.discount}
+
+                {/* Countdown Timer */}
+                <div className="flex items-center gap-1.5 mb-7">
+                  <CountdownDigit
+                    value={timeLeft.days}
+                    label="Days"
+                    theme={theme}
+                  />
+                  <span
+                    className="text-slate-300 font-bold text-lg -mt-4"
+                    style={{ color: theme.border }}
+                  >
+                    :
+                  </span>
+                  <CountdownDigit
+                    value={timeLeft.hours}
+                    label="Hrs"
+                    theme={theme}
+                  />
+                  <span
+                    className="text-slate-300 font-bold text-lg -mt-4"
+                    style={{ color: theme.border }}
+                  >
+                    :
+                  </span>
+                  <CountdownDigit
+                    value={timeLeft.minutes}
+                    label="Min"
+                    theme={theme}
+                  />
+                  <span
+                    className="text-slate-300 font-bold text-lg -mt-4"
+                    style={{ color: theme.border }}
+                  >
+                    :
+                  </span>
+                  <CountdownDigit
+                    value={timeLeft.seconds}
+                    label="Sec"
+                    theme={theme}
+                  />
+                </div>
+
+                {/* Discount */}
+                <div
+                  className="p-4 mb-6 border"
+                  style={{
+                    backgroundColor: theme.bg,
+                    borderColor: theme.border,
+                  }}
+                >
+                  <p className="text-lg font-bold text-slate-900">
+                    {course.course_overview.left_side.discount}
+                  </p>
+                </div>
+
+                {/* Divider */}
+                <div className="w-full h-px bg-slate-200 mb-6" />
+
+                {/* Contact Text */}
+                <p className="text-sm text-slate-500 leading-relaxed mb-8">
+                  {course.course_overview.left_side.contact_text}
                 </p>
+
+                {/* Enrol Now Button */}
+                <a
+                  href={ENROL_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group w-full flex items-center justify-center gap-2.5 px-6 py-4 rounded-md text-sm font-bold uppercase tracking-wider text-white transition-all duration-200 hover:brightness-110 hover:shadow-lg"
+                  style={{
+                    backgroundColor: theme.accent,
+                    boxShadow: `0 4px 14px rgba(${theme.accentRgb}, 0.25)`,
+                  }}
+                >
+                  {course.course_overview.left_side.cta}
+                  <ArrowRight
+                    size={15}
+                    className="group-hover:translate-x-0.5 transition-transform"
+                  />
+                </a>
+
+                {/* Advisor link */}
+                <div className="mt-5 text-center">
+                  <Link
+                    href="/contact"
+                    className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider transition-colors duration-200"
+                    style={{ color: theme.text }}
+                  >
+                    <Phone size={11} />
+                    Speak to an Advisor
+                  </Link>
+                </div>
               </div>
-
-              <p className="text-sm text-slate-600 leading-relaxed mb-8">
-                {course.course_overview.left_side.contact_text}
-              </p>
-
-              <Link
-                href="/contact"
-                className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary text-white rounded-md text-sm font-bold uppercase tracking-wider transition-all hover:bg-primary/90"
-              >
-                {course.course_overview.left_side.cta}
-                <ArrowRight size={16} />
-              </Link>
             </div>
           </div>
         </div>
       </section>
 
       {/* ═══════════════════ WHO IT'S FOR ═══════════════════ */}
-      <section className="reveal py-24 bg-slate-50 border-b border-slate-200">
+      <section className="reveal py-20 md:py-24 bg-slate-50 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="max-w-3xl mb-12">
             <p
               className="text-xs font-bold tracking-[0.2em] uppercase mb-6"
               style={{ color: theme.text }}
             >
-              Who It's For
+              Who It&apos;s For
             </p>
-            <h2 className="text-3xl md:text-5xl font-bold text-primary tracking-tight mb-6">
+            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 tracking-tight mb-6">
               {course.who_its_for.headline}
             </h2>
             <p className="text-lg text-slate-600 leading-relaxed font-light">
@@ -563,7 +738,7 @@ export default function CourseDetailsPage() {
               <CheckCircle2 size={24} style={{ color: theme.accent }} />
             </div>
             <div>
-              <h4 className="text-lg font-bold text-primary mb-2">
+              <h4 className="text-lg font-bold text-slate-900 mb-2">
                 Entry Requirements
               </h4>
               <p className="text-slate-600 leading-relaxed">
@@ -574,10 +749,10 @@ export default function CourseDetailsPage() {
         </div>
       </section>
 
-      {/* ═══════════════════ WHAT YOU'LL STUDY (MODULES) ═══════════════════ */}
+      {/* ═══════════════════ WHAT YOU'LL STUDY ╀═══════════════════ */}
       <section
         id="curriculum"
-        className="reveal py-24 bg-white border-b border-slate-200"
+        className="reveal py-20 md:py-24 bg-white border-b border-slate-200"
       >
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="mb-16 max-w-2xl">
@@ -585,9 +760,9 @@ export default function CourseDetailsPage() {
               className="text-xs font-bold tracking-[0.2em] uppercase mb-6"
               style={{ color: theme.text }}
             >
-              What You'll Study
+              What You&apos;ll Study
             </p>
-            <h2 className="text-3xl md:text-5xl font-bold text-primary tracking-tight mb-4">
+            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 tracking-tight mb-4">
               {course.modules.headline}
             </h2>
             <p className="text-lg text-slate-600 font-light">
@@ -604,49 +779,25 @@ export default function CourseDetailsPage() {
       </section>
 
       {/* ═══════════════════ BROCHURE & FEES ═══════════════════ */}
-      <section className="reveal py-24 bg-slate-50 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
-          <div className="relative overflow-hidden p-12 md:p-20 text-center bg-[#0F172A]">
-            <div
-              className="absolute inset-0 opacity-[0.05] pointer-events-none"
-              style={{
-                backgroundImage: `linear-gradient(to right, ${theme.accent} 1px, transparent 1px), linear-gradient(to bottom, ${theme.accent} 1px, transparent 1px)`,
-                backgroundSize: "40px 40px",
-              }}
-            ></div>
-
-            <div className="relative z-10">
-              <Download
-                size={32}
-                style={{ color: theme.accent }}
-                className="mx-auto mb-8"
-              />
-              <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight mb-8 max-w-3xl mx-auto">
-                {course.brochure_fees.headline}
-              </h2>
-              <button
-                onClick={() => openModal("brochure")}
-                className="group inline-flex items-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-md text-sm font-bold uppercase tracking-wider hover:bg-white/20 transition-all"
-              >
-                {course.brochure_fees.cta}
-                <ArrowRight size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <BrochureMorphSection
+        headline={course.brochure_fees.headline}
+        cta={course.brochure_fees.cta}
+        onDownload={() => openModal("brochure")}
+        theme={theme}
+        courseName={course.course_overview.left_side.course_name} // Pass the dynamic name here!
+      />
 
       {/* ═══════════════════ HOW YOU'LL STUDY ═══════════════════ */}
-      <section className="reveal py-24 bg-white border-b border-slate-200">
+      <section className="reveal py-20 md:py-24 bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="text-center mb-16 max-w-2xl mx-auto">
             <p
               className="text-xs font-bold tracking-[0.2em] uppercase mb-4"
               style={{ color: theme.text }}
             >
-              How You'll Study
+              How You&apos;ll Study
             </p>
-            <h2 className="text-3xl md:text-5xl font-bold text-primary tracking-tight mb-4">
+            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 tracking-tight mb-4">
               {course.how_youll_study.headline}
             </h2>
           </div>
@@ -681,7 +832,7 @@ export default function CourseDetailsPage() {
           </div>
 
           <div className="mt-12 text-center">
-            <button className="inline-flex items-center gap-2 px-8 py-4 bg-white/60 backdrop-blur-md border border-slate-200 text-primary rounded-md text-sm font-bold uppercase tracking-wider hover:bg-white transition-all shadow-sm">
+            <button className="inline-flex items-center gap-2 px-8 py-4 bg-white/60 backdrop-blur-md border border-slate-200 text-slate-900 rounded-md text-sm font-bold uppercase tracking-wider hover:bg-white transition-all shadow-sm">
               {course.how_youll_study.cta}
               <ArrowRight size={14} />
             </button>
@@ -690,11 +841,14 @@ export default function CourseDetailsPage() {
       </section>
 
       {/* ═══════════════════ NEXT STEP ═══════════════════ */}
-      <section className="reveal py-24 bg-slate-50 border-b border-slate-200">
+      <section className="reveal py-20 md:py-24 bg-slate-50 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div
             className="flex flex-col lg:flex-row items-center gap-12 p-12 md:p-16 border"
-            style={{ borderColor: theme.border, backgroundColor: theme.bg }}
+            style={{
+              borderColor: theme.border,
+              backgroundColor: theme.bg,
+            }}
           >
             <div className="flex-1">
               <p
@@ -703,7 +857,7 @@ export default function CourseDetailsPage() {
               >
                 Where This Qualification Takes You
               </p>
-              <h2 className="text-3xl md:text-4xl font-bold text-primary tracking-tight mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight mb-6">
                 {course.next_step.headline}
               </h2>
               <p className="text-lg text-slate-600 leading-relaxed font-light">
@@ -713,7 +867,7 @@ export default function CourseDetailsPage() {
             <div className="flex-shrink-0">
               <Link
                 href="/courses"
-                className="group inline-flex items-center gap-3 px-8 py-4 bg-white/60 backdrop-blur-md border border-white/80 text-primary rounded-md text-sm font-bold uppercase tracking-wider transition-all hover:bg-white shadow-sm"
+                className="group inline-flex items-center gap-3 px-8 py-4 bg-white/60 backdrop-blur-md border border-white/80 text-slate-900 rounded-md text-sm font-bold uppercase tracking-wider transition-all hover:bg-white shadow-sm"
               >
                 {course.next_step.cta}
                 <ArrowRight
@@ -728,7 +882,7 @@ export default function CourseDetailsPage() {
       </section>
 
       {/* ═══════════════════ LSHS BENEFITS ═══════════════════ */}
-      <section className="reveal py-24 bg-white border-b border-slate-200">
+      <section className="reveal py-20 md:py-24 bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="text-center mb-16 max-w-2xl mx-auto">
             <p
@@ -737,7 +891,7 @@ export default function CourseDetailsPage() {
             >
               Why Choose Us
             </p>
-            <h2 className="text-3xl md:text-5xl font-bold text-primary tracking-tight mb-4">
+            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 tracking-tight mb-4">
               {course.lshs_benefits.headline}
             </h2>
             <p className="text-lg text-slate-600 font-light">
@@ -770,13 +924,13 @@ export default function CourseDetailsPage() {
           <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/courses"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-white rounded-md text-sm font-bold uppercase tracking-wider hover:bg-primary/90 transition-all"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-slate-900 text-white rounded-md text-sm font-bold uppercase tracking-wider hover:bg-slate-800 transition-all"
             >
               {course.lshs_benefits.cta_buttons[0]}
             </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/60 backdrop-blur-md border border-slate-200 text-primary rounded-md text-sm font-bold uppercase tracking-wider hover:bg-white transition-all shadow-sm"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/60 backdrop-blur-md border border-slate-200 text-slate-900 rounded-md text-sm font-bold uppercase tracking-wider hover:bg-white transition-all shadow-sm"
             >
               {course.lshs_benefits.cta_buttons[1]}
               <ArrowRight size={16} />
@@ -786,10 +940,9 @@ export default function CourseDetailsPage() {
       </section>
 
       {/* ═══════════════════ FAQ ═══════════════════ */}
-      <section className="reveal py-24 bg-slate-50 border-b border-slate-200">
+      <section className="reveal py-20 md:py-24 bg-slate-50 border-b border-slate-200">
         <div className="mx-auto max-w-7xl px-6 md:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
-            {/* Left Column: Sticky Header & CTA */}
             <div className="lg:col-span-5 lg:sticky lg:top-24 self-start">
               <div className="reveal-item flex items-center gap-4 mb-6">
                 <span
@@ -804,7 +957,7 @@ export default function CourseDetailsPage() {
                 />
               </div>
 
-              <h2 className="reveal-item text-3xl lg:text-4xl font-medium text-primary tracking-tight leading-[1.2] mb-6">
+              <h2 className="reveal-item text-3xl lg:text-4xl font-medium text-slate-900 tracking-tight leading-[1.2] mb-6">
                 Frequently Asked Questions
               </h2>
 
@@ -813,7 +966,6 @@ export default function CourseDetailsPage() {
                 qualifications, study modes, and the enrolment process.
               </p>
 
-              {/* Support CTA Card */}
               <div className="reveal-item relative bg-white border border-slate-200 rounded-xl p-6 overflow-hidden shadow-sm">
                 <div
                   className="absolute top-0 left-0 w-1 h-full"
@@ -828,7 +980,7 @@ export default function CourseDetailsPage() {
                     />
                   </div>
                   <div>
-                    <h3 className="text-base font-semibold text-primary tracking-tight mb-1">
+                    <h3 className="text-base font-semibold text-slate-900 tracking-tight mb-1">
                       Still have questions?
                     </h3>
                     <p className="text-sm font-normal leading-relaxed text-slate-500 mb-4">
@@ -851,7 +1003,6 @@ export default function CourseDetailsPage() {
               </div>
             </div>
 
-            {/* Right Column: Accordion List */}
             <div className="lg:col-span-7">
               <div className="reveal-item bg-white border border-slate-200 p-6 md:p-10 rounded-lg shadow-sm">
                 {course.faq.map((item: any, i: number) => (
@@ -874,11 +1025,13 @@ export default function CourseDetailsPage() {
       {/* ═══════════════════ CLOSING CTA ═══════════════════ */}
       <section className="relative py-24 md:py-32 overflow-hidden bg-slate-50">
         <div className="cta-box-container relative z-10 max-w-5xl py-16 md:py-20 bg-[#050505] rounded-[2rem] mx-auto px-6 md:px-12 shadow-2xl border border-white/10">
-          {/* Centered Content Wrapper */}
           <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
             <div
               className="inline-flex items-center justify-center w-16 h-16 mb-8 border rounded-2xl"
-              style={{ borderColor: theme.border, backgroundColor: theme.bg }}
+              style={{
+                borderColor: theme.border,
+                backgroundColor: theme.bg,
+              }}
             >
               <Award size={32} style={{ color: theme.accent }} />
             </div>
@@ -892,16 +1045,19 @@ export default function CourseDetailsPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
-              <Link
-                href="/contact"
-                className="group inline-flex items-center gap-3 px-10 py-5 bg-primary text-white rounded-md text-sm font-bold uppercase tracking-wider transition-all hover:bg-primary/90 w-full sm:w-auto justify-center"
+              <a
+                href={ENROL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-3 px-10 py-5 text-white rounded-md text-sm font-bold uppercase tracking-wider transition-all hover:brightness-110 w-full sm:w-auto justify-center"
+                style={{ backgroundColor: theme.accent }}
               >
                 {course.closing_cta.cta_buttons[0]}
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-1 transition-transform"
                 />
-              </Link>
+              </a>
               <Link
                 href="/contact"
                 className="inline-flex items-center gap-3 px-10 py-5 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-md text-sm font-bold uppercase tracking-wider hover:bg-white/20 transition-all w-full sm:w-auto justify-center"
@@ -912,6 +1068,66 @@ export default function CourseDetailsPage() {
           </div>
         </div>
       </section>
+
+      {/* ═══════════════════ MOBILE BOTTOM BAR ═══════════════════ */}
+      <div className="fixed bottom-0 inset-x-0 lg:hidden z-50">
+        <div
+          className="border-t backdrop-blur-2xl"
+          style={{
+            backgroundColor: "rgba(15, 23, 42, 0.92)",
+            borderColor: "rgba(255, 255, 255, 0.08)",
+          }}
+        >
+          <div
+            className="flex items-center justify-between gap-3 px-4 py-3"
+            style={{
+              paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))",
+            }}
+          >
+            {/* Left: Discount info */}
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div
+                className="flex-shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-md"
+                style={{ backgroundColor: theme.accent }}
+              >
+                <Tag size={11} className="text-white" />
+                <span className="text-[11px] font-extrabold text-white uppercase tracking-wider">
+                  25% Off
+                </span>
+              </div>
+              <div className="min-w-0 hidden sm:block">
+                <p className="text-[11px] font-semibold text-white/80 truncate leading-tight">
+                  Early Bird Discount
+                </p>
+                <div className="flex items-center gap-1 mt-0.5">
+                  <Zap size={9} style={{ color: theme.accent }} />
+                  <span className="text-[10px] font-mono font-bold text-white/50">
+                    {String(timeLeft.days).padStart(2, "0")}d{" "}
+                    {String(timeLeft.hours).padStart(2, "0")}h{" "}
+                    {String(timeLeft.minutes).padStart(2, "0")}m{" "}
+                    {String(timeLeft.seconds).padStart(2, "0")}s
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Enrol button */}
+            <a
+              href={ENROL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider text-white transition-all active:scale-95"
+              style={{
+                backgroundColor: theme.accent,
+                boxShadow: `0 2px 12px rgba(${theme.accentRgb}, 0.4)`,
+              }}
+            >
+              Enrol Now
+              <ArrowRight size={13} />
+            </a>
+          </div>
+        </div>
+      </div>
     </main>
   );
 }

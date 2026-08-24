@@ -26,7 +26,15 @@
         "discount": "25% Early Bird Discount Available",
         "counter_text": "Use the counter for 7 days, rotated weekly",
         "contact_text": "We'll contact you to discuss your enquiry, help you choose the right course, and let you know of any special offers.",
-        "cta": "Enrol Now"
+        "cta": "Enrol Now",
+        "timer": {
+          "duration_days": 7,
+          "rotation": "weekly",
+          "initial_days": 6,
+          "initial_hours": 23,
+          "initial_minutes": 59,
+          "initial_seconds": 59
+        }
       }
     },
     "who_its_for": {
@@ -159,7 +167,15 @@
         "discount": "25% Early Bird Discount Available",
         "counter_text": "Use the counter for 7 days, rotated weekly",
         "contact_text": "We'll contact you to discuss your enquiry, help you choose the right course, and let you know of any special offers.",
-        "cta": "Enrol Now"
+        "cta": "Enrol Now",
+        "timer": {
+          "duration_days": 7,
+          "rotation": "weekly",
+          "initial_days": 6,
+          "initial_hours": 23,
+          "initial_minutes": 59,
+          "initial_seconds": 59
+        }
       }
     },
     "who_its_for": {
@@ -299,8 +315,16 @@
         "course_name": "CIPS Level 4",
         "discount": "25% Early Bird Discount Available",
         "counter_text": "Use the counter for 7 days, which will be rotated every week",
-        "contact_text": "We’ll contact you to discuss your enquiry, help you choose the right course, and let you know of any special offers.",
-        "cta": "Enrol Now"
+        "contact_text": "We'll contact you to discuss your enquiry, help you choose the right course, and let you know of any special offers.",
+        "cta": "Enrol Now",
+        "timer": {
+          "duration_days": 7,
+          "rotation": "weekly",
+          "initial_days": 6,
+          "initial_hours": 23,
+          "initial_minutes": 59,
+          "initial_seconds": 59
+        }
       }
     },
     "who_its_for": {
@@ -454,7 +478,15 @@
         "discount": "25% Early Bird Discount Available",
         "counter_text": "Use the counter for 7 days, rotated weekly",
         "contact_text": "We'll contact you to discuss your enquiry, help you choose the right course, and let you know of any special offers.",
-        "cta": "Enrol Now"
+        "cta": "Enrol Now",
+        "timer": {
+          "duration_days": 7,
+          "rotation": "weekly",
+          "initial_days": 6,
+          "initial_hours": 23,
+          "initial_minutes": 59,
+          "initial_seconds": 59
+        }
       }
     },
     "who_its_for": {
@@ -630,7 +662,15 @@
         "discount": "25% Early Bird Discount Available",
         "counter_text": "Use the counter for 7 days, rotated weekly",
         "contact_text": "We'll contact you to discuss your enquiry, help you choose the right course, and let you know of any special offers.",
-        "cta": "Enrol Now"
+        "cta": "Enrol Now",
+        "timer": {
+          "duration_days": 7,
+          "rotation": "weekly",
+          "initial_days": 6,
+          "initial_hours": 23,
+          "initial_minutes": 59,
+          "initial_seconds": 59
+        }
       }
     },
     "who_its_for": {

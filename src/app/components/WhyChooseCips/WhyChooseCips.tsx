@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -55,41 +55,43 @@ export default function WhyChooseCips() {
   const counterRef = useRef<HTMLSpanElement>(null);
   const dividerRef = useRef<HTMLDivElement>(null);
 
+  const [activeStep, setActiveStep] = useState("01");
+
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // ── Heading entrance ──
+      // ── Left Content Entrance ──
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 75%",
+          start: "top 70%",
         },
       });
 
       tl.from(".why-eyebrow", {
         opacity: 0,
         y: 20,
-        duration: 1,
+        duration: 0.8,
         ease: "power3.out",
       })
         .from(
           ".why-line",
-          { scaleX: 0, duration: 1.2, ease: "power3.inOut" },
-          "-=0.6",
+          { scaleX: 0, duration: 1, ease: "power3.inOut" },
+          "-=0.4",
         )
         .from(
           ".why-title",
-          { y: 60, opacity: 0, duration: 1.4, ease: "power4.out" },
-          "-=0.8",
+          { y: 40, opacity: 0, duration: 1.2, ease: "power4.out" },
+          "-=0.6",
         )
         .from(
           ".why-desc",
           { y: 25, opacity: 0, duration: 1, ease: "power3.out" },
-          "-=0.7",
+          "-=0.8",
         )
         .from(
           ".why-cta",
-          { y: 20, opacity: 0, duration: 0.9, ease: "power3.out" },
-          "-=0.5",
+          { y: 20, opacity: 0, duration: 0.8, ease: "power3.out" },
+          "-=0.6",
         )
         .from(
           ".why-progress-wrap",
@@ -97,148 +99,110 @@ export default function WhyChooseCips() {
           "-=0.4",
         );
 
-      // ── Progress bar ──
+      // ── Progress Bar Scrub ──
       if (cardsRef.current && progressRef.current) {
         gsap.to(progressRef.current, {
-          scrollTrigger: {
-            trigger: cardsRef.current,
-            start: "top 50%",
-            end: "bottom 50%",
-            scrub: 0.4,
-          },
           scaleX: 1,
           ease: "none",
+          scrollTrigger: {
+            trigger: cardsRef.current,
+            start: "top 60%",
+            end: "bottom 70%",
+            scrub: 0.5,
+          },
         });
       }
 
-      // ── Active counter ──
-      if (counterRef.current) {
-        benefits.forEach((_, i) => {
-          gsap.to(counterRef.current, {
-            scrollTrigger: {
-              trigger: cardsRef.current?.children[i],
-              start: "top 50%",
-              end: "top 10%",
-              scrub: true,
-            },
-            innerText: String(i + 1).padStart(2, "0"),
-            snap: { innerText: 1 },
-            duration: 0.2,
-          });
-        });
-      }
-
-      // ── Divider width ──
+      // ── Vertical Divider Line Draw ──
       if (dividerRef.current) {
         gsap.fromTo(
           dividerRef.current,
           { scaleY: 0 },
           {
-            scrollTrigger: {
-              trigger: cardsRef.current,
-              start: "top 50%",
-              end: "bottom 50%",
-              scrub: 0.3,
-            },
             scaleY: 1,
             ease: "none",
+            scrollTrigger: {
+              trigger: cardsRef.current,
+              start: "top 60%",
+              end: "bottom 70%",
+              scrub: 0.5,
+            },
           },
         );
       }
 
-      // ── Per-card scrub animations ──
+      // ── Card Content Reveals ──
       const cards = gsap.utils.toArray<HTMLElement>(".sticky-card");
 
-      cards.forEach((card) => {
+      cards.forEach((card, index) => {
         const numEl = card.querySelector(".card-num");
-        const iconEl = card.querySelector(".card-icon-wrap");
-        const titleEl = card.querySelector(".card-title");
-        const descEl = card.querySelector(".card-desc");
-        const footEl = card.querySelector(".card-footer");
+        const contentEl = card.querySelector(".card-content-inner");
         const accentEl = card.querySelector(".card-accent");
 
-        if (numEl) {
-          gsap.from(numEl, {
+        // Smooth fade-in-up for content
+        if (contentEl) {
+          gsap.from(contentEl, {
+            opacity: 0,
+            y: 60,
+            duration: 1.2,
+            ease: "power3.out",
             scrollTrigger: {
               trigger: card,
-              start: "top 55%",
-              end: "top 20%",
-              scrub: true,
+              start: "top 75%",
+              toggleActions: "play none none reverse",
             },
-            y: 80,
-            opacity: 0,
           });
         }
 
+        // Accent bar grow
         if (accentEl) {
-          gsap.fromTo(
-            accentEl,
-            { scaleY: 0 },
-            {
-              scrollTrigger: {
-                trigger: card,
-                start: "top 50%",
-                end: "top 25%",
-                scrub: true,
-              },
-              scaleY: 1,
-              ease: "power2.out",
+          gsap.from(accentEl, {
+            scaleY: 0,
+            duration: 1.2,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 75%",
+              toggleActions: "play none none reverse",
             },
+          });
+        }
+
+        // Parallax effect on the large background number
+        if (numEl) {
+          gsap.to(numEl, {
+            yPercent: -30,
+            ease: "none",
+            scrollTrigger: {
+              trigger: card,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 1,
+            },
+          });
+        }
+
+        // ── Active Step Counter Logic ──
+        ScrollTrigger.create({
+          trigger: card,
+          start: "top 50%",
+          end: "bottom 50%",
+          onEnter: () => updateActiveStep(benefits[index].num),
+          onEnterBack: () => updateActiveStep(benefits[index].num),
+        });
+      });
+
+      function updateActiveStep(step: string) {
+        if (counterRef.current) {
+          setActiveStep(step);
+          // Animate the number change
+          gsap.fromTo(
+            counterRef.current,
+            { y: -10, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
           );
         }
-
-        if (iconEl) {
-          gsap.from(iconEl, {
-            scrollTrigger: {
-              trigger: card,
-              start: "top 48%",
-              end: "top 18%",
-              scrub: true,
-            },
-            y: 30,
-            opacity: 0,
-          });
-        }
-
-        if (titleEl) {
-          gsap.from(titleEl, {
-            scrollTrigger: {
-              trigger: card,
-              start: "top 46%",
-              end: "top 16%",
-              scrub: true,
-            },
-            y: 50,
-            opacity: 0,
-          });
-        }
-
-        if (descEl) {
-          gsap.from(descEl, {
-            scrollTrigger: {
-              trigger: card,
-              start: "top 44%",
-              end: "top 14%",
-              scrub: true,
-            },
-            y: 30,
-            opacity: 0,
-          });
-        }
-
-        if (footEl) {
-          gsap.from(footEl, {
-            scrollTrigger: {
-              trigger: card,
-              start: "top 42%",
-              end: "top 12%",
-              scrub: true,
-            },
-            y: 20,
-            opacity: 0,
-          });
-        }
-      });
+      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -313,7 +277,7 @@ export default function WhyChooseCips() {
                     ref={counterRef}
                     className="text-sm font-mono font-medium text-[#0B73B9] tabular-nums"
                   >
-                    01
+                    {activeStep}
                   </span>
                   <span className="text-sm tracking-[0.1em] uppercase font-medium text-white/30">
                     / 05
@@ -332,7 +296,7 @@ export default function WhyChooseCips() {
         </div>
 
         {/* ══════════════════════════════════════════════
-             RIGHT Stacking sticky cards (7 cols)
+             RIGHT Scrollable Cards (7 cols)
         ══════════════════════════════════════════════ */}
         <div ref={cardsRef} className="lg:col-span-7 relative">
           {/* Vertical divider */}
@@ -348,9 +312,7 @@ export default function WhyChooseCips() {
             return (
               <div
                 key={i}
-                className={`sticky top-0 min-h-screen lg:h-screen flex items-center overflow-hidden ${
-                  i > 0 ? "rounded-tl-[3rem]" : ""
-                }`}
+                className="sticky-card relative min-h-[80vh] flex items-center overflow-hidden py-20 lg:py-24"
                 style={{
                   background: i % 2 === 0 ? "#070707" : "#0a0a0a",
                 }}
@@ -372,9 +334,9 @@ export default function WhyChooseCips() {
                   }}
                 />
 
-                {/* Large background number */}
+                {/* Large background number (Parallax) */}
                 <span
-                  className="card-num absolute top-6 right-8 md:top-10 md:right-14 text-[clamp(8rem,20vw,16rem)] font-extralight leading-none select-none pointer-events-none block"
+                  className="card-num absolute top-10 right-8 md:top-12 md:right-14 text-[clamp(8rem,20vw,16rem)] font-extralight leading-none select-none pointer-events-none block"
                   style={{
                     fontFamily: "var(--font-playfair)",
                     background:
@@ -397,11 +359,11 @@ export default function WhyChooseCips() {
                   }}
                 />
 
-                <div className="sticky-card relative z-10 w-full px-8 md:px-14 lg:px-16 py-16 lg:py-0">
+                <div className="card-content-inner relative z-10 w-full px-8 md:px-14 lg:px-16">
                   <div className="max-w-xl">
                     {/* Icon */}
                     <div
-                      className="card-icon-wrap w-16 h-16 rounded-2xl flex items-center justify-center mb-8 transition-all duration-700"
+                      className="w-16 h-16 rounded-2xl flex items-center justify-center mb-8 transition-all duration-700"
                       style={{
                         background: isPrimary
                           ? "linear-gradient(135deg, rgba(11,115,185,0.1) 0%, rgba(11,115,185,0.02) 100%)"
@@ -440,19 +402,19 @@ export default function WhyChooseCips() {
 
                     {/* Title */}
                     <h3
-                      className="card-title text-[clamp(1.8rem,3.2vw,2.4rem)] font-medium text-white tracking-[-0.025em] leading-[1.2] mb-6"
+                      className="text-[clamp(1.8rem,3.2vw,2.4rem)] font-medium text-white tracking-[-0.025em] leading-[1.2] mb-6"
                       style={{ fontFamily: "var(--font-playfair)" }}
                     >
                       {item.title}
                     </h3>
 
                     {/* Description */}
-                    <p className="card-desc text-base font-normal leading-relaxed tracking-normal text-white/60 max-w-[500px]">
+                    <p className="text-base font-normal leading-relaxed tracking-normal text-white/60 max-w-[500px]">
                       {item.desc}
                     </p>
 
                     {/* Footer */}
-                    <div className="card-footer mt-12 flex items-center gap-4">
+                    <div className="mt-12 flex items-center gap-4">
                       <div
                         className="w-12 h-px"
                         style={{

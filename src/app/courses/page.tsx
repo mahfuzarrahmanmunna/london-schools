@@ -16,6 +16,7 @@ import {
 
 // Import the JSON data
 import cipsCoursesData from "../data/cipsCourse.json";
+import { useModal } from "../context/ModalContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -87,12 +88,12 @@ const LEVEL_THEMES: Record<number, LevelTheme> = {
 };
 
 const LEVEL_IMAGES: Record<number, string> = {
-  2: "https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=2070&auto=format&fit=crop",
-  3: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070&auto=format&fit=crop",
-  4: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=2070&auto=format&fit=crop",
-  5: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop",
-  6: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2070&auto=format&fit=crop",
-  7: "https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2069&auto=format&fit=crop",
+  2: "/courses/coursesim.png",
+  3: "/courses/coursesim.png",
+  4: "/courses/coursesim.png",
+  5: "/courses/coursesim.png",
+  6: "/courses/coursesim.png",
+  7: "/courses/coursesim.png",
 };
 
 const LEVEL_TYPE_MAP: Record<number, string> = {
@@ -405,6 +406,7 @@ export default function CipsQualificationsPage() {
   const ctaRef = useRef<HTMLButtonElement>(null);
   const timelineRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLElement>(null);
+   const { openModal } = useModal();
 
   const [timelineActive, setTimelineActive] = useState<number | null>(null);
 
@@ -475,11 +477,28 @@ export default function CipsQualificationsPage() {
         },
       });
 
+      // Desktop line fill animation
       gsap.fromTo(
-        ".timeline-line-fill",
+        ".timeline-line-fill-desktop",
         { scaleX: 0 },
         {
           scaleX: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: timelineRef.current,
+            start: "top 70%",
+            end: "bottom 50%",
+            scrub: 0.8,
+          },
+        },
+      );
+
+      // Mobile line fill animation
+      gsap.fromTo(
+        ".timeline-line-fill-mobile",
+        { scaleY: 0 },
+        {
+          scaleY: 1,
           ease: "none",
           scrollTrigger: {
             trigger: timelineRef.current,
@@ -567,7 +586,7 @@ export default function CipsQualificationsPage() {
           />
         </div>
 
-        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center py-32">
+        <div className="relative mt-12 z-10 max-w-5xl mx-auto px-6 text-center py-32">
           <div className="hero-badge inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-10">
             <Sparkles size={14} className="text-[#D4AF37]" />
             <span className="text-xs font-medium tracking-widest uppercase text-white/60">
@@ -594,7 +613,7 @@ export default function CipsQualificationsPage() {
 
           <button
             ref={ctaRef}
-            className="hero-cta relative inline-flex items-center gap-3 px-8 py-4 bg-[#D4AF37] text-black rounded-full text-sm font-bold uppercase tracking-wider overflow-hidden transition-colors hover:bg-[#e0bd45] will-change-transform"
+            className="hero-cta cursor-pointer relative inline-flex items-center gap-3 px-8 py-4 bg-[#D4AF37] text-black rounded-full text-sm font-bold uppercase tracking-wider overflow-hidden transition-colors hover:bg-[#e0bd45] will-change-transform"
             style={{ boxShadow: "0 10px 30px -10px rgba(212, 175, 55, 0.4)" }}
             onClick={() =>
               document
@@ -622,7 +641,7 @@ export default function CipsQualificationsPage() {
         ref={timelineRef}
         className="relative py-24 md:py-32 bg-white overflow-hidden"
       >
-        <div className="max-w-5xl mx-auto px-6">
+        <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-20">
             <p className="text-xs font-bold tracking-[0.2em] uppercase text-gray-400 mb-4">
               The Journey
@@ -635,97 +654,110 @@ export default function CipsQualificationsPage() {
             </p>
           </div>
 
-          {/* Desktop Timeline */}
+          {/* Desktop Timeline - Perfectly Centered Math */}
+          {/* Node is 56px (w-14 h-14). Center is 28px. Line is 2px (h-0.5). Top edge must be 27px. */}
           <div
-            className="hidden md:flex items-center justify-between relative group/timeline"
+            className="hidden md:flex items-start justify-between relative w-full max-w-4xl mx-auto"
             onMouseLeave={() => setTimelineActive(null)}
           >
-            <div className="absolute top-1/2 left-[10%] right-[10%] h-px bg-gray-100 -translate-y-1/2" />
+            {/* Background Line */}
+            <div className="absolute top-[27px] left-7 right-7 h-0.5 bg-slate-200 z-0" />
 
-            {/* Dynamic Line Fill */}
+            {/* Animated Line Fill */}
             <div
-              className="timeline-line-fill absolute top-1/2 left-[10%] right-[10%] h-0.5 -translate-y-1/2 origin-left"
-              style={{ background: TIMELINE_GRADIENT_DESKTOP }}
+              className="timeline-line-fill-desktop absolute top-[27px] left-7 right-7 h-0.5 z-0 origin-left"
+              style={{
+                background: TIMELINE_GRADIENT_DESKTOP,
+                transform: "scaleX(0)",
+              }}
             />
 
-            <div className="relative z-10 flex justify-between w-full">
-              {TIMELINE_STEPS.map((step, i) => {
-                const theme = LEVEL_THEMES[step.level];
-                const isActive = timelineActive === step.level;
-                const isNeighbor =
-                  timelineActive !== null &&
-                  Math.abs(
-                    TIMELINE_STEPS.findIndex(
-                      (s) => s.level === timelineActive,
-                    ) - i,
-                  ) === 1;
+            {TIMELINE_STEPS.map((step, i) => {
+              const theme = LEVEL_THEMES[step.level];
+              const isActive = timelineActive === step.level;
+              const isNeighbor =
+                timelineActive !== null &&
+                Math.abs(
+                  TIMELINE_STEPS.findIndex((s) => s.level === timelineActive) -
+                    i,
+                ) === 1;
 
-                const linkHref =
-                  step.level === 7
-                    ? "/courses/mcips"
-                    : `/courses/level-${step.level}-certificate`;
+              const linkHref =
+                step.level === 7
+                  ? "/courses/mcips"
+                  : `/courses/level-${step.level}-certificate`;
 
-                return (
-                  <Link
-                    key={step.level}
-                    href={linkHref}
-                    className="timeline-node flex flex-col items-center relative group/node"
-                    onMouseEnter={() => setTimelineActive(step.level)}
+              return (
+                <Link
+                  key={step.level}
+                  href={linkHref}
+                  className="timeline-node flex flex-col items-center relative z-10 group/node cursor-pointer"
+                  onMouseEnter={() => setTimelineActive(step.level)}
+                  style={{
+                    textDecoration: "none",
+                    willChange: "transform, opacity",
+                  }}
+                >
+                  <div
+                    className="relative w-14 h-14 rounded-full flex items-center justify-center border-2 bg-white transition-all duration-300 group-hover/node:scale-110 group-hover/node:shadow-xl"
                     style={{
-                      cursor: "pointer",
-                      willChange: "transform, opacity",
-                      textDecoration: "none",
+                      borderColor:
+                        isActive || isNeighbor ? theme.accent : "#E5E7EB",
+                      boxShadow: isActive
+                        ? `0 10px 25px -5px ${theme.glow}`
+                        : "none",
+                      transform: isActive ? "scale(1.15)" : "scale(1)",
                     }}
                   >
-                    <div
-                      className="w-14 h-14 rounded-2xl flex items-center justify-center border-2 bg-white transition-all duration-500 relative z-10 group-hover/node:shadow-lg"
-                      style={{
-                        borderColor:
-                          isActive || isNeighbor ? theme.accent : "#E5E7EB",
-                        boxShadow: isActive ? `0 0 25px ${theme.glow}` : "none",
-                        transform: isActive ? "scale(1.2)" : "scale(1)",
-                      }}
-                    >
-                      {step.level === 7 ? (
-                        <Award
-                          size={20}
-                          style={{ color: isActive ? theme.text : "#9CA3AF" }}
-                        />
-                      ) : (
-                        <span
-                          className="text-base font-bold"
-                          style={{ color: isActive ? theme.text : "#9CA3AF" }}
-                        >
-                          {step.level}
-                        </span>
-                      )}
-                    </div>
+                    {step.level === 7 ? (
+                      <Award
+                        size={20}
+                        style={{ color: isActive ? theme.text : "#9CA3AF" }}
+                      />
+                    ) : (
+                      <span
+                        className="text-base font-bold transition-colors duration-300"
+                        style={{ color: isActive ? theme.text : "#9CA3AF" }}
+                      >
+                        {step.level}
+                      </span>
+                    )}
+                  </div>
+
+                  <div
+                    className="mt-4 text-center px-2 py-1 rounded-md transition-colors duration-300"
+                    style={{
+                      backgroundColor: isActive ? theme.bg : "transparent",
+                    }}
+                  >
                     <span
-                      className="mt-3 text-xs font-semibold tracking-wider uppercase transition-colors duration-300"
-                      style={{ color: isActive ? theme.text : "#9CA3AF" }}
+                      className="block text-xs font-bold tracking-wider uppercase transition-colors duration-300"
+                      style={{ color: isActive ? theme.text : "#64748B" }}
                     >
+                      {step.level === 7 ? "MCIPS" : `Level ${step.level}`}
+                    </span>
+                    <span className="block text-[10px] font-medium text-slate-400 mt-0.5 uppercase tracking-wide">
                       {step.label}
                     </span>
-                    <div
-                      className="absolute -bottom-6 opacity-0 group-hover/node:opacity-100 transition-all duration-300 translate-y-2 group-hover/node:translate-y-0"
-                      style={{ color: theme.accent }}
-                    >
-                      <ArrowUpRight size={14} />
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
 
-          {/* Mobile Timeline */}
-          <div className="md:hidden relative pl-12 space-y-12">
-            <div className="absolute left-[18px] top-2 bottom-2 w-px bg-gray-100">
-              <div
-                className="timeline-line-fill absolute inset-0 origin-top"
-                style={{ background: TIMELINE_GRADIENT_MOBILE }}
-              />
-            </div>
+          {/* Mobile Timeline - Redesigned with Premium Cards */}
+          <div className="md:hidden relative max-w-sm mx-auto pl-12 space-y-6">
+            {/* Background Line */}
+            <div className="absolute left-[19px] top-5 bottom-5 w-0.5 bg-slate-200" />
+            {/* Dynamic Line Fill */}
+            <div
+              className="timeline-line-fill-mobile absolute left-[19px] top-5 bottom-5 w-0.5 origin-top"
+              style={{
+                background: TIMELINE_GRADIENT_MOBILE,
+                transform: "scaleY(0)",
+              }}
+            />
+
             {TIMELINE_STEPS.map((step) => {
               const theme = LEVEL_THEMES[step.level];
               const linkHref =
@@ -737,14 +769,14 @@ export default function CipsQualificationsPage() {
                 <Link
                   key={step.level}
                   href={linkHref}
-                  className="timeline-node relative flex items-center gap-4 group/node"
+                  className="timeline-node relative flex items-center group/node"
                   style={{ textDecoration: "none" }}
                 >
                   <div
-                    className="absolute -left-12 w-10 h-10 rounded-xl flex items-center justify-center border-2 bg-white transition-all duration-300 group-hover/node:scale-110"
+                    className="absolute -left-12 w-10 h-10 rounded-full flex items-center justify-center border-2 bg-white transition-all duration-300 group-hover/node:scale-110 z-10"
                     style={{
                       borderColor: theme.accent,
-                      boxShadow: `0 0 15px ${theme.glow}`,
+                      boxShadow: `0 4px 10px ${theme.glow}`,
                     }}
                   >
                     {step.level === 7 ? (
@@ -758,19 +790,16 @@ export default function CipsQualificationsPage() {
                       </span>
                     )}
                   </div>
-                  <div className="flex-1 flex items-center justify-between">
-                    <div>
-                      <p className="text-base font-bold text-gray-900">
-                        {step.level === 7 ? "MCIPS" : `Level ${step.level}`}
-                      </p>
-                      <p className="text-xs text-gray-400">{step.label}</p>
-                    </div>
-                    <div
-                      className="opacity-50 group-hover/node:opacity-100 transition-opacity"
-                      style={{ color: theme.accent }}
+                  <div className="flex-1 ml-2 p-4 rounded-xl bg-white border border-slate-100 group-hover/node:border-slate-200 group-hover/node:shadow-md transition-all duration-300">
+                    <span
+                      className="block text-base font-bold"
+                      style={{ color: theme.text }}
                     >
-                      <ArrowRight size={16} />
-                    </div>
+                      {step.level === 7 ? "MCIPS" : `Level ${step.level}`}
+                    </span>
+                    <span className="block text-xs text-slate-400 mt-0.5">
+                      {step.label}
+                    </span>
                   </div>
                 </Link>
               );
@@ -863,13 +892,13 @@ export default function CipsQualificationsPage() {
                     className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
                   />
                 </Link>
-                <Link
-                  href="/fees"
+                <button
+                  onClick={() => openModal("price")}
                   className="inline-flex items-center gap-2 px-8 py-4 border border-white/20 text-white/70 rounded-full text-sm font-medium uppercase tracking-wider hover:border-white/40 hover:text-white transition-all w-full sm:w-auto justify-center"
                 >
                   View Pricing
                   <ChevronRight size={16} />
-                </Link>
+                </button>
               </div>
             </div>
           </div>

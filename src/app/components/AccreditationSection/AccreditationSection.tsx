@@ -90,7 +90,7 @@ export default function AccreditationSection() {
       <div className="mx-auto max-w-7xl px-6 md:px-12 py-20 md:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
           {/* Left Column: Formal License Image Frame (STICKY) */}
-          <div className="lg:col-span-5 flex justify-center lg:justify-start order-2 lg:order-1 lg:sticky lg:top-24 self-start">
+          <div className="lg:col-span-5 flex justify-center lg:justify-start order-2 md:order-1 lg:sticky md:top-34 self-start">
             <div
               className="reveal-item relative w-full max-w-sm cursor-zoom-in"
               onClick={() => setIsModalOpen(true)}

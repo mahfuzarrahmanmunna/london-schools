@@ -6,6 +6,7 @@ import BannerSection from "./components/BannerSection/BannerSection";
 import CipsCoursesBanner from "./components/BannerSection/CipsCoursesBanner";
 import CampusSection from "./components/CampusSection/CampusSection";
 import CipsNavigation from "./components/CipsNavigation/CipsNavigation";
+import CourseCurriculumSection from "./components/CourseCurriculumSection/CourseCurriculumSection";
 import CipsCoursesHome from "./components/CoursesSection/CoursesSection";
 import CTASection from "./components/CTASection/CTASection";
 import DemoClassSection from "./components/DemoClassSection/DemoClassSection";
@@ -30,6 +31,7 @@ export default function Home() {
       {/* <CampusSection/> */}
       <DemoClassSection/>
       <GlobalReachSection />
+      <CourseCurriculumSection/>
       <AmbassadorSection />
       <FaqSection />
       {/* <GallerySection/> */}

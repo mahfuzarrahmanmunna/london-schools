@@ -182,11 +182,10 @@ export default function DemoClassSection() {
             togglePlay();
           }}
         >
-          {/* Video Element */}
+          {/* Video Element - Removed native poster to use Next.js Image instead */}
           <video
             ref={videoRef}
             className="w-full h-full object-cover"
-            poster="/images/video-poster.jpg" // Fallback for native loading
             preload="metadata"
             playsInline
           >
@@ -194,48 +193,48 @@ export default function DemoClassSection() {
             Your browser does not support the video tag.
           </video>
 
-          {/* Overlay: Thumbnail vs Pause State */}
-          {!isPlaying && (
-            <div className="absolute inset-0 flex items-center justify-center transition-all duration-300 z-10">
-              {/* 
-                Only show the high-res Next.js Thumbnail image if the video 
-                hasn't been played yet. Once played, just show a dark overlay 
-                over the paused video frame.
-              */}
-              {!hasStarted ? (
-                <>
-                  <Image
-                    src="/images/video-poster.jpg"
-                    alt="Demo Class Trailer Thumbnail"
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                  <div className="absolute inset-0 bg-black/40 transition-colors group-hover:bg-black/30" />
-                </>
-              ) : (
-                <div className="absolute inset-0 bg-black/40 transition-colors group-hover:bg-black/30" />
-              )}
+          {/* Thumbnail & Pause Overlay Container */}
+          {/* Fades out smoothly when playing */}
+          <div 
+            className={`absolute inset-0 flex items-center justify-center z-10 transition-opacity duration-700 ease-in-out ${
+              isPlaying && hasStarted ? "opacity-0 pointer-events-none" : "opacity-100"
+            }`}
+          >
+            {/* Next.js Optimized Thumbnail - Only rendered before first play */}
+            {!hasStarted && (
+              <Image
+                src="/image.webp"
+                alt="Demo Class Trailer Thumbnail"
+                fill
+                className="object-cover"
+                priority
+                sizes="(max-width: 768px) 100vw, 1200px"
+              />
+            )}
 
-              {/* Play Button (Slightly smaller if just pausing) */}
-              <div
-                className={`relative z-20 flex items-center justify-center rounded-full bg-[#0B73B9] shadow-xl transition-all duration-300 hover:scale-110 hover:bg-[#0d85d6] border-4 border-white/20 backdrop-blur-sm ${
-                  hasStarted
-                    ? "w-16 h-16 md:w-20 md:h-20"
-                    : "w-20 h-20 md:w-24 md:h-24"
-                }`}
-              >
-                <Play
-                  className={`${hasStarted ? "w-6 h-6 md:w-8 md:h-8" : "w-8 h-8 md:w-10 md:h-10"} text-white ml-1`}
-                  fill="currentColor"
-                />
-              </div>
+            {/* Dark Gradient Overlay */}
+            <div className={`absolute inset-0 transition-colors duration-300 ${
+              hasStarted ? "bg-black/40 group-hover:bg-black/30" : "bg-black/40 group-hover:bg-black/20"
+            }`} />
+
+            {/* Center Play Button */}
+            <div
+              className={`relative z-20 flex items-center justify-center rounded-full bg-[#0B73B9] shadow-xl transition-all duration-300 hover:scale-110 hover:bg-[#0d85d6] border-4 border-white/20 backdrop-blur-sm ${
+                hasStarted
+                  ? "w-16 h-16 md:w-20 md:h-20"
+                  : "w-20 h-20 md:w-24 md:h-24"
+              }`}
+            >
+              <Play
+                className={`${hasStarted ? "w-6 h-6 md:w-8 md:h-8" : "w-8 h-8 md:w-10 md:h-10"} text-white ml-1`}
+                fill="currentColor"
+              />
             </div>
-          )}
+          </div>
 
           {/* Bottom Gradient & Controls Bar */}
           <div
-            className={`custom-controls absolute bottom-0 left-0 right-0 z-20 transition-all duration-300 ${
+            className={`custom-controls absolute bottom-0 left-0 right-0 z-30 transition-all duration-300 ${
               showControls || !isPlaying
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-4"

@@ -131,9 +131,9 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
             {/* ── Column 1: About ── */}
             <div className="footer-col lg:col-span-5" style={{ opacity: 0 }}>
-              <div className="relative h-12 w-36 mb-6">
+              <div className="relative h-24 w-24 mb-6">
                 <Image
-                  src="/logo/logo.webp"
+                  src="/logo/lshswhitelogo.png"
                   alt="London School of Higher Studies"
                   fill
                   className="object-contain"
@@ -238,7 +238,9 @@ export default function Footer() {
               </div>
 
               {/* CTA Button Underneath Integrity */}
-              <h4 className="text-lg font-bold text-white mb-4">Book Free Consultation</h4>
+              <h4 className="text-lg font-bold text-white mb-4">
+                Book Free Consultation
+              </h4>
               <Link
                 href="https://forms.gle/kHkicZ6TaHQRoMck6"
                 target="_blank"

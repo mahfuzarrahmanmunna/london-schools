@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Plus, ArrowUpRight, MessageCircle } from "lucide-react";
+import { Plus, ArrowUpRight, MessageCircle, Sparkles } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -74,10 +74,12 @@ export default function FaqSection() {
           {/* Left Column: Sticky Header & CTA */}
           <div className="lg:col-span-5 lg:sticky lg:top-24 self-start">
             <div className="reveal-item flex items-center gap-4 mb-6">
-              <span className="text-sm tracking-[0.2em] font-semibold text-[#0B73B9] uppercase">
-                FAQs
-              </span>
-              <div className="w-12 h-0.5 bg-[#0B73B9]" />
+              <div className="demo-reveal inline-flex items-center gap-3 mb-6 bg-slate-50 border border-slate-200 py-1.5 px-4 rounded-full">
+                <Sparkles className="w-3.5 h-3.5 text-[#0B73B9]" />
+                <span className="text-[11px] tracking-[0.25em] font-semibold text-slate-700 uppercase">
+                  FAQ
+                </span>
+              </div>
             </div>
 
             <h2

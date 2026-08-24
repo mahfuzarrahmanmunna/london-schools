@@ -12,7 +12,7 @@ import {
   Award,
   Check,
 } from "lucide-react";
-import { useNavbarTheme } from "@/app/context/NavbarThemeContext"; // <-- Import Hook
+import { useNavbarTheme } from "@/app/context/NavbarThemeContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -51,133 +51,143 @@ const accreditationPoints = [
 export default function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const bgLayerRef = useRef<HTMLDivElement>(null);
-  const { setIsAboutDark } = useNavbarTheme(); // <-- Use Context
+  const { setIsAboutDark } = useNavbarTheme();
 
   useEffect(() => {
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-
     const ease = "power3.out";
     const dur = reducedMotion ? 0 : 0.9;
     const durFast = reducedMotion ? 0 : 0.7;
     const bgDuration = reducedMotion ? 0 : 0.8;
 
     const ctx = gsap.context(() => {
-      /* =========================================================
-         CONTENT REVEAL ANIMATIONS
-      ========================================================= */
-      gsap.from(".a-eyebrow", {
-        opacity: 0,
-        y: 20,
-        duration: durFast,
-        ease,
-        scrollTrigger: {
-          trigger: ".a-eyebrow",
-          start: "top 88%",
-          once: true,
-        },
-      });
-
-      gsap.from(".a-heading", {
-        opacity: 0,
-        y: 30,
-        duration: dur,
-        ease,
-        scrollTrigger: {
-          trigger: ".a-heading",
-          start: "top 88%",
-          once: true,
-        },
-      });
-
-      const paras = gsap.utils.toArray<HTMLElement>(".a-para");
-      if (paras.length) {
-        gsap.from(paras, {
-          opacity: 0,
-          y: 25,
-          duration: dur,
-          stagger: reducedMotion ? 0 : 0.1,
+      // Changed to fromTo to prevent elements getting stuck at opacity: 0
+      gsap.fromTo(
+        ".a-eyebrow",
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: durFast,
           ease,
           scrollTrigger: {
-            trigger: paras[0],
+            trigger: ".a-eyebrow",
             start: "top 88%",
             once: true,
           },
-        });
-      }
-
-      gsap.from(".a-cta", {
-        opacity: 0,
-        y: 20,
-        duration: durFast,
-        ease,
-        scrollTrigger: {
-          trigger: ".a-cta",
-          start: "top 92%",
-          once: true,
         },
-      });
+      );
 
-      gsap.from(".a-divider", {
-        opacity: 0,
-        duration: durFast,
-        ease,
-        scrollTrigger: {
-          trigger: ".a-divider",
-          start: "top 90%",
-          once: true,
-        },
-      });
-
-      const cards = gsap.utils.toArray<HTMLElement>(".a-card");
-      if (cards.length) {
-        gsap.from(cards, {
-          opacity: 0,
-          y: 20,
-          scale: 0.9,
+      gsap.fromTo(
+        ".a-heading",
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
           duration: dur,
-          stagger: reducedMotion ? 0 : 0.08,
           ease,
           scrollTrigger: {
-            trigger: cards[0],
+            trigger: ".a-heading",
+            start: "top 88%",
+            once: true,
+          },
+        },
+      );
+
+      const paras = gsap.utils.toArray<HTMLElement>(".a-para");
+      if (paras.length) {
+        gsap.fromTo(
+          paras,
+          { opacity: 0, y: 25 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: dur,
+            stagger: reducedMotion ? 0 : 0.1,
+            ease,
+            scrollTrigger: { trigger: paras[0], start: "top 88%", once: true },
+          },
+        );
+      }
+
+      gsap.fromTo(
+        ".a-cta",
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: durFast,
+          ease,
+          scrollTrigger: { trigger: ".a-cta", start: "top 92%", once: true },
+        },
+      );
+
+      gsap.fromTo(
+        ".a-divider",
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: durFast,
+          ease,
+          scrollTrigger: {
+            trigger: ".a-divider",
             start: "top 90%",
             once: true,
           },
-        });
-      }
-
-      gsap.from(".a-strip", {
-        opacity: 0,
-        duration: durFast,
-        ease,
-        scrollTrigger: {
-          trigger: ".a-strip",
-          start: "top 95%",
-          once: true,
         },
-      });
-      const badges = gsap.utils.toArray<HTMLElement>(".a-badge");
+      );
 
-      if (badges.length) {
-        gsap.from(badges, {
-          opacity: 0,
-          y: 15,
-          scale: 0.95,
-          duration: durFast,
-          stagger: reducedMotion ? 0 : 0.05,
-          ease,
-          scrollTrigger: {
-            trigger: ".a-badges-wrapper",
-            start: "top 92%",
-            once: true,
+      const cards = gsap.utils.toArray<HTMLElement>(".a-card");
+      if (cards.length) {
+        gsap.fromTo(
+          cards,
+          { opacity: 0, y: 20, scale: 0.9 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: dur,
+            stagger: reducedMotion ? 0 : 0.08,
+            ease,
+            scrollTrigger: { trigger: cards[0], start: "top 90%", once: true },
           },
-        });
+        );
       }
 
-      /* =========================================================
-         GLOBAL DARK MODE TRANSITION & NAVBAR SYNC
-      ========================================================= */
+      gsap.fromTo(
+        ".a-strip",
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: durFast,
+          ease,
+          scrollTrigger: { trigger: ".a-strip", start: "top 95%", once: true },
+        },
+      );
+
+      const badges = gsap.utils.toArray<HTMLElement>(".a-badge");
+      if (badges.length) {
+        gsap.fromTo(
+          badges,
+          { opacity: 0, y: 15, scale: 0.95 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: durFast,
+            stagger: reducedMotion ? 0 : 0.05,
+            ease,
+            scrollTrigger: {
+              trigger: ".a-badges-wrapper",
+              start: "top 92%",
+              once: true,
+            },
+          },
+        );
+      }
+
       const bgLayer = bgLayerRef.current;
       const section = sectionRef.current;
 
@@ -192,7 +202,7 @@ export default function AboutSection() {
             ease: "power3.inOut",
             overwrite: true,
           });
-          setIsAboutDark(true); // <-- Trigger Navbar Dark Mode
+          setIsAboutDark(true);
         };
 
         const lighten = () => {
@@ -203,7 +213,7 @@ export default function AboutSection() {
             ease: "power3.inOut",
             overwrite: true,
           });
-          setIsAboutDark(false); // <-- Revert Navbar
+          setIsAboutDark(false);
         };
 
         ScrollTrigger.create({
@@ -224,35 +234,24 @@ export default function AboutSection() {
         gsap.killTweensOf(bgLayerRef.current);
         gsap.set(bgLayerRef.current, { opacity: 0 });
       }
-      setIsAboutDark(false); // Cleanup on unmount
+      setIsAboutDark(false);
     };
   }, [setIsAboutDark]);
 
   return (
     <>
-      {/* Fixed dark overlay layer */}
+      {/* Fixed dark overlay layer - Removed duplicate ref */}
       <div
         ref={bgLayerRef}
         aria-hidden="true"
         className="fixed inset-0 pointer-events-none bg-black opacity-0 z-10"
       />
 
-      {/* =========================================================
-          ABOUT SECTION
-      ========================================================= */}
       <section
         ref={sectionRef}
-        className="relative z-[10] w-full overflow-hidden text-white"
+        // Added bg-[#041426] so white text is visible even before the black overlay fades in
+        className="relative z-[10] w-full overflow-hidden text-white bg-[#041426]"
       >
-        {/* Subtle radial blue glow */}
-        <div
-          className="pointer-events-none absolute -top-48 right-[8%] w-[600px] h-[600px] rounded-full bg-[#0B73B9] opacity-[0.04] blur-[120px]"
-          aria-hidden="true"
-        />
-
-        {/* =======================================================
-            MAIN CONTENT
-        ======================================================= */}
         <div className="relative z-[20] mx-auto max-w-7xl px-5 sm:px-6 md:px-10 lg:px-12 pt-20 md:pt-32 pb-14 md:pb-20">
           {/* Header */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-5 lg:gap-8 mb-14 md:mb-20">
@@ -275,7 +274,6 @@ export default function AboutSection() {
 
           {/* Content grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
-            {/* Left column — text + CTA */}
             <div className="lg:col-span-7">
               <div className="space-y-5 mb-10">
                 <p className="a-para text-[15px] leading-[1.8] text-white/70">
@@ -287,7 +285,6 @@ export default function AboutSection() {
                   stage of the procurement career journey, from a first step
                   into the profession through to MCIPS Chartered status.
                 </p>
-
                 <p className="a-para text-[15px] leading-[1.8] text-white/70">
                   Our courses are structured and industry-aligned, delivered by
                   qualified tutors, with a strong emphasis on practical,
@@ -296,7 +293,6 @@ export default function AboutSection() {
                   you the flexibility to fit CIPS study around your career and
                   commitments.
                 </p>
-
                 <p className="a-para text-[15px] leading-[1.8] text-white/70">
                   LSHS operates as part of the Sampan Group, and is supported by
                   the study centre from CIPS directly, with operations in Dhaka.
@@ -304,9 +300,8 @@ export default function AboutSection() {
               </div>
             </div>
 
-            {/* Right column — divider + feature badges */}
+            {/* Right column */}
             <div className="lg:col-span-5 relative z-[30]">
-              {/* Divider label */}
               <div className="a-divider flex items-center gap-3 mb-6">
                 <span
                   className="w-1.5 h-1.5 rounded-full bg-[#F4D210] flex-shrink-0"
@@ -322,7 +317,7 @@ export default function AboutSection() {
               </div>
 
               {/* Feature badges */}
-              <div className="flex flex-wrap items-center gap-3 w-full h-auto min-h-fit overflow-visible py-1">
+              <div className="a-badges-wrapper flex flex-wrap items-center gap-3 w-full h-auto min-h-fit overflow-visible py-1">
                 {aboutPoints.map((point, i) => (
                   <div
                     key={i}
@@ -333,7 +328,7 @@ export default function AboutSection() {
                       strokeWidth={3}
                       aria-hidden="true"
                     />
-                    <span className="text-[11.5px] sm:text-[12.5px] font-medium text-white/75 tracking-wide transition-colors duration-300 group-hover:text-white">
+                    <span className="text-[11.5px] sm:text-[12.5px] font-medium text-white tracking-wide transition-colors duration-300 group-hover:text-white">
                       {point}
                     </span>
                   </div>
@@ -349,7 +344,6 @@ export default function AboutSection() {
                   Get Started Today
                   <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </Link>
-
                 <Link
                   href="https://sampangroup.com.bd/"
                   target="_blank"
@@ -366,9 +360,6 @@ export default function AboutSection() {
           </div>
         </div>
 
-        {/* =======================================================
-            INSTITUTIONAL STRIP
-        ======================================================= */}
         <div
           className="relative z-[20] border-t border-white/[0.10]"
           aria-label="Institutional identifiers"

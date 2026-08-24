@@ -41,7 +41,7 @@ const MODAL_CONFIG = {
     downloadCardTitle: "CIPS Course Brochure",
     downloadCardSubtitle: "PDF • Course Information • Syllabus • Fees",
     fileName: "LSHS_CIPS_Brochure.pdf",
-    filePath: "/brochures/cips-course-brochure.pdf",
+    filePath: "/brochure/LSHS_CIPS_Brochure.pdf",
     apiEndpoint: "/api/brochure",
   },
   price: {
@@ -60,7 +60,7 @@ const MODAL_CONFIG = {
     downloadCardTitle: "CIPS Course Prices",
     downloadCardSubtitle: "PDF • Fee Structure • Discounts",
     fileName: "LSHS_CIPS_Prices.pdf",
-    filePath: "/brochures/cips-course-prices.pdf",
+    filePath: "/brochure/LSHS_CIPS_Prices.pdf",
     apiEndpoint: "/api/brochure",
   },
   discount: {
@@ -78,8 +78,8 @@ const MODAL_CONFIG = {
       "Thank you! Here is your 25% OFF discount code. Apply this during admission.",
     downloadCardTitle: "25% OFF Discount Code",
     downloadCardSubtitle: "Use this code during enrollment",
-    fileName: "",
-    filePath: "",
+    fileName: "LSHS_CIPS_Discount_Code.txt",
+    filePath: "/brochure/LSHS_CIPS_Discount_Code.txt",
     apiEndpoint: "/api/brochure",
   },
 };
@@ -200,7 +200,7 @@ export default function BrochureModal() {
                 ))}
               </div>
               <span className="text-xs font-semibold text-white/80">
-                4.6 / 5 rating
+               93% pass rate in CIPS exams
               </span>
             </div>
             <div className="inline-flex items-center gap-2 bg-white/5 px-4 py-2.5 rounded-lg border border-white/10">
