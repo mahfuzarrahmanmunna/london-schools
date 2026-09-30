@@ -250,7 +250,7 @@ export default function AboutSection() {
       <section
         ref={sectionRef}
         // Added bg-[#041426] so white text is visible even before the black overlay fades in
-        className="relative z-[10] w-full overflow-hidden text-white bg-[#041426]"
+        className="relative z-[10] w-full overflow-hidden text-white bg-black"
       >
         <div className="relative z-[20] mx-auto max-w-7xl px-5 sm:px-6 md:px-10 lg:px-12 pt-20 md:pt-32 pb-14 md:pb-20">
           {/* Header */}
