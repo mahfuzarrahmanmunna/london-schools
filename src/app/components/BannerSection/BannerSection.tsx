@@ -1,115 +1,145 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import Link from "next/link";
-import Image from "next/image";
+import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowRight, Users, User } from "lucide-react";
+import { Volume2, VolumeX } from "lucide-react";
+import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ─── Accreditation Logos ────────────────────────────
-const accreditations = [
-  { label: "CIPS", src: "/accreditations/cips.svg", alt: "CIPS Accredited" },
-  {
-    label: "Ofsted",
-    src: "/accreditations/ofsted.svg",
-    alt: "Ofsted Regulated",
-  },
-  { label: "FSQS", src: "/accreditations/fsqs.svg", alt: "FSQS Certified" },
-  {
-    label: "Apprenticeships",
-    src: "/accreditations/apprenticeships.svg",
-    alt: "Apprenticeships",
-  },
-  {
-    label: "Matrix",
-    src: "/accreditations/matrix.svg",
-    alt: "Matrix Standard",
-  },
-  {
-    label: "UKVI",
-    src: "/accreditations/ukvi.svg",
-    alt: "UK Visas and Immigration",
-  },
-];
-
 export default function BannerSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const leftRef = useRef<HTMLDivElement>(null);
-  const rightRef = useRef<HTMLDivElement>(null);
-  const logosRef = useRef<HTMLDivElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const lineRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isMuted, setIsMuted] = useState(true);
+
+  const toggleMute = useCallback(() => {
+    if (!videoRef.current) return;
+
+    const nextMuted = !isMuted;
+    videoRef.current.muted = nextMuted;
+    setIsMuted(nextMuted);
+  }, [isMuted]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      const tl = gsap.timeline({ delay: 0.8 });
 
-      // ─── Left content stagger ──────────────────
-      if (leftRef.current) {
-        const items = leftRef.current.querySelectorAll(".ban-anim");
-        tl.fromTo(
-          items,
-          { y: 40, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.7, stagger: 0.1 },
-          0.2,
-        );
-      }
-
-      // ─── Right image slide in ──────────────────
-      if (rightRef.current) {
-        tl.fromTo(
-          rightRef.current,
-          { x: 80, opacity: 0, scale: 1.05 },
-          { x: 0, opacity: 1, scale: 1, duration: 1, ease: "power2.out" },
-          0.1,
-        );
-      }
-
-      // ─── Dark overlay fade ────────────────────
-      if (overlayRef.current) {
-        tl.fromTo(
-          overlayRef.current,
-          { opacity: 0 },
-          { opacity: 1, duration: 1.2 },
-          0,
-        );
-      }
-
-      // ─── Logos slide up ───────────────────────
-      if (logosRef.current) {
-        const logos = logosRef.current.querySelectorAll(".logo-item");
-        gsap.fromTo(
-          logos,
-          { y: 20, opacity: 0 },
+      tl.from(".hero-eyebrow", {
+        opacity: 0,
+        y: 20,
+        duration: 1,
+        ease: "power3.out",
+        stagger: 0.2,
+      })
+        .from(
+          lineRef.current,
           {
-            y: 0,
-            opacity: 1,
-            duration: 0.4,
-            stagger: 0.06,
+            scaleX: 0,
+            duration: 1.2,
+            ease: "power3.inOut",
+          },
+          "-=0.6",
+        )
+        .from(
+          ".hero-title",
+          {
+            y: 60,
+            opacity: 0,
+            duration: 1.4,
+            ease: "power4.out",
+          },
+          "-=0.8",
+        )
+        .from(
+          ".hero-desc",
+          {
+            y: 30,
+            opacity: 0,
+            duration: 1,
+            ease: "power3.out",
+          },
+          "-=0.7",
+        )
+        .from(
+          ".hero-cta",
+          {
+            y: 20,
+            opacity: 0,
+            duration: 0.9,
+            ease: "power3.out",
+            stagger: 0.15,
+          },
+          "-=0.6",
+        )
+        .from(
+          scrollRef.current,
+          {
+            opacity: 0,
+            duration: 1,
             ease: "power2.out",
-            scrollTrigger: {
-              trigger: logosRef.current,
-              start: "top 92%",
-            },
           },
+          "-=0.6",
+        )
+        .from(
+          ".sound-toggle",
+          {
+            opacity: 0,
+            duration: 0.8,
+            ease: "power2.out",
+          },
+          "-=0.4",
         );
-      }
 
-      // ─── Subtle parallax on right image ───────
-      if (rightRef.current && sectionRef.current) {
-        gsap.to(rightRef.current, {
-          y: -30,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top top",
-            end: "bottom top",
-            scrub: 2,
-          },
-        });
-      }
+      // Scroll indicator bounce
+      gsap.to(".scroll-bounce", {
+        y: 8,
+        duration: 1.2,
+        ease: "power1.inOut",
+        repeat: -1,
+        yoyo: true,
+        delay: 2.6,
+      });
+
+      // Parallax on scroll
+      gsap.to(".hero-bg", {
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.8,
+        },
+        y: 100,
+        scale: 1.04,
+        ease: "none",
+      });
+
+      gsap.to(titleRef.current, {
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "60% top",
+          scrub: 1,
+        },
+        y: -50,
+        opacity: 0,
+        ease: "none",
+      });
+
+      gsap.to(scrollRef.current, {
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "5% top",
+          end: "25% top",
+          scrub: true,
+        },
+        opacity: 0,
+        y: -15,
+        ease: "none",
+      });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -118,207 +148,166 @@ export default function BannerSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[85vh] lg:min-h-screen flex items-stretch overflow-hidden bg-slate-100"
+      className="relative w-full h-screen overflow-hidden bg-[#001B30]"
     >
-      {/* ═══ LEFT PANEL ═══ */}
-      <div
-        ref={leftRef}
-        className="relative z-20 w-full lg:w-[55%] xl:w-[50%] bg-[#f0f1f3] flex items-center px-8 sm:px-12 lg:px-16 xl:px-20 py-20 lg:py-0"
-      >
-        {/* Subtle texture */}
-        <div
-          className="absolute inset-0 opacity-[0.025] pointer-events-none"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, #0a1628 1px, transparent 0)",
-            backgroundSize: "24px 24px",
-          }}
-        />
+      {/* ── Background Video ── */}
+      <div className="absolute inset-0 w-full h-full">
+        <video
+          ref={videoRef}
+          className="hero-bg w-full h-full object-cover scale-105 will-change-transform"
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster="/port.avif"
+        >
+          <source src="/hero/banner.mp4" type="video/mp4" />
+        </video>
+      </div>
 
-        <div className="relative z-10 w-full max-w-lg">
-          {/* Overline */}
-          <div
-            className="ban-anim inline-flex items-center gap-2.5 mb-6"
-            style={{ opacity: 0 }}
-          >
-            <span className="h-[2px] w-8 bg-primary" />
-            <span className="text-[11px] font-bold tracking-[0.2em] uppercase text-primary">
-              LSHS × CIPS
+      {/* ── Refined Overlay with Right-Side Blue Light Shade ── */}
+      <div className="absolute inset-0 z-[1] pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#001B30]/80 via-[#001B30]/50 to-[#001B30]/90" />
+        <div className="absolute inset-0 bg-gradient-to-l from-[#0B73B9]/40 via-[#0B73B9]/5 to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_50%,transparent_0%,rgba(0,0,0,0.4)_80%)]" />
+      </div>
+
+      {/* ── Left Accent Line ── */}
+      <div className="absolute left-8 top-1/2 -translate-y-1/2 z-[2] hidden lg:flex flex-col items-center gap-4">
+        <div className="w-px h-16 bg-gradient-to-b from-transparent to-white/20" />
+        <div className="w-1.5 h-1.5 rounded-full bg-[#0B73B9]" />
+        <div className="w-px h-16 bg-gradient-to-b from-white/20 to-transparent" />
+      </div>
+
+      {/* ── Main Content ── */}
+      <div
+        ref={titleRef}
+        className="absolute inset-0 z-[2] flex items-center justify-center px-6"
+      >
+        <div className="max-w-5xl w-full text-center pt-12">
+          {/* Glassmorphism Eyebrow Badges */}
+          <div className="flex items-center justify-center gap-3 flex-wrap mb-8">
+            <span className="hero-eyebrow bg-white/10 backdrop-blur-md border border-white/20 text-white/80 px-4 py-2 rounded-full text-[10px] md:text-[11px] tracking-[0.2em] font-medium uppercase">
+              London School of Higher Studies
             </span>
+            <span className="hero-eyebrow bg-white/10 backdrop-blur-md border border-white/20 text-white/80 px-4 py-2 rounded-full text-[10px] md:text-[11px] tracking-[0.2em] font-medium uppercase">
+              CIPS Approved Study Centre
+            </span>
+          </div>
+
+          {/* Divider Line */}
+          <div className="flex justify-center mb-8">
+            <div
+              ref={lineRef}
+              className="w-12 h-px bg-gradient-to-r from-transparent via-[#0B73B9] to-transparent origin-center"
+            />
           </div>
 
           {/* Title */}
           <h1
-            className="ban-anim text-3xl sm:text-4xl lg:text-[2.75rem] xl:text-[3.1rem] font-semibold text-navy leading-[1.1] tracking-tight mb-8"
-            style={{ opacity: 0 }}
+            className="hero-title text-white font-light tracking-[-0.025em] leading-[1.05]"
+            style={{
+              fontFamily: "var(--font-playfair)",
+              fontSize: "clamp(2.5rem, 6vw, 5.5rem)",
+            }}
           >
-            CIPS Professional
-            <br />
-            Qualification Courses
+            Build Your Career on a Global Standard
           </h1>
 
           {/* Description */}
-          <p
-            className="ban-anim text-[15px] text-slate-500 leading-relaxed mb-10 max-w-md"
-            style={{ opacity: 0 }}
-          >
-            Globally recognised procurement qualifications from Level 2 to Level
-            6 MCIPS. Study at an accredited centre in the heart of London or
-            online.
+          <p className="hero-desc mt-8 md:mt-10 text-white/70 text-base md:text-lg font-light leading-relaxed max-w-2xl mx-auto tracking-wide">
+            Welcome to the London School of Higher Studies. We help ambitious
+            professionals gain the world&apos;s leading procurement and supply
+            chain qualification. Studied flexibly, assessed rigorously, and
+            recognised by employers worldwide.
           </p>
 
-          {/* Two CTA Paths */}
-          <div className="ban-anim space-y-3.5" style={{ opacity: 0 }}>
-            {/* Individual Learner */}
+          {/* CTAs */}
+          <div className="hero-cta mt-10 md:mt-12 flex flex-col sm:flex-row justify-center items-center gap-4">
             <Link
-              href="/cips-courses"
-              className="group flex items-center justify-between gap-4 bg-white rounded-xl px-6 py-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-secondary/40 transition-all duration-300"
+              href="/courses"
+              className="group relative inline-flex items-center gap-3 px-8 py-3.5 text-[13px] font-medium tracking-[0.15em] uppercase text-white border border-transparent rounded-none transition-all duration-500 overflow-hidden bg-[#0B73B9] hover:bg-[#085C92]"
             >
-              <div className="flex items-center gap-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-secondary/10">
-                  <User className="h-5 w-5 text-yellow-600" />
-                </div>
-                <div>
-                  <span className="block text-[14.5px] font-semibold text-navy group-hover:text-primary transition-colors duration-200">
-                    I&apos;m looking to learn
-                  </span>
-                  <span className="block text-[12px] text-slate-400 mt-0.5">
-                    Individual qualifications & memberships
-                  </span>
-                </div>
-              </div>
-              <div className="flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-navy group-hover:bg-secondary-dark group-hover:text-white transition-colors duration-300">
-                <ArrowRight className="h-4 w-4" />
-              </div>
-            </Link>
-
-            {/* Corporate Training */}
-            <Link
-              href="/corporate-training"
-              className="group flex items-center justify-between gap-4 bg-white rounded-xl px-6 py-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-300"
-            >
-              <div className="flex items-center gap-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10">
-                  <Users className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <span className="block text-[14.5px] font-semibold text-navy group-hover:text-primary transition-colors duration-200">
-                    I&apos;m looking to train employees
-                  </span>
-                  <span className="block text-[12px] text-slate-400 mt-0.5">
-                    Corporate programmes & in-house training
-                  </span>
-                </div>
-              </div>
-              <div className="flex-shrink-0 flex h-9 w-9 items-center justify-center rounded-full bg-primary text-white group-hover:bg-primary-dark transition-colors duration-300">
-                <ArrowRight className="h-4 w-4" />
-              </div>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* ═══ RIGHT PANEL — Image ═══ */}
-      <div className="hidden lg:block absolute top-0 right-0 bottom-0 w-[50%] xl:w-[55%]">
-        <div
-          ref={rightRef}
-          className="relative h-full w-full"
-          style={{ opacity: 0 }}
-        >
-          <img
-            src="/hero/logistic.avif"
-            alt="Professional at London School of Higher Studies"
-            className="h-full w-full object-cover object-center"
-          />
-
-          {/* Gradient overlay from left */}
-          <div
-            ref={overlayRef}
-            className="absolute inset-0 bg-gradient-to-r from-[#f0f1f3] via-[#f0f1f3]/60 to-transparent pointer-events-none"
-            style={{ opacity: 0 }}
-          />
-
-          {/* Subtle bottom gradient */}
-          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
-
-          {/* Floating stat card — bottom right */}
-          <div className="absolute bottom-8 right-8 xl:bottom-12 xl:right-12 bg-white/95 backdrop-blur-sm rounded-xl shadow-xl shadow-black/10 border border-white/50 p-5 max-w-[220px]">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                <svg
-                  className="h-5 w-5 text-primary"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
+              <span className="relative z-10">Explore CIPS Courses</span>
+              <svg
+                className="relative z-10 w-4 h-4 transition-transform duration-500 group-hover:translate-x-1"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+              >
+                <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                >
-                  <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                  <path d="M6 12v5c3 3 6 3 6 3s3 0 6-3v-5" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-xl font-bold text-navy leading-tight">
-                  50K+
-                </p>
-                <p className="text-[10px] text-slate-400 font-medium tracking-wide uppercase">
-                  CIPS Members
-                </p>
-              </div>
-            </div>
-            <div className="w-full h-1.5 rounded-full bg-slate-100 overflow-hidden">
-              <div className="h-full w-[85%] rounded-full bg-gradient-to-r from-primary to-secondary" />
-            </div>
-            <p className="text-[10px] text-slate-400 mt-1.5">
-              Across 150+ countries
-            </p>
+                  d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                />
+              </svg>
+            </Link>
+
+            <Link
+              href="/contact"
+              className="group relative inline-flex items-center gap-3 px-8 py-3.5 text-[13px] font-medium tracking-[0.15em] uppercase text-white border border-white/30 rounded-none transition-all duration-500 overflow-hidden bg-white/10 backdrop-blur-md hover:bg-white/20"
+            >
+              <span className="relative z-10">Talk to an Advisor</span>
+              <svg
+                className="relative z-10 w-4 h-4 transition-transform duration-500 group-hover:translate-x-1"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                />
+              </svg>
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* ═══ MOBILE IMAGE (visible < lg) ═══ */}
-      <div className="lg:hidden absolute inset-0 z-0">
-        <img
-          src="https://picsum.photos/seed/lshs-banner-professional/1200/1000.jpg"
-          alt=""
-          className="h-full w-full object-cover opacity-15"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-100/80 via-slate-100/60 to-slate-100/90" />
-      </div>
-
-      {/* ═══ ACCREDITATION LOGOS BAR ═══ */}
+      {/* ── Bouncing Scroll Indicator ── */}
       <div
-        ref={logosRef}
-        className="absolute bottom-0 left-0 right-0 z-30 bg-white/90 backdrop-blur-md border-t border-slate-200/60"
+        ref={scrollRef}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[3] flex flex-col items-center gap-3 pointer-events-none"
       >
-        <div className="mx-auto max-w-7xl px-6 lg:px-16 xl:px-20 py-4 lg:py-5">
-          <div className="flex items-center justify-between gap-6">
-            <span className="hidden sm:block text-[10px] font-bold tracking-[0.15em] uppercase text-slate-400 whitespace-nowrap flex-shrink-0">
-              Accredited By
-            </span>
-
-            <div className="flex items-center justify-center gap-8 lg:gap-12 xl:gap-16 flex-1 overflow-x-auto">
-              {accreditations.map((acc) => (
-                <div
-                  key={acc.label}
-                  className="logo-item flex-shrink-0 flex items-center justify-center h-8 lg:h-9 opacity-0 hover:opacity-100 transition-opacity duration-300"
-                  style={{ opacity: 0 }}
-                >
-                  {/* Fallback: text logo if no image file */}
-                  <span className="text-[13px] lg:text-[14px] font-bold text-slate-300 hover:text-slate-500 transition-colors duration-300 tracking-tight">
-                    {acc.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            <span className="hidden sm:block text-[10px] font-bold tracking-[0.15em] uppercase text-slate-400 whitespace-nowrap flex-shrink-0">
-              Trusted Partners
-            </span>
-          </div>
+        <span className="text-white/50 text-[9px] tracking-[0.25em] uppercase font-medium">
+          Scroll
+        </span>
+        <div className="scroll-bounce">
+          <svg
+            className="w-5 h-5 text-white/50"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+            />
+          </svg>
         </div>
       </div>
+
+      {/* ── Sound Toggle — Bottom Right ── */}
+      <button
+        type="button"
+        onClick={toggleMute}
+        className="sound-toggle absolute bottom-8 right-8 z-[5] flex items-center justify-center w-10 h-10 rounded-full bg-white/[0.08] backdrop-blur-md border border-white/[0.12] text-white/60 hover:text-white hover:bg-white/[0.14] hover:border-white/[0.2] transition-all duration-300 min-h-[44px] min-w-[44px]"
+        aria-label={isMuted ? "Unmute video" : "Mute video"}
+      >
+        {isMuted ? (
+          <VolumeX className="w-4 h-4" strokeWidth={1.5} />
+        ) : (
+          <Volume2 className="w-4 h-4" strokeWidth={1.5} />
+        )}
+      </button>
+
+      {/* ── Bottom Gradient Fade ── */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 z-[1] bg-gradient-to-t from-[#001B30] to-transparent pointer-events-none" />
     </section>
   );
 }

@@ -22,12 +22,12 @@ export const apprenticeshipLevels: ApprenticeshipLevel[] = [
     duration: "12–15 months",
     price: "Funded",
     priceNote:
-      "Fully funded for all eligible employers — no co-investment required for apprentices aged 16–18",
+      "Fully funded for all eligible employers no co-investment required for apprentices aged 16–18",
     entryRequirements: [
       "No prior qualifications or experience required",
       "Must be employed in a relevant support or administrative role",
       "Minimum age of 16",
-      "No minimum GCSE requirements — functional skills support available",
+      "No minimum GCSE requirements functional skills support available",
       "Right to work in the UK",
     ],
     modules: [
@@ -134,7 +134,7 @@ export const apprenticeshipLevels: ApprenticeshipLevel[] = [
       {
         question: "How is Level 2 different from Level 3?",
         answer:
-          "Level 2 focuses on basic support tasks — receiving goods, processing orders, and general administration. Level 3 goes deeper into sourcing, supplier evaluation, and procurement operations. Think of Level 2 as learning the 'what' and Level 3 as understanding the 'why'.",
+          "Level 2 focuses on basic support tasks receiving goods, processing orders, and general administration. Level 3 goes deeper into sourcing, supplier evaluation, and procurement operations. Think of Level 2 as learning the 'what' and Level 3 as understanding the 'why'.",
       },
       {
         question: "Can I progress straight to Level 3 after this?",
@@ -145,7 +145,7 @@ export const apprenticeshipLevels: ApprenticeshipLevel[] = [
     progression: {
       previous: null,
       next: {
-        label: "Level 3 — Procurement & Supply Assistant",
+        label: "Level 3 Procurement & Supply Assistant",
         href: "/apprenticeships/level-3",
       },
     },
@@ -298,11 +298,11 @@ export const apprenticeshipLevels: ApprenticeshipLevel[] = [
     ],
     progression: {
       previous: {
-        label: "Level 2 — Supply Chain & Procurement Support",
+        label: "Level 2 Supply Chain & Procurement Support",
         href: "/apprenticeships/level-2",
       },
       next: {
-        label: "Level 4 — Procurement & Supply Officer",
+        label: "Level 4 Procurement & Supply Officer",
         href: "/apprenticeships/level-4",
       },
     },
@@ -455,11 +455,11 @@ export const apprenticeshipLevels: ApprenticeshipLevel[] = [
     ],
     progression: {
       previous: {
-        label: "Level 3 — Procurement & Supply Assistant",
+        label: "Level 3 Procurement & Supply Assistant",
         href: "/apprenticeships/level-3",
       },
       next: {
-        label: "Level 5 — Procurement & Supply Manager",
+        label: "Level 5 Procurement & Supply Manager",
         href: "/apprenticeships/level-5",
       },
     },
@@ -469,7 +469,7 @@ export const apprenticeshipLevels: ApprenticeshipLevel[] = [
     assessment:
       "The EPA consists of a 4,000-word project report addressing a real procurement challenge, followed by a 60-minute professional discussion with an independent assessor. You must also complete all on-programme CIPS assessments to be eligible for EPA gateway.",
     employerInfo:
-      "Level 4 apprentices bring immediate value to procurement teams — they can manage sourcing events independently, draft commercial contracts, and contribute to category planning. This apprenticeship is ideal for upskilling existing staff to officer level.",
+      "Level 4 apprentices bring immediate value to procurement teams they can manage sourcing events independently, draft commercial contracts, and contribute to category planning. This apprenticeship is ideal for upskilling existing staff to officer level.",
   },
   {
     level: 5,
@@ -592,7 +592,7 @@ export const apprenticeshipLevels: ApprenticeshipLevel[] = [
       {
         question: "How is Level 5 different from Level 4?",
         answer:
-          "Level 4 focuses on being a competent procurement practitioner — managing processes, negotiating deals, and understanding contracts. Level 5 shifts to management: leading teams, designing category strategies, managing supply chain risk, and influencing organisational decisions. You're no longer just doing procurement — you're managing how procurement is done.",
+          "Level 4 focuses on being a competent procurement practitioner managing processes, negotiating deals, and understanding contracts. Level 5 shifts to management: leading teams, designing category strategies, managing supply chain risk, and influencing organisational decisions. You're no longer just doing procurement you're managing how procurement is done.",
       },
       {
         question: "Do I need to manage a team to do this apprenticeship?",
@@ -612,17 +612,17 @@ export const apprenticeshipLevels: ApprenticeshipLevel[] = [
     ],
     progression: {
       previous: {
-        label: "Level 4 — Procurement & Supply Officer",
+        label: "Level 4 Procurement & Supply Officer",
         href: "/apprenticeships/level-4",
       },
       next: {
-        label: "Level 6 — Senior Procurement Professional",
+        label: "Level 6 Senior Procurement Professional",
         href: "/apprenticeships/level-6",
       },
     },
     featured: false,
     funding:
-      "Funded through the Apprenticeship Levy for levy-paying employers. Non-levy employers contribute a maximum of £750 (5% co-investment) for apprentices aged 19+. This represents outstanding value for achieving a CIPS Advanced Diploma — which would typically cost several thousand pounds if self-funded.",
+      "Funded through the Apprenticeship Levy for levy-paying employers. Non-levy employers contribute a maximum of £750 (5% co-investment) for apprentices aged 19+. This represents outstanding value for achieving a CIPS Advanced Diploma which would typically cost several thousand pounds if self-funded.",
     assessment:
       "The EPA consists of a 4,500-word management project report addressing a significant procurement or supply chain challenge in your organisation, followed by a 75-minute professional discussion with an independent assessor. You must also pass all on-programme CIPS Level 5 assessments to reach EPA gateway. The standard demands evidence of managerial thinking, not just operational competence.",
     employerInfo:
@@ -742,7 +742,7 @@ export const apprenticeshipLevels: ApprenticeshipLevel[] = [
       {
         question: "Does this apprenticeship lead to MCIPS?",
         answer:
-          "Yes. Completing the Level 6 apprenticeship, combined with the required level of professional experience, enables you to apply for full MCIPS membership — the gold standard in procurement.",
+          "Yes. Completing the Level 6 apprenticeship, combined with the required level of professional experience, enables you to apply for full MCIPS membership the gold standard in procurement.",
       },
       {
         question:
@@ -763,7 +763,7 @@ export const apprenticeshipLevels: ApprenticeshipLevel[] = [
     ],
     progression: {
       previous: {
-        label: "Level 5 — Procurement & Supply Manager",
+        label: "Level 5 Procurement & Supply Manager",
         href: "/apprenticeships/level-5",
       },
       next: null,
@@ -774,6 +774,6 @@ export const apprenticeshipLevels: ApprenticeshipLevel[] = [
     assessment:
       "The EPA comprises a 5,000-word strategic project report addressing a complex procurement challenge, followed by a rigorous 90-minute professional discussion with an independent assessor. You must demonstrate strategic thinking, leadership capability, and the ability to drive organisational value through procurement.",
     employerInfo:
-      "Level 6 apprentices are transformational for organisations — they bring board-level strategic thinking to procurement, lead high-impact projects, and can mentor junior staff. This is the most impactful apprenticeship investment an employer can make in their procurement function.",
+      "Level 6 apprentices are transformational for organisations they bring board-level strategic thinking to procurement, lead high-impact projects, and can mentor junior staff. This is the most impactful apprenticeship investment an employer can make in their procurement function.",
   },
 ];

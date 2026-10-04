@@ -5,29 +5,102 @@ import Link from "next/link";
 import Image from "next/image";
 import gsap from "gsap";
 import {
-  Search,
-  Menu,
-  X,
   ChevronDown,
-  ChevronRight,
   ArrowRight,
+  FileText,
+  CreditCard,
+  Tag,
+  Mail,
+  X,
 } from "lucide-react";
-import { SubMenuItem } from "@/app/types/navbar";
+import { BsFacebook, BsInstagram, BsLinkedin, BsYoutube } from "react-icons/bs";
+
+// Import Modal Hook, Types, and Data
+import { useModal } from "@/app/context/ModalContext";
+import { useNavbarTheme } from "@/app/context/NavbarThemeContext";
+import type { MenuItem, SubMenuItem } from "@/app/types/navbar";
 import { menuData } from "@/app/data/menuData";
 
-// ─── Badge Color Map ─────────────────────────────────
+// ─── Reusable Flag Icons ───────────────────────────
+const UkFlag = ({ className }: { className?: string }) => (
+  <svg
+    viewBox="0 0 60 30"
+    className={className}
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <clipPath id="uk-flag-clip">
+      <path d="M0,0 v30 h60 v-30 z" />
+    </clipPath>
+    <path d="M0,0 v30 h60 v-30 z" fill="#012169" />
+    <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" strokeWidth="6" />
+    <path
+      d="M0,0 L60,30 M60,0 L0,30"
+      clipPath="url(#uk-flag-clip)"
+      stroke="#C8102E"
+      strokeWidth="4"
+    />
+    <path d="M30,0 v30 M0,15 h60" stroke="#fff" strokeWidth="10" />
+    <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" strokeWidth="6" />
+  </svg>
+);
+
+const BdFlag = ({ className }: { className?: string }) => (
+  <svg
+    viewBox="0 0 28 18"
+    className={className}
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <rect width="28" height="18" fill="#006a4e" />
+    <circle cx="11.5" cy="9" r="5.2" fill="#f42a41" />
+  </svg>
+);
+
+// ─── Badge Color Map ───────────────────────────────
 const badgeStyles: Record<string, string> = {
-  Popular: "bg-teal-100 text-teal-700",
-  "MCIPS Path": "bg-amber-100 text-amber-700",
-  "Gold Standard": "bg-yellow-100 text-yellow-800",
-  New: "bg-emerald-100 text-emerald-700",
-  Trending: "bg-violet-100 text-violet-700",
-  Free: "bg-sky-100 text-sky-700",
-  Flagship: "bg-rose-100 text-rose-700",
-  Hiring: "bg-green-100 text-green-700",
+  Popular: "bg-[#0B73B9]/10 text-[#0B73B9] border border-[#0B73B9]/20",
+  MCIPS: "bg-[#f4d210]/15 text-[#92780a] border border-[#f4d210]/25",
+  "MCIPS Path": "bg-[#f4d210]/15 text-[#92780a] border border-[#f4d210]/25",
+  New: "bg-emerald-50 text-emerald-700 border border-emerald-200/60",
+  Trending: "bg-violet-50 text-violet-700 border border-violet-200/60",
+  Free: "bg-sky-50 text-sky-700 border border-sky-200/60",
+  Flagship: "bg-[#0B73B9]/10 text-[#0B73B9] border border-[#0B73B9]/20",
+  Hiring: "bg-emerald-50 text-emerald-700 border border-emerald-200/60",
 };
 
-// ─── SubMenu Item Component ─────────────────────────
+// ─── Quick Links Config (Mobile) ──────────────────
+const quickActions = [
+  { label: "Brochure", icon: FileText, modal: "brochure" as const },
+  { label: "Course Prices", icon: CreditCard, modal: "price" as const },
+  { label: "Get 25% OFF", icon: Tag, modal: "discount" as const },
+];
+
+// ─── Social Links Config ───────────────────────────
+const socialLinks = [
+  {
+    name: "Facebook",
+    href: "https://www.facebook.com/lshs.co.uk/",
+    icon: BsFacebook,
+  },
+  {
+    name: "Instagram",
+    href: "https://www.instagram.com/lshs.co.uk/",
+    icon: BsInstagram,
+  },
+  {
+    name: "LinkedIn",
+    href: "https://uk.linkedin.com/company/londoncollege",
+    icon: BsLinkedin,
+  },
+  {
+    name: "YouTube",
+    href: "https://www.youtube.com/@LondonSchoolofHigherStudies",
+    icon: BsYoutube,
+  },
+];
+
+// ─── SubMenu Item Row (Desktop Mega Menu) ──────────
 function SubMenuItemRow({
   item,
   onClose,
@@ -39,58 +112,68 @@ function SubMenuItemRow({
     <Link
       href={item.href}
       onClick={onClose}
-      className="mega-item group flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors duration-200 hover:bg-slate-50"
+      className="mega-item group flex items-start gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 hover:bg-[#0B73B9]/[0.04] border border-transparent hover:border-[#0B73B9]/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0B73B9]/30"
     >
-      <ChevronRight className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-slate-300 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-cips" />
-      <div className="min-w-0">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-slate-700 transition-colors duration-200 group-hover:text-navy">
+      <span className="mt-[6px] h-1.5 w-1.5 flex-shrink-0 rounded-full bg-slate-300 transition-all duration-300 group-hover:bg-[#0B73B9] group-hover:ring-[4px] group-hover:ring-[#0B73B9]/10" />
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <span className="text-[14px] font-medium text-slate-700 transition-colors duration-200 group-hover:text-[#0B73B9]">
             {item.label}
           </span>
           {item.badge && (
             <span
-              className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold leading-none ${badgeStyles[item.badge] || "bg-slate-100 text-slate-600"}`}
+              className={`inline-flex rounded-md px-2 py-[2px] text-[10px] font-semibold tracking-wide leading-none ${badgeStyles[item.badge] || "bg-slate-50 text-slate-500 border border-slate-200/60"}`}
             >
               {item.badge}
             </span>
           )}
         </div>
         {item.description && (
-          <p className="mt-0.5 text-xs text-slate-400 leading-relaxed">
+          <p className="mt-1 text-[12px] text-slate-400 leading-relaxed">
             {item.description}
           </p>
         )}
       </div>
+      <ArrowRight className="mt-1 h-3.5 w-3.5 flex-shrink-0 text-transparent transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-[#0B73B9]" />
     </Link>
   );
 }
 
-// ─── Main Navbar Component ──────────────────────────
+// ─── Main Navbar ────────────────────────────────────
 export default function Navbar() {
+  const { openModal } = useModal();
+  const { isAboutDark } = useNavbarTheme();
+
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [mobileAccordion, setMobileAccordion] = useState<string | null>(null);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [activeAccordion, setActiveAccordion] = useState<string | null>(null);
 
   const navRef = useRef<HTMLElement>(null);
   const menuPanelRef = useRef<HTMLDivElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const navIndicatorRef = useRef<HTMLDivElement>(null);
   const navItemRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+
   const menuTl = useRef<gsap.core.Timeline | null>(null);
   const closeTimeout = useRef<NodeJS.Timeout | null>(null);
-  const searchContentRef = useRef<HTMLDivElement>(null);
-  const mobilePanelRef = useRef<HTMLDivElement>(null);
 
-  // ─── Scroll Detection ────────────────────────────
+  // Mobile Drawer Refs
+  const mobileDrawerRef = useRef<HTMLDivElement>(null);
+  const mobileBackdropRef = useRef<HTMLDivElement>(null);
+  const mobileTl = useRef<gsap.core.Timeline | null>(null);
+
+  const coursesMenu = menuData.find((m) => m.columns);
+  const megaMenuLabel = coursesMenu?.label || "Courses";
+
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 10);
+    const handleScroll = () => setIsScrolled(window.scrollY > 40);
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // ─── Move Nav Indicator ──────────────────────────
+  // ─── Desktop Mega Menu Logic ─────────────────────
   function moveIndicator(label: string | null) {
     if (!navIndicatorRef.current) return;
     if (!label) {
@@ -106,577 +189,823 @@ export default function Navbar() {
     const rect = el.getBoundingClientRect();
     const navRect = el.closest("nav")?.getBoundingClientRect();
     if (!navRect) return;
-
     gsap.to(navIndicatorRef.current, {
       x: rect.left - navRect.left - 8,
       width: rect.width + 16,
       scaleX: 1,
-      duration: 0.35,
+      duration: 0.4,
       ease: "power3.out",
     });
   }
 
-  // ─── Force Close (escape / click outside / link click) ────────
-  function forceCloseMenu() {
-    if (closeTimeout.current) clearTimeout(closeTimeout.current);
-    if (menuTl.current) menuTl.current.kill();
-    setActiveMenu(null);
-    moveIndicator(null);
-  }
-
-  // ─── Close on Escape ─────────────────────────────
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        if (isSearchOpen) setIsSearchOpen(false);
-        else if (isMobileOpen) setIsMobileOpen(false);
-        else if (activeMenu) forceCloseMenu();
-      }
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [isSearchOpen, isMobileOpen, activeMenu]);
-
-  // ─── Click Outside → Close Mega Menu ─────────────
-  useEffect(() => {
-    const handleMouseDown = (e: MouseEvent) => {
-      if (!activeMenu || !navRef.current) return;
-      const target = e.target as Node;
-      if (!navRef.current.contains(target)) {
-        forceCloseMenu();
-      }
-    };
-    document.addEventListener("mousedown", handleMouseDown);
-    return () => document.removeEventListener("mousedown", handleMouseDown);
-  }, [activeMenu]);
-
-  // ─── Lock Body Scroll ────────────────────────────
-  useEffect(() => {
-    if (isMobileOpen || isSearchOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isMobileOpen, isSearchOpen]);
-
-  // ─── Close mobile accordion when mobile menu closes
-  useEffect(() => {
-    if (!isMobileOpen) setMobileAccordion(null);
-  }, [isMobileOpen]);
-
-  // ─── Open Mega Menu ──────────────────────────────
-  function openMenu(label: string) {
+  const clearCloseTimeout = () => {
     if (closeTimeout.current) {
       clearTimeout(closeTimeout.current);
       closeTimeout.current = null;
     }
+  };
+
+  const closeMenu = () => {
+    clearCloseTimeout();
+    if (menuTl.current) menuTl.current.kill();
+    setActiveMenu(null);
+    moveIndicator(null);
+  };
+
+  const startCloseTimeout = () => {
+    clearCloseTimeout();
+    closeTimeout.current = setTimeout(() => closeMenu(), 120);
+  };
+
+  const openMenu = (label: string) => {
+    clearCloseTimeout();
     if (activeMenu === label) return;
 
     const menuItem = menuData.find((m) => m.label === label);
     if (!menuItem?.columns) return;
 
     if (menuTl.current) menuTl.current.kill();
-
     setActiveMenu(label);
     moveIndicator(label);
 
     requestAnimationFrame(() => {
-      if (!menuPanelRef.current || !overlayRef.current) return;
-
+      if (!menuPanelRef.current) return;
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
       menuTl.current = tl;
 
-      tl.to(overlayRef.current, { opacity: 1, duration: 0.3 }, 0);
-
-      tl.fromTo(
-        menuPanelRef.current,
-        { y: -12, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.4 },
-        0,
-      );
-
-      const topLine = menuPanelRef.current.querySelector(".mega-top-line");
-      if (topLine) {
-        tl.fromTo(
-          topLine,
-          { scaleX: 0 },
-          { scaleX: 1, duration: 0.5, ease: "power2.out" },
-          0.05,
-        );
-      }
-
       const cols = menuPanelRef.current.querySelectorAll(".mega-col");
-      if (cols.length) {
+      if (cols.length)
         tl.fromTo(
           cols,
-          { y: 20, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.35, stagger: 0.07 },
+          { y: 16, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.3, stagger: 0.05 },
           0.1,
         );
-      }
 
       const items = menuPanelRef.current.querySelectorAll(".mega-item");
-      if (items.length) {
+      if (items.length)
         tl.fromTo(
           items,
-          { y: 10, opacity: 0 },
+          { y: 8, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.25,
-            stagger: 0.02,
+            duration: 0.2,
+            stagger: 0.015,
             ease: "power2.out",
           },
           0.15,
         );
-      }
 
       const featured = menuPanelRef.current.querySelector(".mega-featured");
-      if (featured) {
+      if (featured)
         tl.fromTo(
           featured,
-          { y: 20, opacity: 0, scale: 0.96 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.45,
-            ease: "back.out(1.4)",
-          },
+          { y: 16, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.4 },
           0.2,
         );
-      }
     });
-  }
+  };
 
-  // ─── Close Mega Menu ─────────────────────────────
-  function closeMenu() {
-    if (closeTimeout.current) clearTimeout(closeTimeout.current);
+  const handleStandardNavEnter = () => {
+    if (activeMenu) closeMenu();
+  };
 
-    closeTimeout.current = setTimeout(() => {
-      if (menuTl.current) menuTl.current.kill();
-
-      const tl = gsap.timeline({
-        defaults: { ease: "power2.in", duration: 0.2 },
-        onComplete: () => setActiveMenu(null),
-      });
-      menuTl.current = tl;
-
-      if (overlayRef.current) {
-        tl.to(overlayRef.current, { opacity: 0 }, 0);
-      }
-      if (menuPanelRef.current) {
-        tl.to(menuPanelRef.current, { y: -8, opacity: 0 }, 0);
-      }
-
-      moveIndicator(null);
-    }, 120);
-  }
-
-  // ─── Search Toggle ───────────────────────────────
   useEffect(() => {
-    if (isSearchOpen && searchContentRef.current) {
-      gsap.fromTo(
-        searchContentRef.current,
-        { y: -10, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" },
-      );
-      setTimeout(() => {
-        const input = searchContentRef.current?.querySelector("input");
-        input?.focus();
-      }, 100);
-    }
-  }, [isSearchOpen]);
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (isMobileOpen) setIsMobileOpen(false);
+        else if (activeMenu) closeMenu();
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [isMobileOpen, activeMenu]);
 
-  // ─── Get Active Menu Data ────────────────────────
-  const activeMenuItem = menuData.find((m) => m.label === activeMenu);
-  const hasFeatured = !!activeMenuItem?.featured;
-  const colCount = activeMenuItem?.columns?.length || 0;
+  useEffect(() => {
+    const handleMouseDown = (e: MouseEvent) => {
+      if (!activeMenu) return;
+      const target = e.target as Node;
+      if (
+        menuPanelRef.current &&
+        !menuPanelRef.current.contains(target) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(target)
+      ) {
+        closeMenu();
+      }
+    };
+    document.addEventListener("mousedown", handleMouseDown);
+    return () => document.removeEventListener("mousedown", handleMouseDown);
+  }, [activeMenu]);
+
+  // ─── Mobile Body Overflow Lock ───────────────────
+  useEffect(() => {
+    document.body.style.overflow = isMobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileOpen]);
+
+  // ─── Mobile GSAP Initial State (On Mount) ────────
+  useEffect(() => {
+    if (mobileDrawerRef.current)
+      gsap.set(mobileDrawerRef.current, { x: "100%" });
+    if (mobileBackdropRef.current)
+      gsap.set(mobileBackdropRef.current, {
+        opacity: 0,
+        pointerEvents: "none",
+        display: "none",
+      });
+  }, []);
+
+  // ─── Mobile GSAP Drawer Animation ────────────────
+  useEffect(() => {
+    if (!mobileDrawerRef.current || !mobileBackdropRef.current) return;
+    if (mobileTl.current) mobileTl.current.kill();
+
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    mobileTl.current = tl;
+    const items = mobileDrawerRef.current.querySelectorAll(".m-stagger");
+
+    if (isMobileOpen) {
+      tl.set(mobileBackdropRef.current, { display: "block" })
+        .to(
+          mobileBackdropRef.current,
+          { opacity: 1, pointerEvents: "auto", duration: 0.3 },
+          0,
+        )
+        .to(
+          mobileDrawerRef.current,
+          { x: "0%", duration: 0.55, ease: "power4.out" },
+          0,
+        )
+        .fromTo(
+          items,
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.4, stagger: 0.06 },
+          0.25,
+        );
+    } else {
+      tl.to(mobileBackdropRef.current, {
+        opacity: 0,
+        pointerEvents: "none",
+        duration: 0.3,
+      })
+        .to(
+          mobileDrawerRef.current,
+          { x: "100%", duration: 0.55, ease: "power4.out" },
+          0,
+        )
+        .set(mobileBackdropRef.current, { display: "none" });
+    }
+  }, [isMobileOpen]);
+
+  // ─── Dynamic Navbar Styling ──────────────────────
+  const useLightText = !isMobileOpen && (isAboutDark || !isScrolled);
+  const isCtaYellow = isAboutDark || (!isScrolled && !isMobileOpen);
+
+  const navBgClass = isMobileOpen
+    ? "bg-white/[0.98] backdrop-blur-xl shadow-[0_1px_3px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)] border-b border-slate-100/80"
+    : isAboutDark
+      ? "bg-black/95 backdrop-blur-md border-b border-white/10"
+      : isScrolled
+        ? "bg-white/[0.98] backdrop-blur-xl shadow-[0_1px_3px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,0,0,0.06)] border-b border-slate-100/80"
+        : "bg-gradient-to-b from-black/60 via-black/20 to-transparent";
+
+  const linkBaseClass =
+    "px-4 py-2 text-sm font-medium tracking-[0.02em] transition-all duration-300 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0B73B9]/40";
+  const linkStateClass = useLightText
+    ? "text-white/90 hover:text-white hover:bg-white/10"
+    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100";
+  const activeLinkClass = useLightText
+    ? "text-white bg-white/10"
+    : "text-[#0B73B9] bg-[#0B73B9]/[0.06]";
 
   return (
     <>
-      {/* ═══ MEGA MENU OVERLAY ═══ */}
+      {/* ═══ MEGA MENU OVERLAY (Desktop) ═══ */}
       <div
-        ref={overlayRef}
-        className={`fixed inset-0 z-40 bg-black/20 backdrop-blur-[1px] cursor-pointer transition-opacity ${
-          activeMenu ? "pointer-events-auto" : "pointer-events-none"
-        }`}
-        style={{ opacity: 0, display: activeMenu ? "block" : "none" }}
-        onClick={forceCloseMenu}
+        className="fixed inset-0 z-40 bg-slate-900/20 backdrop-blur-[3px] cursor-pointer"
+        style={{
+          opacity: activeMenu ? 1 : 0,
+          transition: "opacity 0.3s ease-out",
+          pointerEvents: activeMenu ? "auto" : "none",
+          visibility: activeMenu ? "visible" : "hidden",
+        }}
+        onClick={closeMenu}
       />
 
       {/* ═══ NAVBAR ═══ */}
       <nav
         ref={navRef}
-        className={`fixed top-0 left-0 right-0 z-50 bg-white transition-shadow duration-300 ${
-          isScrolled
-            ? "shadow-md shadow-slate-200/60"
-            : "border-b border-slate-100"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${navBgClass}`}
       >
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="flex h-[72px] items-center justify-between">
-            {/* ── Logo ── */}
-            <Link href="/" className="relative z-50 flex items-center gap-3">
-              <div className="relative h-12 w-36 flex-shrink-0">
-                <Image
-                  src="/logo/logo.webp"
-                  alt="logo"
-                  fill
-                  className="object-contain"
-                />
-              </div>
-            </Link>
-
-            {/* ── Desktop Nav Items ── */}
-            <div className="hidden lg:flex items-center gap-0.5 relative">
-              {menuData.map((item) => (
-                <button
-                  key={item.label}
-                  ref={(el) => {
-                    if (el) navItemRefs.current.set(item.label, el);
-                  }}
-                  onMouseEnter={() => openMenu(item.label)}
-                  className={`relative flex items-center gap-1 px-3.5 py-2 text-[13.5px] font-medium transition-colors duration-150 rounded-md ${
-                    activeMenu === item.label
-                      ? "text-cips"
-                      : "text-slate-600 hover:text-navy hover:bg-slate-50"
-                  }`}
-                >
-                  {item.label}
-                  {item.columns && (
-                    <ChevronDown
-                      className={`h-3.5 w-3.5 transition-transform duration-300 ${
-                        activeMenu === item.label ? "rotate-180" : ""
-                      }`}
-                    />
-                  )}
-                </button>
-              ))}
-
-              {/* Sliding Indicator */}
-              <div
-                ref={navIndicatorRef}
-                className="absolute bottom-0 h-0.5 rounded-full bg-cips origin-left"
-                style={{ transform: "scaleX(0)" }}
-              />
-            </div>
-
-            {/* ── Right Actions ── */}
-            <div className="flex items-center gap-2">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {/* ═══ DESKTOP: TWO-ROW LAYOUT ═══ */}
+          <div className="hidden lg:flex flex-col">
+            {/* ── ROW 1: Top Info Bar + Phone + Socials ── */}
+            <div
+              className={`flex items-center justify-end gap-3 transition-all duration-500 ease-in-out overflow-hidden ${isScrolled ? "max-h-0 opacity-0 pt-0 pb-0 mb-0" : "max-h-20 opacity-100 pt-3 pb-2 mb-1"}`}
+            >
               <button
-                onClick={() => setIsSearchOpen(!isSearchOpen)}
-                className="relative z-50 flex h-9 w-9 items-center justify-center rounded-md text-slate-400 hover:text-navy hover:bg-slate-50 transition-colors duration-150"
-                aria-label="Search"
+                onClick={() => openModal("brochure")}
+                className="flex cursor-pointer items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold tracking-[0.05em] uppercase transition-all duration-300 hover:scale-105 bg-white/10 text-white border border-white/15 backdrop-blur-sm"
               >
-                <Search className="h-[17px] w-[17px]" />
+                <FileText className="w-3.5 h-3.5" strokeWidth={2} /> Brochure
+              </button>
+              <button
+                onClick={() => openModal("discount")}
+                className="flex cursor-pointer items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold tracking-[0.05em] uppercase transition-all duration-300 hover:scale-105 bg-red-500/20 text-red-300 border border-red-400/30 backdrop-blur-sm"
+              >
+                <Tag className="w-3.5 h-3.5" strokeWidth={2} /> Get 25% OFF
+              </button>
+              <button
+                onClick={() => openModal("price")}
+                className="flex cursor-pointer items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold tracking-[0.05em] uppercase transition-all duration-300 hover:scale-105 bg-[#f4d210] text-slate-900 shadow-sm"
+              >
+                <CreditCard className="w-3.5 h-3.5" strokeWidth={2} /> Course
+                Prices
               </button>
 
+              <div className="hidden xl:flex items-center gap-4 text-white/80 border-l border-white/15 pl-4 ml-1">
+                <a
+                  href="tel:+447515106586"
+                  className="flex items-center gap-1.5 text-[12px] font-medium tracking-wide hover:text-white transition-colors whitespace-nowrap"
+                >
+                  <UkFlag className="w-[18px] h-3 rounded-[2px] flex-shrink-0" />
+                  <span>+44 7515 106586</span>
+                </a>
+                <a
+                  href="tel:+8801906896326"
+                  className="flex items-center gap-1.5 text-[12px] font-medium tracking-wide hover:text-white transition-colors whitespace-nowrap"
+                >
+                  <BdFlag className="w-[18px] h-3 rounded-[2px] flex-shrink-0" />
+                  <span>+88 0190 6896326</span>
+                </a>
+                <a
+                  href="mailto:info@lshs.co.uk"
+                  className="flex items-center gap-1.5 text-[12px] font-medium tracking-wide hover:text-white transition-colors whitespace-nowrap"
+                >
+                  <Mail className="w-3.5 h-3.5" strokeWidth={2} />{" "}
+                  <span>info@lshs.co.uk</span>
+                </a>
+              </div>
+
+              <div className="hidden xl:flex items-center gap-1 border-l border-white/15 pl-4 ml-1">
+                {socialLinks.map((social) => {
+                  const Icon = social.icon;
+                  return (
+                    <a
+                      key={social.name}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={social.name}
+                      className="flex h-7 w-7 items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-white/15 transition-all duration-300"
+                    >
+                      <Icon className="w-[14px] h-[14px]" />
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* ── ROW 2: Main Navbar ── */}
+            <div className="flex items-center justify-between pb-3 pt-1">
               <Link
-                href="/login"
-                className="hidden md:inline-flex relative z-50 items-center px-3.5 py-2 text-[13.5px] font-medium text-slate-500 hover:text-navy hover:bg-slate-50 rounded-md transition-colors duration-150"
+                href="/"
+                className={`relative h-20 w-32 flex-shrink-0 transition-all duration-500 ${useLightText ? "drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]" : ""}`}
+                aria-label="Home"
               >
-                Login
+                <Image
+                  src="/logo/logo.webp"
+                  alt="LSHS Logo"
+                  fill
+                  className="object-contain"
+                  priority
+                />
               </Link>
 
-              <Link
-                href="/join"
-                className="hidden sm:inline-flex relative z-50 items-center gap-2 bg-navy text-white text-[13px] font-semibold px-5 py-2.5 rounded-md hover:bg-navy-dark transition-colors duration-150"
+              <div className="flex-1 flex justify-center">
+                <div className="flex items-center gap-1 relative">
+                  {menuData.map((item: MenuItem) =>
+                    item.columns ? (
+                      <button
+                        key={item.label}
+                        ref={(el) => {
+                          if (el) {
+                            navItemRefs.current.set(item.label, el);
+                            if (item.label === megaMenuLabel) {
+                              triggerRef.current = el;
+                            }
+                          }
+                        }}
+                        onMouseEnter={() => openMenu(item.label)}
+                        onMouseLeave={startCloseTimeout}
+                        aria-expanded={activeMenu === item.label}
+                        aria-haspopup="true"
+                        aria-controls="mega-menu-panel"
+                        className={`relative flex items-center gap-1.5 ${linkBaseClass} ${activeMenu === item.label ? activeLinkClass : linkStateClass}`}
+                      >
+                        {item.label}
+                        <ChevronDown
+                          className={`h-3.5 w-3.5 transition-transform duration-300 ${activeMenu === item.label ? "rotate-180" : ""}`}
+                        />
+                      </button>
+                    ) : item.external ? (
+                      <a
+                        key={item.label}
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onMouseEnter={handleStandardNavEnter}
+                        className={`${linkBaseClass} ${linkStateClass}`}
+                      >
+                        {item.label}
+                      </a>
+                    ) : (
+                      <Link
+                        key={item.label}
+                        href={item.href || "#"}
+                        onMouseEnter={handleStandardNavEnter}
+                        className={`${linkBaseClass} ${linkStateClass}`}
+                      >
+                        {item.label}
+                      </Link>
+                    ),
+                  )}
+                  <div
+                    ref={navIndicatorRef}
+                    className="absolute bottom-0 h-[2px] w-0 bg-[#0B73B9] origin-left"
+                    style={{ transform: "scaleX(0)" }}
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <a
+                  href="https://forms.gle/kHkicZ6TaHQRoMck6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`hidden sm:inline-flex items-center gap-2 text-sm font-semibold tracking-wide px-5 py-2.5 rounded-full transition-all duration-300 ml-2 whitespace-nowrap ${isCtaYellow ? "bg-[#f4d210] text-slate-900 hover:bg-[#f4d210]/90 shadow-lg shadow-[#f4d210]/20 hover:-translate-y-0.5" : "bg-[#0B73B9] text-white hover:bg-[#085C92] shadow-md shadow-[#0B73B9]/20 hover:shadow-lg hover:-translate-y-0.5"}`}
+                >
+                  Enroll Now <ArrowRight className="h-4 w-4" />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* ═══ MOBILE TOP BAR ═══ */}
+          <div className="flex lg:hidden w-full items-center justify-between h-16 sm:h-20">
+            <Link
+              href="/"
+              className="relative h-10 w-28 sm:h-12 sm:w-32 shrink-0"
+              aria-label="Home"
+            >
+              <Image
+                src="/logo/logo.webp"
+                alt="LSHS Logo"
+                fill
+                sizes="(max-width: 640px) 112px, 128px"
+                className={`object-contain transition-all duration-500 ${useLightText ? "drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" : ""}`}
+                priority
+              />
+            </Link>
+
+            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+              <a
+                href="https://forms.gle/kHkicZ6TaHQRoMck6"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 bg-[#f4d210] text-slate-900 rounded-full px-4 py-2 font-bold text-[11px] tracking-[0.04em] shadow-sm active:scale-95 transition-transform"
               >
-                Join Now
-              </Link>
+                <span className="hidden sm:inline">GET ADMISSION</span>
+                <span className="sm:hidden">ADMISSION</span>
+                <ArrowRight className="h-3 w-3" strokeWidth={3} />
+              </a>
 
               <button
                 onClick={() => setIsMobileOpen(!isMobileOpen)}
-                className="relative z-50 flex lg:hidden h-9 w-9 items-center justify-center rounded-md text-slate-500 hover:text-navy hover:bg-slate-50 transition-colors duration-150"
+                className={`relative flex h-11 w-11 items-center justify-center rounded-[14px] transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0B73B9]/40 ${isMobileOpen ? "bg-slate-100 text-slate-900" : useLightText ? "bg-white/10 text-white hover:bg-white/20" : "bg-slate-100 text-slate-900 hover:bg-slate-200"}`}
                 aria-label="Toggle menu"
+                aria-expanded={isMobileOpen}
               >
-                {isMobileOpen ? (
-                  <X className="h-5 w-5" />
-                ) : (
-                  <Menu className="h-5 w-5" />
-                )}
+                <div className="relative flex h-4 w-5 flex-col items-end justify-center gap-[5px]">
+                  <span
+                    className={`h-[2px] rounded-full bg-current transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${isMobileOpen ? "w-5 translate-y-[3.5px] rotate-45" : "w-5"}`}
+                  ></span>
+                  <span
+                    className={`h-[2px] rounded-full bg-current transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${isMobileOpen ? "w-5 -translate-y-[3.5px] -rotate-45" : "w-3.5"}`}
+                  ></span>
+                </div>
               </button>
             </div>
           </div>
         </div>
 
-        {/* ═══ MEGA MENU PANEL ═══ */}
+        {/* ═══ DESKTOP MEGA MENU PANEL ═══ */}
         <div
+          id="mega-menu-panel"
           ref={menuPanelRef}
-          className={`absolute top-full left-0 right-0 opacity-0 ${
-            activeMenu ? "pointer-events-auto" : "pointer-events-none"
-          }`}
-          onMouseEnter={() => {
-            if (closeTimeout.current) {
-              clearTimeout(closeTimeout.current);
-              closeTimeout.current = null;
-            }
+          className="absolute top-full left-0 right-0 z-50"
+          style={{
+            opacity: activeMenu ? 1 : 0,
+            transform: activeMenu ? "translateY(0)" : "translateY(-10px)",
+            transition: "opacity 0.25s ease-out, transform 0.25s ease-out",
+            pointerEvents: activeMenu ? "auto" : "none",
+            visibility: activeMenu ? "visible" : "hidden",
           }}
-          onMouseLeave={closeMenu}
-          style={{ display: activeMenu ? "block" : "none" }}
+          onMouseEnter={clearCloseTimeout}
+          onMouseLeave={startCloseTimeout}
         >
-          <div className="mega-top-line h-[2px] w-full bg-gradient-to-r from-cips via-teal-400 to-cips origin-left" />
-
-          <div className="bg-white border-b border-slate-100 shadow-xl shadow-slate-200/40">
-            <div className="mx-auto max-w-7xl px-6 py-8">
-              <div
-                className={`grid gap-8 ${
-                  hasFeatured
-                    ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-                    : colCount <= 2
-                      ? "grid-cols-1 md:grid-cols-2"
-                      : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-                }`}
-              >
-                {activeMenuItem?.columns?.map((col, colIdx) => (
-                  <div key={colIdx} className="mega-col">
-                    <h3 className="text-xs font-bold tracking-widest uppercase text-cips mb-3">
-                      {col.title}
-                    </h3>
-                    <div className="space-y-0.5">
-                      {col.items.map((subItem, subIdx) => (
-                        <SubMenuItemRow
-                          key={subIdx}
-                          item={subItem}
-                          onClose={forceCloseMenu}
-                        />
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-2">
+            <div className="h-[3px] w-full bg-gradient-to-r from-transparent via-[#0B73B9] to-transparent rounded-full" />
+            <div className="bg-white rounded-[20px] shadow-[0_20px_50px_-10px_rgba(0,0,0,0.1)] border border-slate-100/80 overflow-hidden">
+              <div className="grid grid-cols-1 md:grid-cols-[1.6fr_1fr]">
+                <div className="p-6 md:p-8 mega-col">
+                  {activeMenu &&
+                    menuData
+                      .find((m) => m.label === activeMenu)
+                      ?.columns?.map((col, colIdx) => (
+                        <div key={colIdx} className={colIdx > 0 ? "mt-8" : ""}>
+                          <h3 className="text-[11px] font-bold tracking-[0.18em] uppercase text-[#0B73B9] mb-4 pb-2.5 border-b border-slate-100 flex items-center gap-2">
+                            <span className="h-1 w-1 rounded-full bg-[#f4d210]" />
+                            {col.title}
+                          </h3>
+                          <div className="space-y-1">
+                            {col.items.map((subItem, subIdx) => (
+                              <SubMenuItemRow
+                                key={subIdx}
+                                item={subItem}
+                                onClose={closeMenu}
+                              />
+                            ))}
+                          </div>
+                        </div>
                       ))}
-                    </div>
-                  </div>
-                ))}
+                </div>
 
-                {/* {activeMenuItem?.featured && (
-                  <div className="mega-featured">
-                    <Link
-                      href={activeMenuItem.featured.href}
-                      onClick={forceCloseMenu}
-                      className="group block overflow-hidden rounded-xl border border-slate-100 bg-gradient-to-br from-slate-50 to-white shadow-sm hover:shadow-md transition-shadow duration-300"
-                    >
-                      <div className="relative h-36 overflow-hidden">
-                        <img
-                          src={activeMenuItem.featured.image}
-                          alt={activeMenuItem.featured.title}
-                          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-transparent to-transparent" />
-                      </div>
-                      <div className="p-5">
-                        <h4 className="text-sm font-semibold text-navy mb-1.5 group-hover:text-cips transition-colors duration-200">
-                          {activeMenuItem.featured.title}
-                        </h4>
-                        <p className="text-xs text-slate-400 leading-relaxed mb-3">
-                          {activeMenuItem.featured.description}
-                        </p>
-                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-cips group-hover:gap-2.5 transition-all duration-300">
-                          {activeMenuItem.featured.ctaText || "Learn More"}
-                          <ArrowRight className="h-3 w-3" />
-                        </span>
-                      </div>
-                    </Link>
-                  </div>
-                )} */}
+                {activeMenu &&
+                  menuData.find((m) => m.label === activeMenu)?.featured && (
+                    <div className="mega-featured bg-slate-50/60 border-l border-slate-100">
+                      {(() => {
+                        const menuItem = menuData.find(
+                          (m) => m.label === activeMenu,
+                        );
+                        if (!menuItem?.featured) return null;
+                        return (
+                          <Link
+                            href={"/contextual-learning-assessment"}
+                            className="group block w-full h-full overflow-hidden cursor-pointer"
+                            onClick={closeMenu}
+                          >
+                            <div className="relative h-48 overflow-hidden">
+                              <img
+                                src={menuItem.featured.image}
+                                alt={menuItem.featured.title}
+                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent" />
+                              <div className="absolute bottom-0 left-0 p-5">
+                                <span className="inline-block bg-[#f4d210] text-slate-900 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md mb-2">
+                                  Featured
+                                </span>
+                              </div>
+                            </div>
+                            <div className="p-5">
+                              <h4
+                                className="text-lg font-semibold text-slate-900 mb-2 group-hover:text-[#0B73B9] transition-colors duration-300"
+                                style={{ fontFamily: "var(--font-playfair)" }}
+                              >
+                                {menuItem.featured.title}
+                              </h4>
+                              <p className="text-sm text-slate-500 leading-relaxed mb-5">
+                                {menuItem.featured.description}
+                              </p>
+                              <span className="inline-flex items-center gap-2 text-sm font-semibold text-[#0B73B9] group-hover:gap-3 transition-all duration-300">
+                                {menuItem.featured.ctaText || "Learn More"}{" "}
+                                <ArrowRight className="h-4 w-4" />
+                              </span>
+                            </div>
+                          </Link>
+                        );
+                      })()}
+                    </div>
+                  )}
               </div>
 
-              <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between">
-                <p className="text-xs text-slate-400">
-                  Can&apos;t find what you&apos;re looking for?{" "}
-                  <Link
-                    href="/contact"
-                    onClick={forceCloseMenu}
-                    className="font-medium text-cips hover:underline"
+              <div className="bg-slate-50 border-t border-slate-100 px-6 md:px-8 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-bold tracking-[0.15em] uppercase text-slate-400">
+                    Follow Us
+                  </span>
+                  <div className="flex items-center gap-1">
+                    {socialLinks.map((social) => {
+                      const Icon = social.icon;
+                      return (
+                        <a
+                          key={social.name}
+                          href={social.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={social.name}
+                          className="flex h-7 w-7 items-center justify-center rounded-full text-slate-400 hover:text-[#0B73B9] hover:bg-[#0B73B9]/[0.06] transition-all duration-300"
+                        >
+                          <Icon className="w-3.5 h-3.5" />
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 text-sm text-slate-500">
+                  <a
+                    href="mailto:info@lshs.co.uk"
+                    className="flex items-center gap-1.5 hover:text-[#0B73B9] transition-colors"
                   >
-                    Contact our team
-                  </Link>
-                </p>
-                <Link
-                  href={activeMenuItem?.href || "#"}
-                  onClick={forceCloseMenu}
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-navy hover:text-cips transition-colors duration-200"
-                >
-                  View all {activeMenuItem?.label?.toLowerCase()}
-                  <ArrowRight className="h-3 w-3" />
-                </Link>
+                    <Mail className="w-3.5 h-3.5" /> info@lshs.co.uk
+                  </a>
+                  <span className="text-slate-200 hidden sm:inline">|</span>
+                  <a
+                    href="tel:+447515106586"
+                    className="hidden sm:flex items-center gap-1.5 hover:text-[#0B73B9] transition-colors"
+                  >
+                    <UkFlag className="w-4 h-2.5 rounded-[2px]" /> +44 7515
+                    106586
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* ═══ SEARCH OVERLAY ═══ */}
-      {isSearchOpen && (
-        <div
-          className="fixed inset-0 z-[60] bg-white/98 backdrop-blur-xl flex items-start justify-center pt-32"
-          onClick={() => setIsSearchOpen(false)}
-        >
-          <button
-            onClick={() => setIsSearchOpen(false)}
-            className="absolute top-6 right-6 text-slate-400 hover:text-navy transition-colors"
-          >
-            <X className="h-6 w-6" />
-          </button>
-          <div
-            ref={searchContentRef}
-            className="w-full max-w-2xl px-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="relative">
-              <Search className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-6 text-cips" />
-              <input
-                type="text"
-                placeholder="Search qualifications, resources, events..."
-                className="w-full bg-transparent border-b-2 border-slate-200 focus:border-cips text-navy text-2xl md:text-3xl font-light pl-10 pb-4 pr-4 outline-none placeholder:text-slate-300 transition-colors duration-300"
-              />
-            </div>
-            <div className="mt-8 flex flex-wrap gap-2">
-              {[
-                "MCIPS",
-                "Level 4 Diploma",
-                "Sustainable Procurement",
-                "Membership",
-                "Training Courses",
-              ].map((tag) => (
-                <button
-                  key={tag}
-                  className="rounded-full border border-slate-200 px-4 py-1.5 text-xs font-medium text-slate-500 hover:text-navy hover:border-cips hover:bg-cips/5 transition-all duration-200"
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ═══ MOBILE OVERLAY ═══ */}
+      {/* ═══ MOBILE BACKDROP ═══ */}
       <div
-        className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden transition-all duration-500 ${
-          isMobileOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-        }`}
+        ref={mobileBackdropRef}
+        className="fixed inset-0 z-[55] bg-slate-950/40 backdrop-blur-[6px] lg:hidden"
         onClick={() => setIsMobileOpen(false)}
         aria-hidden="true"
       />
 
-      {/* ═══ MOBILE DRAWER PANEL ═══ */}
+      {/* ═══ MOBILE DRAWER ═══ */}
       <div
-        ref={mobilePanelRef}
-        className={`fixed inset-y-0 right-0 z-[41] w-[85%] max-w-sm bg-white shadow-2xl shadow-slate-300/30 lg:hidden transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          isMobileOpen ? "translate-x-0" : "translate-x-full"
-        }`}
-        onClick={(e) => e.stopPropagation()}
+        ref={mobileDrawerRef}
+        className="fixed inset-0 z-[60] w-full h-full bg-white shadow-2xl shadow-slate-900/15 lg:hidden flex flex-col"
+        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
-        <div className="flex items-center justify-between h-[72px] px-6 border-b border-slate-100">
-          <span className="text-sm font-semibold text-navy">Menu</span>
+        {/* Drawer Header */}
+        <div className="flex items-center justify-between h-[68px] px-6 border-b border-slate-100 flex-shrink-0">
+          <div className="relative h-8 w-24 flex-shrink-0">
+            <Image
+              src="/logo/logo.webp"
+              alt="LSHS Logo"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
           <button
             onClick={() => setIsMobileOpen(false)}
-            className="flex h-9 w-9 items-center justify-center rounded-md text-slate-400 hover:text-navy hover:bg-slate-50 transition-colors"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0B73B9]/40"
             aria-label="Close menu"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        <div className="h-[calc(100vh-72px)] overflow-y-auto px-6 pb-8">
-          <div className="space-y-1 pt-2">
-            {menuData.map((item) => (
-              <div key={item.label}>
-                <button
-                  onClick={() =>
-                    setMobileAccordion(
-                      mobileAccordion === item.label ? null : item.label,
-                    )
-                  }
-                  className="flex w-full items-center justify-between py-3.5 text-[15px] font-medium text-navy"
-                >
-                  {item.label}
-                  <ChevronDown
-                    className={`h-4 w-4 text-slate-400 transition-transform duration-300 ${
-                      mobileAccordion === item.label ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
+        {/* Scrollable Content */}
+        <div className="h-[calc(100vh-68px)] overflow-y-auto px-6 pb-8 flex flex-col overscroll-contain">
+          {/* Quick Actions */}
+          <div className="m-stagger pt-6 pb-6 border-b border-slate-100">
+            <div className="grid grid-cols-3 gap-3">
+              {quickActions.map((action) => {
+                const Icon = action.icon;
+                return (
+                  <button
+                    key={action.label}
+                    onClick={() => {
+                      openModal(action.modal);
+                      setIsMobileOpen(false);
+                    }}
+                    className="group flex flex-col items-center justify-center gap-2 p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-[#0B73B9]/30 hover:bg-white active:scale-95 transition-all duration-300 shadow-sm"
+                  >
+                    <Icon
+                      className="w-5 h-5 text-slate-400 group-hover:text-[#0B73B9] transition-colors"
+                      strokeWidth={1.5}
+                    />
+                    <span className="text-[11px] font-semibold text-slate-700 group-hover:text-[#0B73B9] transition-colors text-center leading-tight">
+                      {action.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
-                <div
-                  className="overflow-hidden transition-all duration-400"
-                  style={{
-                    maxHeight: mobileAccordion === item.label ? "600px" : "0px",
-                    opacity: mobileAccordion === item.label ? 1 : 0,
-                  }}
-                >
-                  {item.columns?.map((col, colIdx) => (
-                    <div key={colIdx} className="mb-4 pl-3">
-                      <p className="text-[10px] font-bold tracking-widest uppercase text-cips mb-2">
-                        {col.title}
-                      </p>
-                      <div className="space-y-0.5">
-                        {col.items.map((subItem, subIdx) => (
-                          <Link
-                            key={subIdx}
-                            href={subItem.href}
-                            onClick={() => setIsMobileOpen(false)}
-                            className="flex items-center gap-2 py-2 text-sm text-slate-500 hover:text-navy transition-colors"
+          {/* Main Navigation */}
+          <div className="m-stagger flex flex-col mt-4">
+            {menuData.map((item: MenuItem) => (
+              <div key={item.label} className="border-b border-slate-100">
+                {item.columns ? (
+                  <>
+                    <button
+                      onClick={() =>
+                        setActiveAccordion(
+                          activeAccordion === item.label ? null : item.label,
+                        )
+                      }
+                      className="flex w-full items-center justify-between py-4 text-left group min-h-[44px] focus:outline-none"
+                      aria-expanded={activeAccordion === item.label}
+                    >
+                      <span
+                        className={`text-[15px] font-semibold transition-colors ${activeAccordion === item.label ? "text-[#0B73B9]" : "text-slate-800"}`}
+                      >
+                        {item.label}
+                      </span>
+                      <span
+                        className={`flex h-7 w-7 items-center justify-center rounded-full transition-all duration-300 ${activeAccordion === item.label ? "bg-[#0B73B9] text-white rotate-180" : "bg-slate-100 text-slate-500 group-hover:bg-slate-200"}`}
+                      >
+                        <ChevronDown className="h-4 w-4" />
+                      </span>
+                    </button>
+
+                    <div
+                      className={`grid transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${activeAccordion === item.label ? "grid-rows-[1fr] pb-4" : "grid-rows-[0fr]"}`}
+                    >
+                      <div className="overflow-hidden">
+                        {item.columns.map((col, colIdx) => (
+                          <div
+                            key={colIdx}
+                            className={colIdx > 0 ? "mt-6" : ""}
                           >
-                            <span className="h-1 w-1 rounded-full bg-slate-300 flex-shrink-0" />
-                            <span className="min-w-0">{subItem.label}</span>
-                            {subItem.badge && (
-                              <span
-                                className={`rounded-full px-2 py-0.5 text-[9px] font-semibold leading-none flex-shrink-0 ${badgeStyles[subItem.badge] || "bg-slate-100 text-slate-500"}`}
-                              >
-                                {subItem.badge}
-                              </span>
-                            )}
-                          </Link>
+                            <h4 className="text-[11px] font-bold tracking-[0.15em] uppercase text-slate-400 mb-3 flex items-center gap-2">
+                              <span className="h-1 w-1 rounded-full bg-[#f4d210]"></span>
+                              {col.title}
+                            </h4>
+                            <div className="space-y-2">
+                              {col.items.map((subItem, subIdx) => (
+                                <Link
+                                  key={subIdx}
+                                  href={subItem.href}
+                                  onClick={() => setIsMobileOpen(false)}
+                                  className="group flex items-start gap-3 rounded-xl p-2 hover:bg-[#0B73B9]/[0.04] transition-colors"
+                                >
+                                  <div className="flex-1">
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                      <span className="text-[14px] font-medium text-slate-700 group-hover:text-[#0B73B9] transition-colors">
+                                        {subItem.label}
+                                      </span>
+                                      {subItem.badge && (
+                                        <span
+                                          className={`inline-flex rounded-md px-1.5 py-[1px] text-[10px] font-semibold tracking-wide leading-none ${badgeStyles[subItem.badge] || "bg-slate-50 text-slate-500 border border-slate-200/60"}`}
+                                        >
+                                          {subItem.badge}
+                                        </span>
+                                      )}
+                                    </div>
+                                    {subItem.description && (
+                                      <p className="text-[12px] text-slate-400 mt-1 leading-relaxed">
+                                        {subItem.description}
+                                      </p>
+                                    )}
+                                  </div>
+                                  <ArrowRight className="mt-1 h-4 w-4 text-slate-300 group-hover:text-[#0B73B9] group-hover:translate-x-1 transition-all" />
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
                         ))}
                       </div>
                     </div>
-                  ))}
-
-                  {item.featured && (
-                    <Link
-                      href={item.featured.href}
-                      onClick={() => setIsMobileOpen(false)}
-                      className="ml-3 flex items-center gap-3 rounded-lg bg-slate-50 p-3 mb-3 border border-slate-100"
-                    >
-                      <img
-                        src={item.featured.image}
-                        alt=""
-                        className="h-14 w-14 rounded-lg object-cover flex-shrink-0"
-                      />
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium text-navy">
-                          {item.featured.title}
-                        </p>
-                        <p className="text-xs text-slate-400 mt-0.5 line-clamp-1">
-                          {item.featured.description}
-                        </p>
-                      </div>
-                    </Link>
-                  )}
-                </div>
+                  </>
+                ) : item.external ? (
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setIsMobileOpen(false)}
+                    className="flex items-center justify-between py-4 text-[15px] font-medium text-slate-800 active:bg-slate-50/50 transition-colors min-h-[44px]"
+                  >
+                    {item.label}
+                    <ArrowRight className="h-4 w-4 text-slate-300" />
+                  </a>
+                ) : (
+                  <Link
+                    href={item.href || "#"}
+                    onClick={() => setIsMobileOpen(false)}
+                    className="flex items-center justify-between py-4 text-[15px] font-medium text-slate-800 active:bg-slate-50/50 transition-colors min-h-[44px]"
+                  >
+                    {item.label}
+                    <ArrowRight className="h-4 w-4 text-slate-300" />
+                  </Link>
+                )}
               </div>
             ))}
           </div>
 
-          <div className="mt-8 space-y-3 border-t border-slate-100 pt-6">
+          {/* Contact Info */}
+          <div className="m-stagger mt-6 pt-6 border-t border-slate-100">
+            <h4 className="text-[11px] font-bold tracking-[0.15em] uppercase text-slate-400 mb-4">
+              Contact Us
+            </h4>
+            <div className="space-y-3">
+              <a
+                href="tel:+447515106586"
+                className="flex items-center gap-3 group"
+              >
+                <span className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 group-hover:bg-[#0B73B9]/10 transition-colors">
+                  <UkFlag className="w-[20px] h-3.5 rounded-[2px]" />
+                </span>
+                <div>
+                  <p className="text-[11px] font-semibold tracking-wider uppercase text-slate-400">
+                    UK
+                  </p>
+                  <p className="text-[14px] font-medium text-slate-700 group-hover:text-[#0B73B9] transition-colors">
+                    +44 7515 106586
+                  </p>
+                </div>
+              </a>
+              <a
+                href="tel:+8801906896326"
+                className="flex items-center gap-3 group"
+              >
+                <span className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 group-hover:bg-[#0B73B9]/10 transition-colors">
+                  <BdFlag className="w-[22px] h-3.5 rounded-[2px]" />
+                </span>
+                <div>
+                  <p className="text-[11px] font-semibold tracking-wider uppercase text-slate-400">
+                    Bangladesh
+                  </p>
+                  <p className="text-[14px] font-medium text-slate-700 group-hover:text-[#0B73B9] transition-colors">
+                    +88 0190 6896326
+                  </p>
+                </div>
+              </a>
+              <a
+                href="mailto:info@lshs.co.uk"
+                className="flex items-center gap-3 group"
+              >
+                <span className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 group-hover:bg-[#0B73B9]/10 transition-colors">
+                  <Mail className="w-4 h-4 text-slate-500 group-hover:text-[#0B73B9] transition-colors" />
+                </span>
+                <div>
+                  <p className="text-[11px] font-semibold tracking-wider uppercase text-slate-400">
+                    Email
+                  </p>
+                  <p className="text-[14px] font-medium text-slate-700 group-hover:text-[#0B73B9] transition-colors">
+                    info@lshs.co.uk
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          {/* Social Links */}
+          <div className="m-stagger mt-6 pt-6 border-t border-slate-100">
+            <h4 className="text-[11px] font-bold tracking-[0.15em] uppercase text-slate-400 mb-4">
+              Follow Us
+            </h4>
+            <div className="flex items-center gap-3">
+              {socialLinks.map((social) => {
+                const Icon = social.icon;
+                return (
+                  <a
+                    key={social.name}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.name}
+                    className="w-10 h-10 rounded-full flex items-center justify-center bg-white border border-slate-200 text-slate-500 hover:text-white hover:bg-[#0B73B9] hover:border-[#0B73B9] shadow-sm transition-all duration-300 active:scale-95"
+                  >
+                    <Icon className="w-4 h-4" />
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="flex-1 min-h-[32px]" />
+
+          {/* Bottom CTAs */}
+          <div className="m-stagger mt-4 space-y-3">
             <Link
-              href="/login"
+              href="/contextual-learning-assessment"
               onClick={() => setIsMobileOpen(false)}
-              className="block w-full text-center py-3 text-sm font-medium text-slate-600 rounded-md border border-slate-200 hover:bg-slate-50 transition-colors"
+              className="flex items-center justify-center gap-2 w-full py-3.5 text-sm font-bold tracking-wide text-white bg-[#0B73B9] rounded-xl hover:bg-[#085C92] transition-all duration-300 shadow-lg shadow-[#0B73B9]/20 active:scale-[0.98]"
             >
-              Login
+              TAKE FREE ASSESSMENT <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link
-              href="/join"
+            <a
+              href="https://forms.gle/kHkicZ6TaHQRoMck6"
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => setIsMobileOpen(false)}
-              className="block w-full text-center py-3 text-sm font-semibold text-white bg-navy rounded-md hover:bg-navy-dark transition-colors"
+              className="flex items-center justify-center gap-2 w-full py-3.5 text-sm font-bold tracking-wide text-slate-900 bg-[#f4d210] rounded-xl hover:bg-[#e6c709] transition-all duration-300 active:scale-[0.98]"
             >
-              Join Now
-            </Link>
+              GET ADMISSION <ArrowRight className="w-4 h-4" />
+            </a>
           </div>
         </div>
       </div>

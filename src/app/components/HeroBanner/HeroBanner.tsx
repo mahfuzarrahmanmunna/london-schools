@@ -366,7 +366,7 @@ export default function HeroBanner() {
                 </div>
               </div>
 
-              {/* Floating Card — Top Right */}
+              {/* Floating Card Top Right */}
               <div className="absolute -top-4 -right-4 lg:-top-6 lg:-right-6 bg-white rounded-xl shadow-xl shadow-slate-200/50 border border-slate-100 p-4 max-w-[200px]">
                 <div className="flex items-center gap-3 mb-2">
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-50">
@@ -387,7 +387,7 @@ export default function HeroBanner() {
                 </p>
               </div>
 
-              {/* Floating Card — Bottom Left */}
+              {/* Floating Card Bottom Left */}
               <div className="absolute -bottom-4 -left-4 lg:-bottom-6 lg:-left-6 bg-white rounded-xl shadow-xl shadow-slate-200/50 border border-slate-100 p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="flex -space-x-2">

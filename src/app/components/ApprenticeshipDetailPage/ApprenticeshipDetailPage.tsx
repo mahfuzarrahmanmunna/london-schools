@@ -1057,7 +1057,7 @@ export default function ApprenticeshipDetailPage() {
       </div>
 
       {/* ═══════════════════════════════════════════
-          STUDENT REVIEWS — Continuous Marquee
+          STUDENT REVIEWS Continuous Marquee
           ═══════════════════════════════════════════ */}
       <section className="py-12 overflow-hidden">
         <div className="mx-auto max-w-6xl px-6 mb-2">
@@ -1072,10 +1072,10 @@ export default function ApprenticeshipDetailPage() {
         {/* Stats row */}
         <ReviewStats color={course.color} />
 
-        {/* Row 1 — scrolls left */}
+        {/* Row 1 scrolls left */}
         <ReviewMarquee color={course.color} />
 
-        {/* Row 2 — scrolls right (reversed) */}
+        {/* Row 2 scrolls right (reversed) */}
         <div style={{ transform: "scaleX(-1)" }} className="mt-4">
           <ReviewMarquee color={course.color} />
         </div>
