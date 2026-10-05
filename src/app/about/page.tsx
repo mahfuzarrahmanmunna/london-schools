@@ -238,7 +238,7 @@ const tutors = [
     name: "Jeremy W Johnson",
     role: "CIPS Associate Tutor",
     subtitle: "CIPS Fellow \u00b7 Supply Chain Consultant",
-    image: "/tutors/jeremy.webp",
+    image: "/about/johnson.jpeg",
     bio: "A CIPS Fellow and project consultant with 25 years of experience in procurement and supply chain management. He brings cross-industry expertise, providing training for both public and private sector organisations.",
     tags: ["CIPS Fellow", "25+ Years Experience", "Supply Chain Consultant"],
   },
@@ -657,7 +657,7 @@ export default function AboutPage() {
               <div className="relative z-10 mt-10 md:mt-0 md:w-[400px] lg:w-[450px] flex-shrink-0">
                 <div className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-2xl border border-white/10">
                   <Image
-                    src="/about/images.jfif"
+                    src="/about/missions.jpg"
                     alt="Our Mission"
                     fill
                     className="object-cover"
