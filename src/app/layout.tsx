@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 import LayoutProvider from "./provider/LayoutProvider";
+import DashboardQueryProvider from "./dashboard/query-provider";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -199,7 +200,9 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
-        <LayoutProvider>{children}</LayoutProvider>
+        <DashboardQueryProvider>
+          <LayoutProvider>{children}</LayoutProvider>
+        </DashboardQueryProvider>
       </body>
     </html>
   );

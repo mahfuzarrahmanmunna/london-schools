@@ -20,6 +20,33 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## CRM Dashboard
+
+The dashboard loads its lead data from the LSHS backend. Configure the backend's
+`DATABASE_URL` in `lshsbackend/.env`, then start the backend in one terminal:
+
+```powershell
+cd D:\londonschool\lshsbackend
+npm install
+npx prisma migrate deploy
+npx prisma generate
+npm run dev
+```
+
+Start the frontend in a second terminal:
+
+```powershell
+cd D:\londonschool\london-schools
+npm install
+npm run dev
+```
+
+The frontend uses `http://localhost:5000` for the API by default. Set
+`NEXT_PUBLIC_API_URL` if the backend runs at a different URL. Dashboard, lead
+list, and lead detail data refresh every 15 seconds; successful create and edit
+actions refresh related views immediately through TanStack Query cache
+invalidation.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
