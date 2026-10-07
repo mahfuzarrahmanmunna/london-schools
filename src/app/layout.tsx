@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 import LayoutProvider from "./provider/LayoutProvider";
+import DashboardQueryProvider from "./dashboard/query-provider";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -50,9 +51,9 @@ export const metadata: Metadata = {
 
   // ─── fav ──────────────────────────────────
   icons: {
-    icon: [{ url: "/logo/fav.png", sizes: "any", type: "image/jpeg" }],
-    shortcut: "/logo/fav.png",
-    apple: [{ url: "/logo/fav.png", sizes: "180x180", type: "image/jpeg" }],
+    icon: [{ url: "/logo/lshslogos.png", sizes: "any", type: "image/jpeg" }],
+    shortcut: "/logo/lshslogos.png",
+    apple: [{ url: "/logo/lshslogos.png", sizes: "180x180", type: "image/jpeg" }],
   },
 
   // ─── Open Graph (Facebook, LinkedIn, Discord…) ─
@@ -110,8 +111,8 @@ export default function RootLayout({
     >
       <head>
         {/* Direct fav link for maximum browser compat */}
-        <link rel="icon" href="/logo/fav.png" />
-        <link rel="apple-touch-icon" href="/logo/fav.png" />
+        <link rel="icon" href="/logo/lshslogos.png" />
+        <link rel="apple-touch-icon" href="/logo/lshslogos.png" />
 
         {/* Preload sharing image for faster OG rendering */}
         <link
@@ -199,7 +200,9 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
-        <LayoutProvider>{children}</LayoutProvider>
+        <DashboardQueryProvider>
+          <LayoutProvider>{children}</LayoutProvider>
+        </DashboardQueryProvider>
       </body>
     </html>
   );
