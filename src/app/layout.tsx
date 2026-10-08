@@ -4,6 +4,7 @@ import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 import LayoutProvider from "./provider/LayoutProvider";
 import DashboardQueryProvider from "./dashboard/query-provider";
+import { AuthProvider } from "./contexts/AuthContext";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -200,9 +201,9 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
-        <DashboardQueryProvider>
+       <AuthProvider> <DashboardQueryProvider>
           <LayoutProvider>{children}</LayoutProvider>
-        </DashboardQueryProvider>
+        </DashboardQueryProvider></AuthProvider>
       </body>
     </html>
   );
