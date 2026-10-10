@@ -735,10 +735,9 @@ export default function AboutPage() {
             <div className="reveal-item grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
               <div className="md:col-span-4 lg:col-span-3 flex justify-center md:justify-end">
                 <div className="relative w-40 h-40 md:w-44 md:h-44 lg:w-48 lg:h-48 rounded-2xl overflow-hidden ring-1 ring-black/5 shadow-lg flex-shrink-0">
-                  <Image
-                    src="/about/EmamulHassan.jpeg"
+                  <img
+                    src="https://cips.lshs.co.uk/about/EmamulHassan.jpeg"
                     alt="Md. Emamul Hasan"
-                    fill
                     className="object-cover object-top"
                   />
                 </div>
@@ -838,10 +837,9 @@ export default function AboutPage() {
               <div className="hidden md:block w-px h-full min-h-[200px] bg-slate-200 order-1 md:order-2" />
               <div className="md:col-span-4 lg:col-span-3 flex justify-center md:justify-start order-1 md:order-3">
                 <div className="relative w-40 h-40 md:w-44 md:h-44 lg:w-48 lg:h-48 rounded-2xl overflow-hidden ring-1 ring-black/5 shadow-lg flex-shrink-0">
-                  <Image
+                  <img
                     src="/about/muhammadhaque.jpeg"
                     alt="Muhammad Haque"
-                    fill
                     className="object-cover object-top"
                   />
                 </div>
@@ -965,10 +963,10 @@ export default function AboutPage() {
               <div className="hidden md:block w-px h-full min-h-[200px] bg-slate-200 order-1 md:order-2" />
               <div className="md:col-span-4 lg:col-span-3 flex justify-center md:justify-start order-1 md:order-3">
                 <div className="relative w-40 h-40 md:w-44 md:h-44 lg:w-48 lg:h-48 rounded-2xl overflow-hidden ring-1 ring-black/5 shadow-lg flex-shrink-0">
-                  <Image
+                  <img
                     src="/about/johnson.jpeg"
                     alt="Jeremy W Johnson"
-                    fill
+                    
                     className="object-cover object-top"
                   />
                 </div>
