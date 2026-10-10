@@ -133,7 +133,7 @@ export default function Footer() {
             <div className="footer-col lg:col-span-5" style={{ opacity: 0 }}>
               <div className="relative h-24 w-24 mb-6">
                 <Image
-                  src="/logo/lshswhitelogo.png"
+                  src="/logo/lshslogo.png"
                   alt="London School of Higher Studies"
                   fill
                   className="object-contain"
