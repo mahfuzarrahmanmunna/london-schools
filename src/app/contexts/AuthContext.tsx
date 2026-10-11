@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react"
+import { onAuthStateChanged } from "firebase/auth"
 import { firebaseAuth, isFirebaseConfigured } from "@/lib/firebase"
 import { fetchCurrentUser, signOutUser } from "@/lib/auth-api"
 
@@ -51,50 +52,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (mounted) setLoading(false)
     }, 5000)
 
-    import("firebase/auth")
-      .then(({ onAuthStateChanged }) => {
-        if (!mounted || !firebaseAuth) return
+    unsubscribe = onAuthStateChanged(firebaseAuth, async (firebaseUser) => {
+      if (!mounted) return
 
-        unsubscribe = onAuthStateChanged(
-          firebaseAuth,
-          async (firebaseUser) => {
-            if (!mounted) return
+      if (firebaseUser) {
+        try {
+          const userData = await fetchCurrentUser()
+          if (!mounted) return
 
-            if (firebaseUser) {
-              try {
-                const userData = await fetchCurrentUser()
-                if (!mounted) return
-
-                if (userData) {
-                  setUser(userData)
-                } else {
-                  // Backend session expired OR backend temporarily down.
-                  // DON'T call signOutUser() — if the backend is just
-                  // unreachable (not "unauthenticated"), the Firebase auth
-                  // is still valid. Clear local state only; the user can
-                  // retry when the backend comes back.
-                  setUser(null)
-                }
-              } catch {
-                if (!mounted) return
-                // Network error, backend down, etc.
-                // Don't sign out from Firebase — just clear local state.
-                // User's Firebase session persists; they'll be
-                // auto-restored when the backend is reachable again.
-                setUser(null)
-              }
-            } else {
-              // Firebase says: not signed in
-              setUser(null)
-            }
-            setLoading(false)
+          if (userData) {
+            setUser(userData)
+          } else {
+            // Backend session expired or backend temporarily down.
+            // Keep Firebase auth intact so the user can retry later.
+            setUser(null)
           }
-        )
-      })
-      .catch((error) => {
-        console.error("[Auth] Failed to load Firebase auth module:", error)
-        if (mounted) setLoading(false)
-      })
+        } catch {
+          if (!mounted) return
+          setUser(null)
+        }
+      } else {
+        // Firebase says: not signed in
+        setUser(null)
+      }
+      setLoading(false)
+    })
 
     // ✅ This return IS from useEffect — React calls it on unmount
     return () => {
