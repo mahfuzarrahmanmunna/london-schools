@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query" // Added useQueryClient
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import {
@@ -27,6 +27,8 @@ import {
 } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { fetchApi, leadsApiUrl } from "../api"
+// Import your socket getter (adjust path if needed)
+import { getSocket } from "@/lib/socket-client"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -177,6 +179,7 @@ const getLeadName = (lead: Activity["lead"]) =>
 
 export default function ActivitiesPage() {
   const pageRef = useRef<HTMLDivElement>(null)
+  const queryClient = useQueryClient() // Initialize query client
   const [page, setPage] = useState(1)
   const [type, setType] = useState("ALL")
   const [search, setSearch] = useState("")
@@ -192,6 +195,24 @@ export default function ActivitiesPage() {
     return () => clearTimeout(timer)
   }, [searchInput])
 
+  // ─── Socket.IO Real-time Listener ───
+  useEffect(() => {
+    const socket = getSocket()
+    if (!socket) return
+
+    // Listen for new activities broadcasted from backend
+    const handleNewActivity = () => {
+      // Invalidate the activities query to trigger an instant refetch
+      queryClient.invalidateQueries({ queryKey: ["activities"] })
+    }
+
+    socket.on("activity:new", handleNewActivity)
+
+    return () => {
+      socket.off("activity:new", handleNewActivity)
+    }
+  }, [queryClient])
+
   // Build query string
   const queryParams = new URLSearchParams({
     page: String(page),
@@ -205,7 +226,7 @@ export default function ActivitiesPage() {
     queryKey: ["activities", { page, limit, type, search }],
     queryFn: () =>
       fetchApi<ActivitiesResponse>(`${leadsApiUrl}/activities?${queryParams.toString()}`),
-    refetchInterval: 30_000,
+    // refetchInterval: 30_000, // Removed polling, now relies on socket events
   })
 
   const activities = activitiesQuery.data?.data ?? []
@@ -637,7 +658,7 @@ export default function ActivitiesPage() {
               <button
                 onClick={() =>
                   setPage(Math.min(pagination.totalPages, pagination.page + 1))
-                }s
+                }
                 disabled={pagination.page === pagination.totalPages}
                 className="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >

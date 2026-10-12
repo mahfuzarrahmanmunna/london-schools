@@ -82,10 +82,10 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
 
     const socket = connectSocket()
 
-    // Load persisted notifications. Call fetchNotifications directly (not
-    // refresh) so the only setStates here happen after `await` resolves,
-    // avoiding a synchronous setState-in-effect cascading render.
-    fetchNotifications()
+    // Defer the initial fetch so state updates do not run from the effect body.
+    const fetchTimeout = window.setTimeout(() => {
+      void fetchNotifications()
+    }, 0)
 
     // ── Listen for real-time notifications ──
     const handleNewNotification = (data: NotificationData) => {
@@ -110,6 +110,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     socket.io.on("reconnect", handleReconnect)
 
     return () => {
+      window.clearTimeout(fetchTimeout)
       socket.off("notification:new", handleNewNotification)
       socket.io.off("reconnect", handleReconnect)
       disconnectSocket()
